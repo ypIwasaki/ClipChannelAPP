@@ -1,0 +1,72 @@
+{
+  "ignored_fields": [
+    "object focus",
+    "project and scene display state"
+  ],
+  "checks": {
+    "generated_preserved_by_host": true,
+    "base_count_8": true,
+    "single_duplicate_count_9": true,
+    "dup_count_16": true,
+    "originals_unchanged": true,
+    "copies_match_except_layer_plus4": true,
+    "undo_equals_baseline": true,
+    "redo_equals_duplicate": true,
+    "all16_move_plus60_only": true,
+    "move_undo_equals_duplicate": true,
+    "move_redo_equals_moved": true,
+    "reopened_matches_moved": true
+  },
+  "files": [
+    {
+      "file": "compound-generated.aup2",
+      "sha256": "4b1967c6853facf963d8e260a62ff3946a460ff442ca268078db4fe4b0099991",
+      "object_count": 8
+    },
+    {
+      "file": "compound-host-saved.aup2",
+      "sha256": "4b1967c6853facf963d8e260a62ff3946a460ff442ca268078db4fe4b0099991",
+      "object_count": 8
+    },
+    {
+      "file": "compound-single-duplicate.aup2",
+      "sha256": "9fa2f9de67467281064ef21194ef487b4dc47ee3b4a51d71329e006a27736ea3",
+      "object_count": 9
+    },
+    {
+      "file": "compound-duplicated.aup2",
+      "sha256": "98c7310e46bba8505b7458d14bd8d8dd4f35458d2f64fb1a93f3f5eb65e581f7",
+      "object_count": 16
+    },
+    {
+      "file": "compound-undo.aup2",
+      "sha256": "4b1967c6853facf963d8e260a62ff3946a460ff442ca268078db4fe4b0099991",
+      "object_count": 8
+    },
+    {
+      "file": "compound-redo.aup2",
+      "sha256": "fd821a0da82077bc7f95b2e3d368ef368343f2cdf57bab606cf9c204300e1c79",
+      "object_count": 16
+    },
+    {
+      "file": "compound-moved.aup2",
+      "sha256": "fad15ac19b050d7467a1d83b771415b077938d924ec7f2894048e475030c9f97",
+      "object_count": 16
+    },
+    {
+      "file": "compound-move-undo.aup2",
+      "sha256": "b23856a098f8bf0b53bd6a88db799196167f03949162058e3cdd2b24fd608dc2",
+      "object_count": 16
+    },
+    {
+      "file": "compound-move-redo.aup2",
+      "sha256": "fad15ac19b050d7467a1d83b771415b077938d924ec7f2894048e475030c9f97",
+      "object_count": 16
+    },
+    {
+      "file": "compound-reopened.aup2",
+      "sha256": "a08caf348ddf555a445dfde77c5be0327e4deb10f51362d2bb8dd131ed4a2b92",
+      "object_count": 16
+    }
+  ]
+}

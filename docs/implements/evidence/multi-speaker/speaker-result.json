@@ -1,0 +1,5634 @@
+{
+  "video_id": "8Xyb7UB3OlM",
+  "source_range": [
+    1200,
+    2400
+  ],
+  "audio_samples": 19200000,
+  "sample_rate": 16000,
+  "audio_sha256": "2c0c196f6c79e0579afbc97b33f3c83ef669dda1321b346e51172124fd42a4bd",
+  "reference_sha256": "a784449ca9bd1b57ae8fbfa26c6399e452ae36d1e98d86a81bef04816c500c86",
+  "reference_user_label": "A107 target-only; RWM4SdTZ1t8 180-200s",
+  "model_revision": "0f99f2d0ebe89ac095bcc5903c4dd8f72b367286",
+  "settings": {
+    "cpu_threads": 4,
+    "vad_threshold": 0.5,
+    "vad_min_speech_ms": 250,
+    "vad_min_silence_ms": 100,
+    "vad_pad_ms": 30,
+    "window_seconds": 5,
+    "stride_seconds": 2.5,
+    "min_vad_speech_seconds": 0.5
+  },
+  "vad_intervals": [
+    {
+      "start": 234528,
+      "end": 245216
+    },
+    {
+      "start": 306208,
+      "end": 319968
+    },
+    {
+      "start": 333344,
+      "end": 348128
+    },
+    {
+      "start": 1919008,
+      "end": 1928672
+    },
+    {
+      "start": 1941536,
+      "end": 2016224
+    },
+    {
+      "start": 2414624,
+      "end": 2423776
+    },
+    {
+      "start": 2440224,
+      "end": 2450400
+    },
+    {
+      "start": 2454560,
+      "end": 2462176
+    },
+    {
+      "start": 2469920,
+      "end": 2483680
+    },
+    {
+      "start": 2495520,
+      "end": 2512352
+    },
+    {
+      "start": 2529824,
+      "end": 2560480
+    },
+    {
+      "start": 2570272,
+      "end": 2624480
+    },
+    {
+      "start": 2634272,
+      "end": 2688480
+    },
+    {
+      "start": 2708000,
+      "end": 2722272
+    },
+    {
+      "start": 2726944,
+      "end": 2745312
+    },
+    {
+      "start": 2774560,
+      "end": 2782176
+    },
+    {
+      "start": 2794016,
+      "end": 2804704
+    },
+    {
+      "start": 2823200,
+      "end": 2870752
+    },
+    {
+      "start": 2889760,
+      "end": 2924512
+    },
+    {
+      "start": 2953248,
+      "end": 2983392
+    },
+    {
+      "start": 3005472,
+      "end": 3011040
+    },
+    {
+      "start": 3013152,
+      "end": 3034080
+    },
+    {
+      "start": 3135008,
+      "end": 3164128
+    },
+    {
+      "start": 3166240,
+      "end": 3198432
+    },
+    {
+      "start": 3216416,
+      "end": 3299296
+    },
+    {
+      "start": 3304480,
+      "end": 3322336
+    },
+    {
+      "start": 3327520,
+      "end": 3365856
+    },
+    {
+      "start": 3372064,
+      "end": 3383264
+    },
+    {
+      "start": 3401248,
+      "end": 3408352
+    },
+    {
+      "start": 3539488,
+      "end": 3549152
+    },
+    {
+      "start": 3557408,
+      "end": 3571680
+    },
+    {
+      "start": 3586592,
+      "end": 3596768
+    },
+    {
+      "start": 3606048,
+      "end": 3647968
+    },
+    {
+      "start": 3652640,
+      "end": 3691488
+    },
+    {
+      "start": 3696160,
+      "end": 3706336
+    },
+    {
+      "start": 3741728,
+      "end": 3778528
+    },
+    {
+      "start": 3834912,
+      "end": 3863008
+    },
+    {
+      "start": 3979808,
+      "end": 3988448
+    },
+    {
+      "start": 4004896,
+      "end": 4034016
+    },
+    {
+      "start": 4057120,
+      "end": 4065760
+    },
+    {
+      "start": 4067872,
+      "end": 4092896
+    },
+    {
+      "start": 4095520,
+      "end": 4102112
+    },
+    {
+      "start": 4154400,
+      "end": 4171744
+    },
+    {
+      "start": 4188704,
+      "end": 4203488
+    },
+    {
+      "start": 4235296,
+      "end": 4249568
+    },
+    {
+      "start": 4271136,
+      "end": 4294624
+    },
+    {
+      "start": 4330016,
+      "end": 4342240
+    },
+    {
+      "start": 4390944,
+      "end": 4422624
+    },
+    {
+      "start": 4427296,
+      "end": 4432352
+    },
+    {
+      "start": 4558368,
+      "end": 4567520
+    },
+    {
+      "start": 4575776,
+      "end": 4582880
+    },
+    {
+      "start": 4618272,
+      "end": 4629984
+    },
+    {
+      "start": 4661792,
+      "end": 4732896
+    },
+    {
+      "start": 4753952,
+      "end": 4763616
+    },
+    {
+      "start": 4807200,
+      "end": 4821472
+    },
+    {
+      "start": 4829216,
+      "end": 4846048
+    },
+    {
+      "start": 4854304,
+      "end": 4868064
+    },
+    {
+      "start": 4889120,
+      "end": 4914656
+    },
+    {
+      "start": 4922400,
+      "end": 4931552
+    },
+    {
+      "start": 4978208,
+      "end": 4991968
+    },
+    {
+      "start": 5003808,
+      "end": 5025248
+    },
+    {
+      "start": 5030944,
+      "end": 5043168
+    },
+    {
+      "start": 5067808,
+      "end": 5074912
+    },
+    {
+      "start": 5086240,
+      "end": 5102048
+    },
+    {
+      "start": 5106208,
+      "end": 5136864
+    },
+    {
+      "start": 5153312,
+      "end": 5178848
+    },
+    {
+      "start": 5189152,
+      "end": 5241824
+    },
+    {
+      "start": 5292576,
+      "end": 5322208
+    },
+    {
+      "start": 5329440,
+      "end": 5362144
+    },
+    {
+      "start": 5564448,
+      "end": 5571040
+    },
+    {
+      "start": 5581344,
+      "end": 5586400
+    },
+    {
+      "start": 5600800,
+      "end": 5606368
+    },
+    {
+      "start": 5609504,
+      "end": 5622752
+    },
+    {
+      "start": 5645856,
+      "end": 5655520
+    },
+    {
+      "start": 5702688,
+      "end": 5719008
+    },
+    {
+      "start": 5722144,
+      "end": 5817824
+    },
+    {
+      "start": 5825056,
+      "end": 5858784
+    },
+    {
+      "start": 5860384,
+      "end": 5871584
+    },
+    {
+      "start": 5884448,
+      "end": 5895136
+    },
+    {
+      "start": 5896736,
+      "end": 6020064
+    },
+    {
+      "start": 6053408,
+      "end": 6096352
+    },
+    {
+      "start": 6117920,
+      "end": 6124512
+    },
+    {
+      "start": 6139424,
+      "end": 6155232
+    },
+    {
+      "start": 6163488,
+      "end": 6192608
+    },
+    {
+      "start": 6200864,
+      "end": 6454240
+    },
+    {
+      "start": 6469152,
+      "end": 6605280
+    },
+    {
+      "start": 6607392,
+      "end": 6809568
+    },
+    {
+      "start": 6811680,
+      "end": 6822368
+    },
+    {
+      "start": 6826016,
+      "end": 6999008
+    },
+    {
+      "start": 7002656,
+      "end": 7020000
+    },
+    {
+      "start": 7035936,
+      "end": 7077856
+    },
+    {
+      "start": 7079968,
+      "end": 7112672
+    },
+    {
+      "start": 7120416,
+      "end": 7138784
+    },
+    {
+      "start": 7140896,
+      "end": 7178720
+    },
+    {
+      "start": 7183392,
+      "end": 7217120
+    },
+    {
+      "start": 7220256,
+      "end": 7268320
+    },
+    {
+      "start": 7275040,
+      "end": 7451616
+    },
+    {
+      "start": 7456800,
+      "end": 7566816
+    },
+    {
+      "start": 7570464,
+      "end": 7611360
+    },
+    {
+      "start": 7616544,
+      "end": 7670240
+    },
+    {
+      "start": 7672352,
+      "end": 7837152
+    },
+    {
+      "start": 7851040,
+      "end": 7924192
+    },
+    {
+      "start": 7933984,
+      "end": 8151520
+    },
+    {
+      "start": 8164896,
+      "end": 8196576
+    },
+    {
+      "start": 8200736,
+      "end": 8309728
+    },
+    {
+      "start": 8313376,
+      "end": 8376288
+    },
+    {
+      "start": 8381472,
+      "end": 8544736
+    },
+    {
+      "start": 8547872,
+      "end": 8760800
+    },
+    {
+      "start": 8763424,
+      "end": 8801760
+    },
+    {
+      "start": 8806944,
+      "end": 8844256
+    },
+    {
+      "start": 8848416,
+      "end": 8878560
+    },
+    {
+      "start": 8885280,
+      "end": 8899552
+    },
+    {
+      "start": 8902688,
+      "end": 9036256
+    },
+    {
+      "start": 9056288,
+      "end": 9069024
+    },
+    {
+      "start": 9103392,
+      "end": 9296352
+    },
+    {
+      "start": 9300000,
+      "end": 9325536
+    },
+    {
+      "start": 9330720,
+      "end": 9452000
+    },
+    {
+      "start": 9457184,
+      "end": 9594848
+    },
+    {
+      "start": 9633312,
+      "end": 9662944
+    },
+    {
+      "start": 9669152,
+      "end": 9710560
+    },
+    {
+      "start": 9753632,
+      "end": 9766368
+    },
+    {
+      "start": 9852960,
+      "end": 9894880
+    },
+    {
+      "start": 9896992,
+      "end": 9906656
+    },
+    {
+      "start": 9943072,
+      "end": 9956320
+    },
+    {
+      "start": 10011168,
+      "end": 10022880
+    },
+    {
+      "start": 10267168,
+      "end": 10291168
+    },
+    {
+      "start": 10445856,
+      "end": 10454496
+    },
+    {
+      "start": 10606624,
+      "end": 10613728
+    },
+    {
+      "start": 10619424,
+      "end": 10633696
+    },
+    {
+      "start": 10648608,
+      "end": 10669024
+    },
+    {
+      "start": 10720288,
+      "end": 10738656
+    },
+    {
+      "start": 10747936,
+      "end": 10802144
+    },
+    {
+      "start": 10808864,
+      "end": 10814944
+    },
+    {
+      "start": 10828832,
+      "end": 10873312
+    },
+    {
+      "start": 10877472,
+      "end": 10914272
+    },
+    {
+      "start": 10916896,
+      "end": 10930144
+    },
+    {
+      "start": 10948640,
+      "end": 10972128
+    },
+    {
+      "start": 10981408,
+      "end": 10990560
+    },
+    {
+      "start": 10996256,
+      "end": 11008480
+    },
+    {
+      "start": 11028000,
+      "end": 11101152
+    },
+    {
+      "start": 11165216,
+      "end": 11196384
+    },
+    {
+      "start": 11246624,
+      "end": 11254752
+    },
+    {
+      "start": 11363872,
+      "end": 11387360
+    },
+    {
+      "start": 11462688,
+      "end": 11477984
+    },
+    {
+      "start": 11590688,
+      "end": 11607520
+    },
+    {
+      "start": 11626016,
+      "end": 11632096
+    },
+    {
+      "start": 11640352,
+      "end": 11658720
+    },
+    {
+      "start": 11662880,
+      "end": 11674080
+    },
+    {
+      "start": 11690528,
+      "end": 11707360
+    },
+    {
+      "start": 11737120,
+      "end": 11749344
+    },
+    {
+      "start": 11775008,
+      "end": 11787744
+    },
+    {
+      "start": 11796000,
+      "end": 11836896
+    },
+    {
+      "start": 11839008,
+      "end": 11851232
+    },
+    {
+      "start": 11859488,
+      "end": 11928032
+    },
+    {
+      "start": 11931168,
+      "end": 11959776
+    },
+    {
+      "start": 11965472,
+      "end": 11996128
+    },
+    {
+      "start": 12046368,
+      "end": 12082144
+    },
+    {
+      "start": 12085280,
+      "end": 12132832
+    },
+    {
+      "start": 12135968,
+      "end": 12141536
+    },
+    {
+      "start": 12165152,
+      "end": 12173280
+    },
+    {
+      "start": 12466208,
+      "end": 12503520
+    },
+    {
+      "start": 12507168,
+      "end": 12513248
+    },
+    {
+      "start": 12610080,
+      "end": 12615648
+    },
+    {
+      "start": 12642336,
+      "end": 12657120
+    },
+    {
+      "start": 12687904,
+      "end": 12704224
+    },
+    {
+      "start": 12770336,
+      "end": 12801504
+    },
+    {
+      "start": 12804128,
+      "end": 12920800
+    },
+    {
+      "start": 12924448,
+      "end": 12947936
+    },
+    {
+      "start": 12953632,
+      "end": 13008352
+    },
+    {
+      "start": 13010464,
+      "end": 13037024
+    },
+    {
+      "start": 13040160,
+      "end": 13084640
+    },
+    {
+      "start": 13098016,
+      "end": 13111776
+    },
+    {
+      "start": 13151264,
+      "end": 13178336
+    },
+    {
+      "start": 13188640,
+      "end": 13196768
+    },
+    {
+      "start": 13200416,
+      "end": 13215200
+    },
+    {
+      "start": 13223456,
+      "end": 13243872
+    },
+    {
+      "start": 13248544,
+      "end": 13283808
+    },
+    {
+      "start": 13286432,
+      "end": 13352416
+    },
+    {
+      "start": 13355552,
+      "end": 13380576
+    },
+    {
+      "start": 13384736,
+      "end": 13465056
+    },
+    {
+      "start": 13483552,
+      "end": 13491680
+    },
+    {
+      "start": 13495328,
+      "end": 13517792
+    },
+    {
+      "start": 13556768,
+      "end": 13614048
+    },
+    {
+      "start": 13617696,
+      "end": 13626848
+    },
+    {
+      "start": 13642272,
+      "end": 13655008
+    },
+    {
+      "start": 13714976,
+      "end": 13731808
+    },
+    {
+      "start": 13744160,
+      "end": 13765088
+    },
+    {
+      "start": 13795360,
+      "end": 13808096
+    },
+    {
+      "start": 13811232,
+      "end": 14017504
+    },
+    {
+      "start": 14190112,
+      "end": 14226912
+    },
+    {
+      "start": 14231072,
+      "end": 14255584
+    },
+    {
+      "start": 14261280,
+      "end": 14340576
+    },
+    {
+      "start": 14346272,
+      "end": 14393824
+    },
+    {
+      "start": 14395936,
+      "end": 14418912
+    },
+    {
+      "start": 14422560,
+      "end": 14469088
+    },
+    {
+      "start": 14474272,
+      "end": 14561248
+    },
+    {
+      "start": 14563360,
+      "end": 14713824
+    },
+    {
+      "start": 14716448,
+      "end": 14765024
+    },
+    {
+      "start": 14783008,
+      "end": 14792672
+    },
+    {
+      "start": 14795296,
+      "end": 14887392
+    },
+    {
+      "start": 14889504,
+      "end": 14950368
+    },
+    {
+      "start": 14958112,
+      "end": 14997984
+    },
+    {
+      "start": 15001120,
+      "end": 15046624
+    },
+    {
+      "start": 15049760,
+      "end": 15115232
+    },
+    {
+      "start": 15124000,
+      "end": 15195104
+    },
+    {
+      "start": 15219232,
+      "end": 15243744
+    },
+    {
+      "start": 15245344,
+      "end": 15320032
+    },
+    {
+      "start": 15324704,
+      "end": 15339488
+    },
+    {
+      "start": 15350816,
+      "end": 15375840
+    },
+    {
+      "start": 15385120,
+      "end": 15405024
+    },
+    {
+      "start": 15417376,
+      "end": 15438816
+    },
+    {
+      "start": 15443488,
+      "end": 15515616
+    },
+    {
+      "start": 15522848,
+      "end": 15547360
+    },
+    {
+      "start": 15561248,
+      "end": 15593440
+    },
+    {
+      "start": 15595552,
+      "end": 15607264
+    },
+    {
+      "start": 15609888,
+      "end": 15633888
+    },
+    {
+      "start": 15640096,
+      "end": 15726048
+    },
+    {
+      "start": 15731232,
+      "end": 15740896
+    },
+    {
+      "start": 15747616,
+      "end": 15757280
+    },
+    {
+      "start": 15761952,
+      "end": 15803360
+    },
+    {
+      "start": 15804960,
+      "end": 15865312
+    },
+    {
+      "start": 15868960,
+      "end": 15886304
+    },
+    {
+      "start": 15911456,
+      "end": 15945184
+    },
+    {
+      "start": 15951904,
+      "end": 15963616
+    },
+    {
+      "start": 15975968,
+      "end": 15989216
+    },
+    {
+      "start": 15992352,
+      "end": 16023520
+    },
+    {
+      "start": 16030240,
+      "end": 16113632
+    },
+    {
+      "start": 16130080,
+      "end": 16195040
+    },
+    {
+      "start": 16202272,
+      "end": 16244192
+    },
+    {
+      "start": 16247840,
+      "end": 16338912
+    },
+    {
+      "start": 16342048,
+      "end": 16348640
+    },
+    {
+      "start": 16362016,
+      "end": 16374240
+    },
+    {
+      "start": 16375840,
+      "end": 16407520
+    },
+    {
+      "start": 16434208,
+      "end": 16474080
+    },
+    {
+      "start": 16490528,
+      "end": 16518112
+    },
+    {
+      "start": 16520736,
+      "end": 16528864
+    },
+    {
+      "start": 16532000,
+      "end": 16582112
+    },
+    {
+      "start": 16594464,
+      "end": 16613344
+    },
+    {
+      "start": 16635936,
+      "end": 16675808
+    },
+    {
+      "start": 16761888,
+      "end": 16790496
+    },
+    {
+      "start": 16793632,
+      "end": 16836576
+    },
+    {
+      "start": 16838176,
+      "end": 16861152
+    },
+    {
+      "start": 16862752,
+      "end": 16905696
+    },
+    {
+      "start": 16912416,
+      "end": 16917472
+    },
+    {
+      "start": 16919584,
+      "end": 16953824
+    },
+    {
+      "start": 16962592,
+      "end": 16976864
+    },
+    {
+      "start": 17011232,
+      "end": 17020896
+    },
+    {
+      "start": 17025568,
+      "end": 17058272
+    },
+    {
+      "start": 17075744,
+      "end": 17088992
+    },
+    {
+      "start": 17152032,
+      "end": 17204192
+    },
+    {
+      "start": 17206304,
+      "end": 17313760
+    },
+    {
+      "start": 17319968,
+      "end": 17351648
+    },
+    {
+      "start": 17372192,
+      "end": 17403872
+    },
+    {
+      "start": 17409568,
+      "end": 17440224
+    },
+    {
+      "start": 17450528,
+      "end": 17461216
+    },
+    {
+      "start": 17554464,
+      "end": 17570272
+    },
+    {
+      "start": 17591328,
+      "end": 17613280
+    },
+    {
+      "start": 17665568,
+      "end": 17673696
+    },
+    {
+      "start": 17688096,
+      "end": 17711072
+    },
+    {
+      "start": 17799200,
+      "end": 17806304
+    },
+    {
+      "start": 17907744,
+      "end": 17954784
+    },
+    {
+      "start": 17958944,
+      "end": 17969632
+    },
+    {
+      "start": 17972768,
+      "end": 17994720
+    },
+    {
+      "start": 17999904,
+      "end": 18037216
+    },
+    {
+      "start": 18048544,
+      "end": 18066400
+    },
+    {
+      "start": 18076704,
+      "end": 18095584
+    },
+    {
+      "start": 18105376,
+      "end": 18131424
+    },
+    {
+      "start": 18136096,
+      "end": 18181600
+    },
+    {
+      "start": 18184224,
+      "end": 18217440
+    },
+    {
+      "start": 18223136,
+      "end": 18359776
+    },
+    {
+      "start": 18379808,
+      "end": 18495968
+    },
+    {
+      "start": 18502688,
+      "end": 18509280
+    },
+    {
+      "start": 18522656,
+      "end": 18539488
+    },
+    {
+      "start": 18558496,
+      "end": 18571744
+    },
+    {
+      "start": 18595360,
+      "end": 18608608
+    },
+    {
+      "start": 18618912,
+      "end": 18645472
+    },
+    {
+      "start": 18647584,
+      "end": 18701792
+    },
+    {
+      "start": 18709536,
+      "end": 18735072
+    },
+    {
+      "start": 18767392,
+      "end": 18824160
+    },
+    {
+      "start": 18829344,
+      "end": 18839008
+    },
+    {
+      "start": 18845728,
+      "end": 18882528
+    },
+    {
+      "start": 18885152,
+      "end": 19143136
+    },
+    {
+      "start": 19146784,
+      "end": 19200000
+    }
+  ],
+  "vad_probability_count": 37500,
+  "vad_speech_seconds": 682.486,
+  "windows": [
+    {
+      "start_sample": 0,
+      "end_sample": 80000,
+      "source_start": 1200.0,
+      "source_end": 1205.0,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 40000,
+      "end_sample": 120000,
+      "source_start": 1202.5,
+      "source_end": 1207.5,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 80000,
+      "end_sample": 160000,
+      "source_start": 1205.0,
+      "source_end": 1210.0,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 120000,
+      "end_sample": 200000,
+      "source_start": 1207.5,
+      "source_end": 1212.5,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 160000,
+      "end_sample": 240000,
+      "source_start": 1210.0,
+      "source_end": 1215.0,
+      "vad_speech_seconds": 0.342,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 200000,
+      "end_sample": 280000,
+      "source_start": 1212.5,
+      "source_end": 1217.5,
+      "vad_speech_seconds": 0.668,
+      "label": "unlabelled",
+      "cosine": 0.4621206223964691
+    },
+    {
+      "start_sample": 240000,
+      "end_sample": 320000,
+      "source_start": 1215.0,
+      "source_end": 1220.0,
+      "vad_speech_seconds": 1.186,
+      "label": "unlabelled",
+      "cosine": 0.10265443474054337
+    },
+    {
+      "start_sample": 280000,
+      "end_sample": 360000,
+      "source_start": 1217.5,
+      "source_end": 1222.5,
+      "vad_speech_seconds": 1.784,
+      "label": "unlabelled",
+      "cosine": 0.08366772532463074
+    },
+    {
+      "start_sample": 320000,
+      "end_sample": 400000,
+      "source_start": 1220.0,
+      "source_end": 1225.0,
+      "vad_speech_seconds": 0.924,
+      "label": "unlabelled",
+      "cosine": 0.15038667619228363
+    },
+    {
+      "start_sample": 360000,
+      "end_sample": 440000,
+      "source_start": 1222.5,
+      "source_end": 1227.5,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 400000,
+      "end_sample": 480000,
+      "source_start": 1225.0,
+      "source_end": 1230.0,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 440000,
+      "end_sample": 520000,
+      "source_start": 1227.5,
+      "source_end": 1232.5,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 480000,
+      "end_sample": 560000,
+      "source_start": 1230.0,
+      "source_end": 1235.0,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 520000,
+      "end_sample": 600000,
+      "source_start": 1232.5,
+      "source_end": 1237.5,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 560000,
+      "end_sample": 640000,
+      "source_start": 1235.0,
+      "source_end": 1240.0,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 600000,
+      "end_sample": 680000,
+      "source_start": 1237.5,
+      "source_end": 1242.5,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 640000,
+      "end_sample": 720000,
+      "source_start": 1240.0,
+      "source_end": 1245.0,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 680000,
+      "end_sample": 760000,
+      "source_start": 1242.5,
+      "source_end": 1247.5,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 720000,
+      "end_sample": 800000,
+      "source_start": 1245.0,
+      "source_end": 1250.0,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 760000,
+      "end_sample": 840000,
+      "source_start": 1247.5,
+      "source_end": 1252.5,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 800000,
+      "end_sample": 880000,
+      "source_start": 1250.0,
+      "source_end": 1255.0,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 840000,
+      "end_sample": 920000,
+      "source_start": 1252.5,
+      "source_end": 1257.5,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 880000,
+      "end_sample": 960000,
+      "source_start": 1255.0,
+      "source_end": 1260.0,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 920000,
+      "end_sample": 1000000,
+      "source_start": 1257.5,
+      "source_end": 1262.5,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 960000,
+      "end_sample": 1040000,
+      "source_start": 1260.0,
+      "source_end": 1265.0,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 1000000,
+      "end_sample": 1080000,
+      "source_start": 1262.5,
+      "source_end": 1267.5,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 1040000,
+      "end_sample": 1120000,
+      "source_start": 1265.0,
+      "source_end": 1270.0,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 1080000,
+      "end_sample": 1160000,
+      "source_start": 1267.5,
+      "source_end": 1272.5,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 1120000,
+      "end_sample": 1200000,
+      "source_start": 1270.0,
+      "source_end": 1275.0,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 1160000,
+      "end_sample": 1240000,
+      "source_start": 1272.5,
+      "source_end": 1277.5,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 1200000,
+      "end_sample": 1280000,
+      "source_start": 1275.0,
+      "source_end": 1280.0,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 1240000,
+      "end_sample": 1320000,
+      "source_start": 1277.5,
+      "source_end": 1282.5,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 1280000,
+      "end_sample": 1360000,
+      "source_start": 1280.0,
+      "source_end": 1285.0,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 1320000,
+      "end_sample": 1400000,
+      "source_start": 1282.5,
+      "source_end": 1287.5,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 1360000,
+      "end_sample": 1440000,
+      "source_start": 1285.0,
+      "source_end": 1290.0,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 1400000,
+      "end_sample": 1480000,
+      "source_start": 1287.5,
+      "source_end": 1292.5,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 1440000,
+      "end_sample": 1520000,
+      "source_start": 1290.0,
+      "source_end": 1295.0,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 1480000,
+      "end_sample": 1560000,
+      "source_start": 1292.5,
+      "source_end": 1297.5,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 1520000,
+      "end_sample": 1600000,
+      "source_start": 1295.0,
+      "source_end": 1300.0,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 1560000,
+      "end_sample": 1640000,
+      "source_start": 1297.5,
+      "source_end": 1302.5,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 1600000,
+      "end_sample": 1680000,
+      "source_start": 1300.0,
+      "source_end": 1305.0,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 1640000,
+      "end_sample": 1720000,
+      "source_start": 1302.5,
+      "source_end": 1307.5,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 1680000,
+      "end_sample": 1760000,
+      "source_start": 1305.0,
+      "source_end": 1310.0,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 1720000,
+      "end_sample": 1800000,
+      "source_start": 1307.5,
+      "source_end": 1312.5,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 1760000,
+      "end_sample": 1840000,
+      "source_start": 1310.0,
+      "source_end": 1315.0,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 1800000,
+      "end_sample": 1880000,
+      "source_start": 1312.5,
+      "source_end": 1317.5,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 1840000,
+      "end_sample": 1920000,
+      "source_start": 1315.0,
+      "source_end": 1320.0,
+      "vad_speech_seconds": 0.062,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 1880000,
+      "end_sample": 1960000,
+      "source_start": 1317.5,
+      "source_end": 1322.5,
+      "vad_speech_seconds": 1.758,
+      "label": "unlabelled",
+      "cosine": 0.07320000976324081
+    },
+    {
+      "start_sample": 1920000,
+      "end_sample": 2000000,
+      "source_start": 1320.0,
+      "source_end": 1325.0,
+      "vad_speech_seconds": 4.196,
+      "label": "unlabelled",
+      "cosine": 0.07273152470588684
+    },
+    {
+      "start_sample": 1960000,
+      "end_sample": 2040000,
+      "source_start": 1322.5,
+      "source_end": 1327.5,
+      "vad_speech_seconds": 3.514,
+      "label": "unlabelled",
+      "cosine": 0.1129029244184494
+    },
+    {
+      "start_sample": 2000000,
+      "end_sample": 2080000,
+      "source_start": 1325.0,
+      "source_end": 1330.0,
+      "vad_speech_seconds": 1.014,
+      "label": "unlabelled",
+      "cosine": 0.6304986476898193
+    },
+    {
+      "start_sample": 2040000,
+      "end_sample": 2120000,
+      "source_start": 1327.5,
+      "source_end": 1332.5,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 2080000,
+      "end_sample": 2160000,
+      "source_start": 1330.0,
+      "source_end": 1335.0,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 2120000,
+      "end_sample": 2200000,
+      "source_start": 1332.5,
+      "source_end": 1337.5,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 2160000,
+      "end_sample": 2240000,
+      "source_start": 1335.0,
+      "source_end": 1340.0,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 2200000,
+      "end_sample": 2280000,
+      "source_start": 1337.5,
+      "source_end": 1342.5,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 2240000,
+      "end_sample": 2320000,
+      "source_start": 1340.0,
+      "source_end": 1345.0,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 2280000,
+      "end_sample": 2360000,
+      "source_start": 1342.5,
+      "source_end": 1347.5,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 2320000,
+      "end_sample": 2400000,
+      "source_start": 1345.0,
+      "source_end": 1350.0,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 2360000,
+      "end_sample": 2440000,
+      "source_start": 1347.5,
+      "source_end": 1352.5,
+      "vad_speech_seconds": 0.572,
+      "label": "unlabelled",
+      "cosine": 0.21310073137283325
+    },
+    {
+      "start_sample": 2400000,
+      "end_sample": 2480000,
+      "source_start": 1350.0,
+      "source_end": 1355.0,
+      "vad_speech_seconds": 2.314,
+      "label": "unlabelled",
+      "cosine": 0.16544529795646667
+    },
+    {
+      "start_sample": 2440000,
+      "end_sample": 2520000,
+      "source_start": 1352.5,
+      "source_end": 1357.5,
+      "vad_speech_seconds": 3.024,
+      "label": "unlabelled",
+      "cosine": 0.11828628182411194
+    },
+    {
+      "start_sample": 2480000,
+      "end_sample": 2560000,
+      "source_start": 1355.0,
+      "source_end": 1360.0,
+      "vad_speech_seconds": 3.168,
+      "label": "unlabelled",
+      "cosine": 0.11434520035982132
+    },
+    {
+      "start_sample": 2520000,
+      "end_sample": 2600000,
+      "source_start": 1357.5,
+      "source_end": 1362.5,
+      "vad_speech_seconds": 3.774,
+      "label": "unlabelled",
+      "cosine": 0.2215876430273056
+    },
+    {
+      "start_sample": 2560000,
+      "end_sample": 2640000,
+      "source_start": 1360.0,
+      "source_end": 1365.0,
+      "vad_speech_seconds": 3.776,
+      "label": "unlabelled",
+      "cosine": 0.37375766038894653
+    },
+    {
+      "start_sample": 2600000,
+      "end_sample": 2680000,
+      "source_start": 1362.5,
+      "source_end": 1367.5,
+      "vad_speech_seconds": 4.388,
+      "label": "unlabelled",
+      "cosine": 0.10019133985042572
+    },
+    {
+      "start_sample": 2640000,
+      "end_sample": 2720000,
+      "source_start": 1365.0,
+      "source_end": 1370.0,
+      "vad_speech_seconds": 3.78,
+      "label": "unlabelled",
+      "cosine": 0.10050354897975922
+    },
+    {
+      "start_sample": 2680000,
+      "end_sample": 2760000,
+      "source_start": 1367.5,
+      "source_end": 1372.5,
+      "vad_speech_seconds": 2.57,
+      "label": "unlabelled",
+      "cosine": 0.15306271612644196
+    },
+    {
+      "start_sample": 2720000,
+      "end_sample": 2800000,
+      "source_start": 1370.0,
+      "source_end": 1375.0,
+      "vad_speech_seconds": 2.14,
+      "label": "unlabelled",
+      "cosine": 0.1699237823486328
+    },
+    {
+      "start_sample": 2760000,
+      "end_sample": 2840000,
+      "source_start": 1372.5,
+      "source_end": 1377.5,
+      "vad_speech_seconds": 2.194,
+      "label": "unlabelled",
+      "cosine": 0.5293264389038086
+    },
+    {
+      "start_sample": 2800000,
+      "end_sample": 2880000,
+      "source_start": 1375.0,
+      "source_end": 1380.0,
+      "vad_speech_seconds": 3.266,
+      "label": "unlabelled",
+      "cosine": 0.4135175943374634
+    },
+    {
+      "start_sample": 2840000,
+      "end_sample": 2920000,
+      "source_start": 1377.5,
+      "source_end": 1382.5,
+      "vad_speech_seconds": 3.812,
+      "label": "unlabelled",
+      "cosine": 0.32271817326545715
+    },
+    {
+      "start_sample": 2880000,
+      "end_sample": 2960000,
+      "source_start": 1380.0,
+      "source_end": 1385.0,
+      "vad_speech_seconds": 2.594,
+      "label": "unlabelled",
+      "cosine": 0.0379558801651001
+    },
+    {
+      "start_sample": 2920000,
+      "end_sample": 3000000,
+      "source_start": 1382.5,
+      "source_end": 1387.5,
+      "vad_speech_seconds": 2.166,
+      "label": "unlabelled",
+      "cosine": 0.02481444552540779
+    },
+    {
+      "start_sample": 2960000,
+      "end_sample": 3040000,
+      "source_start": 1385.0,
+      "source_end": 1390.0,
+      "vad_speech_seconds": 3.118,
+      "label": "unlabelled",
+      "cosine": 0.15684980154037476
+    },
+    {
+      "start_sample": 3000000,
+      "end_sample": 3080000,
+      "source_start": 1387.5,
+      "source_end": 1392.5,
+      "vad_speech_seconds": 1.656,
+      "label": "unlabelled",
+      "cosine": 0.12059371173381805
+    },
+    {
+      "start_sample": 3040000,
+      "end_sample": 3120000,
+      "source_start": 1390.0,
+      "source_end": 1395.0,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 3080000,
+      "end_sample": 3160000,
+      "source_start": 1392.5,
+      "source_end": 1397.5,
+      "vad_speech_seconds": 1.562,
+      "label": "unlabelled",
+      "cosine": 0.2414063960313797
+    },
+    {
+      "start_sample": 3120000,
+      "end_sample": 3200000,
+      "source_start": 1395.0,
+      "source_end": 1400.0,
+      "vad_speech_seconds": 3.832,
+      "label": "unlabelled",
+      "cosine": 0.49019289016723633
+    },
+    {
+      "start_sample": 3160000,
+      "end_sample": 3240000,
+      "source_start": 1397.5,
+      "source_end": 1402.5,
+      "vad_speech_seconds": 3.744,
+      "label": "unlabelled",
+      "cosine": 0.625342845916748
+    },
+    {
+      "start_sample": 3200000,
+      "end_sample": 3280000,
+      "source_start": 1400.0,
+      "source_end": 1405.0,
+      "vad_speech_seconds": 3.974,
+      "label": "unlabelled",
+      "cosine": 0.5881316661834717
+    },
+    {
+      "start_sample": 3240000,
+      "end_sample": 3320000,
+      "source_start": 1402.5,
+      "source_end": 1407.5,
+      "vad_speech_seconds": 4.676,
+      "label": "unlabelled",
+      "cosine": 0.6006555557250977
+    },
+    {
+      "start_sample": 3280000,
+      "end_sample": 3360000,
+      "source_start": 1405.0,
+      "source_end": 1410.0,
+      "vad_speech_seconds": 4.352,
+      "label": "unlabelled",
+      "cosine": 0.5308580994606018
+    },
+    {
+      "start_sample": 3320000,
+      "end_sample": 3400000,
+      "source_start": 1407.5,
+      "source_end": 1412.5,
+      "vad_speech_seconds": 3.242,
+      "label": "unlabelled",
+      "cosine": 0.5765470862388611
+    },
+    {
+      "start_sample": 3360000,
+      "end_sample": 3440000,
+      "source_start": 1410.0,
+      "source_end": 1415.0,
+      "vad_speech_seconds": 1.51,
+      "label": "unlabelled",
+      "cosine": 0.4403019845485687
+    },
+    {
+      "start_sample": 3400000,
+      "end_sample": 3480000,
+      "source_start": 1412.5,
+      "source_end": 1417.5,
+      "vad_speech_seconds": 0.444,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 3440000,
+      "end_sample": 3520000,
+      "source_start": 1415.0,
+      "source_end": 1420.0,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 3480000,
+      "end_sample": 3560000,
+      "source_start": 1417.5,
+      "source_end": 1422.5,
+      "vad_speech_seconds": 0.766,
+      "label": "unlabelled",
+      "cosine": 0.10197459161281586
+    },
+    {
+      "start_sample": 3520000,
+      "end_sample": 3600000,
+      "source_start": 1420.0,
+      "source_end": 1425.0,
+      "vad_speech_seconds": 2.132,
+      "label": "unlabelled",
+      "cosine": 0.00565703772008419
+    },
+    {
+      "start_sample": 3560000,
+      "end_sample": 3640000,
+      "source_start": 1422.5,
+      "source_end": 1427.5,
+      "vad_speech_seconds": 3.488,
+      "label": "unlabelled",
+      "cosine": 0.025697901844978333
+    },
+    {
+      "start_sample": 3600000,
+      "end_sample": 3680000,
+      "source_start": 1425.0,
+      "source_end": 1430.0,
+      "vad_speech_seconds": 4.33,
+      "label": "unlabelled",
+      "cosine": 0.04942164942622185
+    },
+    {
+      "start_sample": 3640000,
+      "end_sample": 3720000,
+      "source_start": 1427.5,
+      "source_end": 1432.5,
+      "vad_speech_seconds": 3.562,
+      "label": "unlabelled",
+      "cosine": 0.0685618445277214
+    },
+    {
+      "start_sample": 3680000,
+      "end_sample": 3760000,
+      "source_start": 1430.0,
+      "source_end": 1435.0,
+      "vad_speech_seconds": 2.496,
+      "label": "unlabelled",
+      "cosine": 0.10325445979833603
+    },
+    {
+      "start_sample": 3720000,
+      "end_sample": 3800000,
+      "source_start": 1432.5,
+      "source_end": 1437.5,
+      "vad_speech_seconds": 2.3,
+      "label": "unlabelled",
+      "cosine": 0.30794069170951843
+    },
+    {
+      "start_sample": 3760000,
+      "end_sample": 3840000,
+      "source_start": 1435.0,
+      "source_end": 1440.0,
+      "vad_speech_seconds": 1.476,
+      "label": "unlabelled",
+      "cosine": 0.3533167839050293
+    },
+    {
+      "start_sample": 3800000,
+      "end_sample": 3880000,
+      "source_start": 1437.5,
+      "source_end": 1442.5,
+      "vad_speech_seconds": 1.756,
+      "label": "unlabelled",
+      "cosine": 0.009480275213718414
+    },
+    {
+      "start_sample": 3840000,
+      "end_sample": 3920000,
+      "source_start": 1440.0,
+      "source_end": 1445.0,
+      "vad_speech_seconds": 1.438,
+      "label": "unlabelled",
+      "cosine": 0.21121962368488312
+    },
+    {
+      "start_sample": 3880000,
+      "end_sample": 3960000,
+      "source_start": 1442.5,
+      "source_end": 1447.5,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 3920000,
+      "end_sample": 4000000,
+      "source_start": 1445.0,
+      "source_end": 1450.0,
+      "vad_speech_seconds": 0.54,
+      "label": "unlabelled",
+      "cosine": 0.23834136128425598
+    },
+    {
+      "start_sample": 3960000,
+      "end_sample": 4040000,
+      "source_start": 1447.5,
+      "source_end": 1452.5,
+      "vad_speech_seconds": 2.36,
+      "label": "unlabelled",
+      "cosine": 0.3039394021034241
+    },
+    {
+      "start_sample": 4000000,
+      "end_sample": 4080000,
+      "source_start": 1450.0,
+      "source_end": 1455.0,
+      "vad_speech_seconds": 3.118,
+      "label": "unlabelled",
+      "cosine": 0.3958165645599365
+    },
+    {
+      "start_sample": 4040000,
+      "end_sample": 4120000,
+      "source_start": 1452.5,
+      "source_end": 1457.5,
+      "vad_speech_seconds": 2.516,
+      "label": "unlabelled",
+      "cosine": 0.22258426249027252
+    },
+    {
+      "start_sample": 4080000,
+      "end_sample": 4160000,
+      "source_start": 1455.0,
+      "source_end": 1460.0,
+      "vad_speech_seconds": 1.568,
+      "label": "unlabelled",
+      "cosine": 0.15540286898612976
+    },
+    {
+      "start_sample": 4120000,
+      "end_sample": 4200000,
+      "source_start": 1457.5,
+      "source_end": 1462.5,
+      "vad_speech_seconds": 1.79,
+      "label": "unlabelled",
+      "cosine": 0.22108832001686096
+    },
+    {
+      "start_sample": 4160000,
+      "end_sample": 4240000,
+      "source_start": 1460.0,
+      "source_end": 1465.0,
+      "vad_speech_seconds": 1.952,
+      "label": "unlabelled",
+      "cosine": 0.38260576128959656
+    },
+    {
+      "start_sample": 4200000,
+      "end_sample": 4280000,
+      "source_start": 1462.5,
+      "source_end": 1467.5,
+      "vad_speech_seconds": 1.664,
+      "label": "unlabelled",
+      "cosine": 0.1662222445011139
+    },
+    {
+      "start_sample": 4240000,
+      "end_sample": 4320000,
+      "source_start": 1465.0,
+      "source_end": 1470.0,
+      "vad_speech_seconds": 2.066,
+      "label": "unlabelled",
+      "cosine": 0.2568071484565735
+    },
+    {
+      "start_sample": 4280000,
+      "end_sample": 4360000,
+      "source_start": 1467.5,
+      "source_end": 1472.5,
+      "vad_speech_seconds": 1.678,
+      "label": "unlabelled",
+      "cosine": 0.32045817375183105
+    },
+    {
+      "start_sample": 4320000,
+      "end_sample": 4400000,
+      "source_start": 1470.0,
+      "source_end": 1475.0,
+      "vad_speech_seconds": 1.33,
+      "label": "unlabelled",
+      "cosine": 0.15524578094482422
+    },
+    {
+      "start_sample": 4360000,
+      "end_sample": 4440000,
+      "source_start": 1472.5,
+      "source_end": 1477.5,
+      "vad_speech_seconds": 2.296,
+      "label": "unlabelled",
+      "cosine": 0.011013447307050228
+    },
+    {
+      "start_sample": 4400000,
+      "end_sample": 4480000,
+      "source_start": 1475.0,
+      "source_end": 1480.0,
+      "vad_speech_seconds": 1.73,
+      "label": "unlabelled",
+      "cosine": 0.11036361753940582
+    },
+    {
+      "start_sample": 4440000,
+      "end_sample": 4520000,
+      "source_start": 1477.5,
+      "source_end": 1482.5,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 4480000,
+      "end_sample": 4560000,
+      "source_start": 1480.0,
+      "source_end": 1485.0,
+      "vad_speech_seconds": 0.102,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 4520000,
+      "end_sample": 4600000,
+      "source_start": 1482.5,
+      "source_end": 1487.5,
+      "vad_speech_seconds": 1.016,
+      "label": "unlabelled",
+      "cosine": 0.4007880389690399
+    },
+    {
+      "start_sample": 4560000,
+      "end_sample": 4640000,
+      "source_start": 1485.0,
+      "source_end": 1490.0,
+      "vad_speech_seconds": 1.646,
+      "label": "unlabelled",
+      "cosine": 0.3044433295726776
+    },
+    {
+      "start_sample": 4600000,
+      "end_sample": 4680000,
+      "source_start": 1487.5,
+      "source_end": 1492.5,
+      "vad_speech_seconds": 1.87,
+      "label": "unlabelled",
+      "cosine": 0.4103335738182068
+    },
+    {
+      "start_sample": 4640000,
+      "end_sample": 4720000,
+      "source_start": 1490.0,
+      "source_end": 1495.0,
+      "vad_speech_seconds": 3.638,
+      "label": "unlabelled",
+      "cosine": 0.5810176134109497
+    },
+    {
+      "start_sample": 4680000,
+      "end_sample": 4760000,
+      "source_start": 1492.5,
+      "source_end": 1497.5,
+      "vad_speech_seconds": 3.684,
+      "label": "unlabelled",
+      "cosine": 0.5937123894691467
+    },
+    {
+      "start_sample": 4720000,
+      "end_sample": 4800000,
+      "source_start": 1495.0,
+      "source_end": 1500.0,
+      "vad_speech_seconds": 1.41,
+      "label": "unlabelled",
+      "cosine": 0.2868126332759857
+    },
+    {
+      "start_sample": 4760000,
+      "end_sample": 4840000,
+      "source_start": 1497.5,
+      "source_end": 1502.5,
+      "vad_speech_seconds": 1.792,
+      "label": "unlabelled",
+      "cosine": 0.14541089534759521
+    },
+    {
+      "start_sample": 4800000,
+      "end_sample": 4880000,
+      "source_start": 1500.0,
+      "source_end": 1505.0,
+      "vad_speech_seconds": 2.804,
+      "label": "unlabelled",
+      "cosine": 0.23076419532299042
+    },
+    {
+      "start_sample": 4840000,
+      "end_sample": 4920000,
+      "source_start": 1502.5,
+      "source_end": 1507.5,
+      "vad_speech_seconds": 2.834,
+      "label": "unlabelled",
+      "cosine": 0.23416900634765625
+    },
+    {
+      "start_sample": 4880000,
+      "end_sample": 4960000,
+      "source_start": 1505.0,
+      "source_end": 1510.0,
+      "vad_speech_seconds": 2.168,
+      "label": "unlabelled",
+      "cosine": 0.17259615659713745
+    },
+    {
+      "start_sample": 4920000,
+      "end_sample": 5000000,
+      "source_start": 1507.5,
+      "source_end": 1512.5,
+      "vad_speech_seconds": 1.432,
+      "label": "unlabelled",
+      "cosine": 0.313190221786499
+    },
+    {
+      "start_sample": 4960000,
+      "end_sample": 5040000,
+      "source_start": 1510.0,
+      "source_end": 1515.0,
+      "vad_speech_seconds": 2.766,
+      "label": "unlabelled",
+      "cosine": 0.5284374952316284
+    },
+    {
+      "start_sample": 5000000,
+      "end_sample": 5080000,
+      "source_start": 1512.5,
+      "source_end": 1517.5,
+      "vad_speech_seconds": 2.548,
+      "label": "unlabelled",
+      "cosine": 0.47159484028816223
+    },
+    {
+      "start_sample": 5040000,
+      "end_sample": 5120000,
+      "source_start": 1515.0,
+      "source_end": 1520.0,
+      "vad_speech_seconds": 2.492,
+      "label": "unlabelled",
+      "cosine": 0.4746771454811096
+    },
+    {
+      "start_sample": 5080000,
+      "end_sample": 5160000,
+      "source_start": 1517.5,
+      "source_end": 1522.5,
+      "vad_speech_seconds": 3.322,
+      "label": "unlabelled",
+      "cosine": 0.5347689986228943
+    },
+    {
+      "start_sample": 5120000,
+      "end_sample": 5200000,
+      "source_start": 1520.0,
+      "source_end": 1525.0,
+      "vad_speech_seconds": 3.328,
+      "label": "unlabelled",
+      "cosine": 0.5495409965515137
+    },
+    {
+      "start_sample": 5160000,
+      "end_sample": 5240000,
+      "source_start": 1522.5,
+      "source_end": 1527.5,
+      "vad_speech_seconds": 4.356,
+      "label": "unlabelled",
+      "cosine": 0.4984128773212433
+    },
+    {
+      "start_sample": 5200000,
+      "end_sample": 5280000,
+      "source_start": 1525.0,
+      "source_end": 1530.0,
+      "vad_speech_seconds": 2.614,
+      "label": "unlabelled",
+      "cosine": 0.4651012420654297
+    },
+    {
+      "start_sample": 5240000,
+      "end_sample": 5320000,
+      "source_start": 1527.5,
+      "source_end": 1532.5,
+      "vad_speech_seconds": 1.828,
+      "label": "unlabelled",
+      "cosine": 0.5386478304862976
+    },
+    {
+      "start_sample": 5280000,
+      "end_sample": 5360000,
+      "source_start": 1530.0,
+      "source_end": 1535.0,
+      "vad_speech_seconds": 3.762,
+      "label": "unlabelled",
+      "cosine": 0.5995137691497803
+    },
+    {
+      "start_sample": 5320000,
+      "end_sample": 5400000,
+      "source_start": 1532.5,
+      "source_end": 1537.5,
+      "vad_speech_seconds": 2.182,
+      "label": "unlabelled",
+      "cosine": 0.4558658301830292
+    },
+    {
+      "start_sample": 5360000,
+      "end_sample": 5440000,
+      "source_start": 1535.0,
+      "source_end": 1540.0,
+      "vad_speech_seconds": 0.134,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 5400000,
+      "end_sample": 5480000,
+      "source_start": 1537.5,
+      "source_end": 1542.5,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 5440000,
+      "end_sample": 5520000,
+      "source_start": 1540.0,
+      "source_end": 1545.0,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 5480000,
+      "end_sample": 5560000,
+      "source_start": 1542.5,
+      "source_end": 1547.5,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 5520000,
+      "end_sample": 5600000,
+      "source_start": 1545.0,
+      "source_end": 1550.0,
+      "vad_speech_seconds": 0.728,
+      "label": "unlabelled",
+      "cosine": 0.5152338147163391
+    },
+    {
+      "start_sample": 5560000,
+      "end_sample": 5640000,
+      "source_start": 1547.5,
+      "source_end": 1552.5,
+      "vad_speech_seconds": 1.904,
+      "label": "unlabelled",
+      "cosine": 0.5303813815116882
+    },
+    {
+      "start_sample": 5600000,
+      "end_sample": 5680000,
+      "source_start": 1550.0,
+      "source_end": 1555.0,
+      "vad_speech_seconds": 1.78,
+      "label": "unlabelled",
+      "cosine": 0.43689149618148804
+    },
+    {
+      "start_sample": 5640000,
+      "end_sample": 5720000,
+      "source_start": 1552.5,
+      "source_end": 1557.5,
+      "vad_speech_seconds": 1.624,
+      "label": "unlabelled",
+      "cosine": 0.15164558589458466
+    },
+    {
+      "start_sample": 5680000,
+      "end_sample": 5760000,
+      "source_start": 1555.0,
+      "source_end": 1560.0,
+      "vad_speech_seconds": 3.386,
+      "label": "unlabelled",
+      "cosine": 0.2635709345340729
+    },
+    {
+      "start_sample": 5720000,
+      "end_sample": 5800000,
+      "source_start": 1557.5,
+      "source_end": 1562.5,
+      "vad_speech_seconds": 4.866,
+      "label": "unlabelled",
+      "cosine": 0.2992134392261505
+    },
+    {
+      "start_sample": 5760000,
+      "end_sample": 5840000,
+      "source_start": 1560.0,
+      "source_end": 1565.0,
+      "vad_speech_seconds": 4.548,
+      "label": "unlabelled",
+      "cosine": 0.25774410367012024
+    },
+    {
+      "start_sample": 5800000,
+      "end_sample": 5880000,
+      "source_start": 1562.5,
+      "source_end": 1567.5,
+      "vad_speech_seconds": 3.922,
+      "label": "unlabelled",
+      "cosine": 0.2767719626426697
+    },
+    {
+      "start_sample": 5840000,
+      "end_sample": 5920000,
+      "source_start": 1565.0,
+      "source_end": 1570.0,
+      "vad_speech_seconds": 3.996,
+      "label": "unlabelled",
+      "cosine": 0.24677877128124237
+    },
+    {
+      "start_sample": 5880000,
+      "end_sample": 5960000,
+      "source_start": 1567.5,
+      "source_end": 1572.5,
+      "vad_speech_seconds": 4.622,
+      "label": "unlabelled",
+      "cosine": 0.15728938579559326
+    },
+    {
+      "start_sample": 5920000,
+      "end_sample": 6000000,
+      "source_start": 1570.0,
+      "source_end": 1575.0,
+      "vad_speech_seconds": 5.0,
+      "label": "unlabelled",
+      "cosine": 0.19022294878959656
+    },
+    {
+      "start_sample": 5960000,
+      "end_sample": 6040000,
+      "source_start": 1572.5,
+      "source_end": 1577.5,
+      "vad_speech_seconds": 3.754,
+      "label": "unlabelled",
+      "cosine": 0.30608946084976196
+    },
+    {
+      "start_sample": 6000000,
+      "end_sample": 6080000,
+      "source_start": 1575.0,
+      "source_end": 1580.0,
+      "vad_speech_seconds": 2.916,
+      "label": "unlabelled",
+      "cosine": 0.33907952904701233
+    },
+    {
+      "start_sample": 6040000,
+      "end_sample": 6120000,
+      "source_start": 1577.5,
+      "source_end": 1582.5,
+      "vad_speech_seconds": 2.814,
+      "label": "unlabelled",
+      "cosine": 0.4323357045650482
+    },
+    {
+      "start_sample": 6080000,
+      "end_sample": 6160000,
+      "source_start": 1580.0,
+      "source_end": 1585.0,
+      "vad_speech_seconds": 2.422,
+      "label": "unlabelled",
+      "cosine": 0.526140570640564
+    },
+    {
+      "start_sample": 6120000,
+      "end_sample": 6200000,
+      "source_start": 1582.5,
+      "source_end": 1587.5,
+      "vad_speech_seconds": 3.09,
+      "label": "unlabelled",
+      "cosine": 0.25787094235420227
+    },
+    {
+      "start_sample": 6160000,
+      "end_sample": 6240000,
+      "source_start": 1585.0,
+      "source_end": 1590.0,
+      "vad_speech_seconds": 4.266,
+      "label": "unlabelled",
+      "cosine": 0.28629055619239807
+    },
+    {
+      "start_sample": 6200000,
+      "end_sample": 6280000,
+      "source_start": 1587.5,
+      "source_end": 1592.5,
+      "vad_speech_seconds": 4.946,
+      "label": "unlabelled",
+      "cosine": 0.3048096299171448
+    },
+    {
+      "start_sample": 6240000,
+      "end_sample": 6320000,
+      "source_start": 1590.0,
+      "source_end": 1595.0,
+      "vad_speech_seconds": 5.0,
+      "label": "unlabelled",
+      "cosine": 0.27336370944976807
+    },
+    {
+      "start_sample": 6280000,
+      "end_sample": 6360000,
+      "source_start": 1592.5,
+      "source_end": 1597.5,
+      "vad_speech_seconds": 5.0,
+      "label": "unlabelled",
+      "cosine": 0.22726401686668396
+    },
+    {
+      "start_sample": 6320000,
+      "end_sample": 6400000,
+      "source_start": 1595.0,
+      "source_end": 1600.0,
+      "vad_speech_seconds": 5.0,
+      "label": "unlabelled",
+      "cosine": 0.3421627879142761
+    },
+    {
+      "start_sample": 6360000,
+      "end_sample": 6440000,
+      "source_start": 1597.5,
+      "source_end": 1602.5,
+      "vad_speech_seconds": 5.0,
+      "label": "unlabelled",
+      "cosine": 0.5025439858436584
+    },
+    {
+      "start_sample": 6400000,
+      "end_sample": 6480000,
+      "source_start": 1600.0,
+      "source_end": 1605.0,
+      "vad_speech_seconds": 4.068,
+      "label": "unlabelled",
+      "cosine": 0.26635226607322693
+    },
+    {
+      "start_sample": 6440000,
+      "end_sample": 6520000,
+      "source_start": 1602.5,
+      "source_end": 1607.5,
+      "vad_speech_seconds": 4.068,
+      "label": "unlabelled",
+      "cosine": 0.19271314144134521
+    },
+    {
+      "start_sample": 6480000,
+      "end_sample": 6560000,
+      "source_start": 1605.0,
+      "source_end": 1610.0,
+      "vad_speech_seconds": 5.0,
+      "label": "unlabelled",
+      "cosine": 0.2211199849843979
+    },
+    {
+      "start_sample": 6520000,
+      "end_sample": 6600000,
+      "source_start": 1607.5,
+      "source_end": 1612.5,
+      "vad_speech_seconds": 5.0,
+      "label": "unlabelled",
+      "cosine": 0.2978297173976898
+    },
+    {
+      "start_sample": 6560000,
+      "end_sample": 6640000,
+      "source_start": 1610.0,
+      "source_end": 1615.0,
+      "vad_speech_seconds": 4.868,
+      "label": "unlabelled",
+      "cosine": 0.20589914917945862
+    },
+    {
+      "start_sample": 6600000,
+      "end_sample": 6680000,
+      "source_start": 1612.5,
+      "source_end": 1617.5,
+      "vad_speech_seconds": 4.868,
+      "label": "unlabelled",
+      "cosine": 0.29057812690734863
+    },
+    {
+      "start_sample": 6640000,
+      "end_sample": 6720000,
+      "source_start": 1615.0,
+      "source_end": 1620.0,
+      "vad_speech_seconds": 5.0,
+      "label": "unlabelled",
+      "cosine": 0.2618860602378845
+    },
+    {
+      "start_sample": 6680000,
+      "end_sample": 6760000,
+      "source_start": 1617.5,
+      "source_end": 1622.5,
+      "vad_speech_seconds": 5.0,
+      "label": "unlabelled",
+      "cosine": 0.1454789936542511
+    },
+    {
+      "start_sample": 6720000,
+      "end_sample": 6800000,
+      "source_start": 1620.0,
+      "source_end": 1625.0,
+      "vad_speech_seconds": 5.0,
+      "label": "unlabelled",
+      "cosine": 0.29916876554489136
+    },
+    {
+      "start_sample": 6760000,
+      "end_sample": 6840000,
+      "source_start": 1622.5,
+      "source_end": 1627.5,
+      "vad_speech_seconds": 4.64,
+      "label": "unlabelled",
+      "cosine": 0.3212384879589081
+    },
+    {
+      "start_sample": 6800000,
+      "end_sample": 6880000,
+      "source_start": 1625.0,
+      "source_end": 1630.0,
+      "vad_speech_seconds": 4.64,
+      "label": "unlabelled",
+      "cosine": 0.07899350672960281
+    },
+    {
+      "start_sample": 6840000,
+      "end_sample": 6920000,
+      "source_start": 1627.5,
+      "source_end": 1632.5,
+      "vad_speech_seconds": 5.0,
+      "label": "unlabelled",
+      "cosine": 0.14007708430290222
+    },
+    {
+      "start_sample": 6880000,
+      "end_sample": 6960000,
+      "source_start": 1630.0,
+      "source_end": 1635.0,
+      "vad_speech_seconds": 5.0,
+      "label": "unlabelled",
+      "cosine": 0.31247127056121826
+    },
+    {
+      "start_sample": 6920000,
+      "end_sample": 7000000,
+      "source_start": 1632.5,
+      "source_end": 1637.5,
+      "vad_speech_seconds": 4.938,
+      "label": "unlabelled",
+      "cosine": 0.3057851493358612
+    },
+    {
+      "start_sample": 6960000,
+      "end_sample": 7040000,
+      "source_start": 1635.0,
+      "source_end": 1640.0,
+      "vad_speech_seconds": 3.776,
+      "label": "unlabelled",
+      "cosine": 0.19076402485370636
+    },
+    {
+      "start_sample": 7000000,
+      "end_sample": 7080000,
+      "source_start": 1637.5,
+      "source_end": 1642.5,
+      "vad_speech_seconds": 3.706,
+      "label": "unlabelled",
+      "cosine": 0.1674070954322815
+    },
+    {
+      "start_sample": 7040000,
+      "end_sample": 7120000,
+      "source_start": 1640.0,
+      "source_end": 1645.0,
+      "vad_speech_seconds": 4.41,
+      "label": "unlabelled",
+      "cosine": 0.2662961483001709
+    },
+    {
+      "start_sample": 7080000,
+      "end_sample": 7160000,
+      "source_start": 1642.5,
+      "source_end": 1647.5,
+      "vad_speech_seconds": 4.384,
+      "label": "unlabelled",
+      "cosine": 0.2868850529193878
+    },
+    {
+      "start_sample": 7120000,
+      "end_sample": 7200000,
+      "source_start": 1645.0,
+      "source_end": 1650.0,
+      "vad_speech_seconds": 4.55,
+      "label": "unlabelled",
+      "cosine": 0.5072938203811646
+    },
+    {
+      "start_sample": 7160000,
+      "end_sample": 7240000,
+      "source_start": 1647.5,
+      "source_end": 1652.5,
+      "vad_speech_seconds": 4.512,
+      "label": "unlabelled",
+      "cosine": 0.18783411383628845
+    },
+    {
+      "start_sample": 7200000,
+      "end_sample": 7280000,
+      "source_start": 1650.0,
+      "source_end": 1655.0,
+      "vad_speech_seconds": 4.384,
+      "label": "unlabelled",
+      "cosine": 0.1575717031955719
+    },
+    {
+      "start_sample": 7240000,
+      "end_sample": 7320000,
+      "source_start": 1652.5,
+      "source_end": 1657.5,
+      "vad_speech_seconds": 4.58,
+      "label": "unlabelled",
+      "cosine": 0.27471962571144104
+    },
+    {
+      "start_sample": 7280000,
+      "end_sample": 7360000,
+      "source_start": 1655.0,
+      "source_end": 1660.0,
+      "vad_speech_seconds": 5.0,
+      "label": "unlabelled",
+      "cosine": 0.3349251449108124
+    },
+    {
+      "start_sample": 7320000,
+      "end_sample": 7400000,
+      "source_start": 1657.5,
+      "source_end": 1662.5,
+      "vad_speech_seconds": 5.0,
+      "label": "unlabelled",
+      "cosine": 0.22650142014026642
+    },
+    {
+      "start_sample": 7360000,
+      "end_sample": 7440000,
+      "source_start": 1660.0,
+      "source_end": 1665.0,
+      "vad_speech_seconds": 5.0,
+      "label": "unlabelled",
+      "cosine": 0.15328137576580048
+    },
+    {
+      "start_sample": 7400000,
+      "end_sample": 7480000,
+      "source_start": 1662.5,
+      "source_end": 1667.5,
+      "vad_speech_seconds": 4.676,
+      "label": "unlabelled",
+      "cosine": 0.3885880410671234
+    },
+    {
+      "start_sample": 7440000,
+      "end_sample": 7520000,
+      "source_start": 1665.0,
+      "source_end": 1670.0,
+      "vad_speech_seconds": 4.676,
+      "label": "unlabelled",
+      "cosine": 0.4285542368888855
+    },
+    {
+      "start_sample": 7480000,
+      "end_sample": 7560000,
+      "source_start": 1667.5,
+      "source_end": 1672.5,
+      "vad_speech_seconds": 5.0,
+      "label": "unlabelled",
+      "cosine": 0.21190284192562103
+    },
+    {
+      "start_sample": 7520000,
+      "end_sample": 7600000,
+      "source_start": 1670.0,
+      "source_end": 1675.0,
+      "vad_speech_seconds": 4.772,
+      "label": "unlabelled",
+      "cosine": 0.08326533436775208
+    },
+    {
+      "start_sample": 7560000,
+      "end_sample": 7640000,
+      "source_start": 1672.5,
+      "source_end": 1677.5,
+      "vad_speech_seconds": 4.448,
+      "label": "unlabelled",
+      "cosine": 0.19320780038833618
+    },
+    {
+      "start_sample": 7600000,
+      "end_sample": 7680000,
+      "source_start": 1675.0,
+      "source_end": 1680.0,
+      "vad_speech_seconds": 4.544,
+      "label": "unlabelled",
+      "cosine": 0.2118774801492691
+    },
+    {
+      "start_sample": 7640000,
+      "end_sample": 7720000,
+      "source_start": 1677.5,
+      "source_end": 1682.5,
+      "vad_speech_seconds": 4.868,
+      "label": "unlabelled",
+      "cosine": 0.2909257113933563
+    },
+    {
+      "start_sample": 7680000,
+      "end_sample": 7760000,
+      "source_start": 1680.0,
+      "source_end": 1685.0,
+      "vad_speech_seconds": 5.0,
+      "label": "unlabelled",
+      "cosine": 0.3210770785808563
+    },
+    {
+      "start_sample": 7720000,
+      "end_sample": 7800000,
+      "source_start": 1682.5,
+      "source_end": 1687.5,
+      "vad_speech_seconds": 5.0,
+      "label": "unlabelled",
+      "cosine": 0.2691444456577301
+    },
+    {
+      "start_sample": 7760000,
+      "end_sample": 7840000,
+      "source_start": 1685.0,
+      "source_end": 1690.0,
+      "vad_speech_seconds": 4.822,
+      "label": "unlabelled",
+      "cosine": 0.07978281378746033
+    },
+    {
+      "start_sample": 7800000,
+      "end_sample": 7880000,
+      "source_start": 1687.5,
+      "source_end": 1692.5,
+      "vad_speech_seconds": 4.132,
+      "label": "unlabelled",
+      "cosine": 0.28672662377357483
+    },
+    {
+      "start_sample": 7840000,
+      "end_sample": 7920000,
+      "source_start": 1690.0,
+      "source_end": 1695.0,
+      "vad_speech_seconds": 4.31,
+      "label": "unlabelled",
+      "cosine": 0.32442399859428406
+    },
+    {
+      "start_sample": 7880000,
+      "end_sample": 7960000,
+      "source_start": 1692.5,
+      "source_end": 1697.5,
+      "vad_speech_seconds": 4.388,
+      "label": "unlabelled",
+      "cosine": 0.2301267832517624
+    },
+    {
+      "start_sample": 7920000,
+      "end_sample": 8000000,
+      "source_start": 1695.0,
+      "source_end": 1700.0,
+      "vad_speech_seconds": 4.388,
+      "label": "unlabelled",
+      "cosine": 0.124937042593956
+    },
+    {
+      "start_sample": 7960000,
+      "end_sample": 8040000,
+      "source_start": 1697.5,
+      "source_end": 1702.5,
+      "vad_speech_seconds": 5.0,
+      "label": "unlabelled",
+      "cosine": 0.19698207080364227
+    },
+    {
+      "start_sample": 8000000,
+      "end_sample": 8080000,
+      "source_start": 1700.0,
+      "source_end": 1705.0,
+      "vad_speech_seconds": 5.0,
+      "label": "unlabelled",
+      "cosine": 0.23162062466144562
+    },
+    {
+      "start_sample": 8040000,
+      "end_sample": 8120000,
+      "source_start": 1702.5,
+      "source_end": 1707.5,
+      "vad_speech_seconds": 5.0,
+      "label": "unlabelled",
+      "cosine": 0.07903045415878296
+    },
+    {
+      "start_sample": 8080000,
+      "end_sample": 8160000,
+      "source_start": 1705.0,
+      "source_end": 1710.0,
+      "vad_speech_seconds": 4.47,
+      "label": "unlabelled",
+      "cosine": 0.025760652497410774
+    },
+    {
+      "start_sample": 8120000,
+      "end_sample": 8200000,
+      "source_start": 1707.5,
+      "source_end": 1712.5,
+      "vad_speech_seconds": 3.95,
+      "label": "unlabelled",
+      "cosine": 0.14155460894107819
+    },
+    {
+      "start_sample": 8160000,
+      "end_sample": 8240000,
+      "source_start": 1710.0,
+      "source_end": 1715.0,
+      "vad_speech_seconds": 4.434,
+      "label": "unlabelled",
+      "cosine": 0.1059681698679924
+    },
+    {
+      "start_sample": 8200000,
+      "end_sample": 8280000,
+      "source_start": 1712.5,
+      "source_end": 1717.5,
+      "vad_speech_seconds": 4.954,
+      "label": "unlabelled",
+      "cosine": 0.10986509174108505
+    },
+    {
+      "start_sample": 8240000,
+      "end_sample": 8320000,
+      "source_start": 1715.0,
+      "source_end": 1720.0,
+      "vad_speech_seconds": 4.772,
+      "label": "unlabelled",
+      "cosine": 0.1710042655467987
+    },
+    {
+      "start_sample": 8280000,
+      "end_sample": 8360000,
+      "source_start": 1717.5,
+      "source_end": 1722.5,
+      "vad_speech_seconds": 4.772,
+      "label": "unlabelled",
+      "cosine": 0.07963527739048004
+    },
+    {
+      "start_sample": 8320000,
+      "end_sample": 8400000,
+      "source_start": 1720.0,
+      "source_end": 1725.0,
+      "vad_speech_seconds": 4.676,
+      "label": "unlabelled",
+      "cosine": 0.08814568817615509
+    },
+    {
+      "start_sample": 8360000,
+      "end_sample": 8440000,
+      "source_start": 1722.5,
+      "source_end": 1727.5,
+      "vad_speech_seconds": 4.676,
+      "label": "unlabelled",
+      "cosine": 0.18973010778427124
+    },
+    {
+      "start_sample": 8400000,
+      "end_sample": 8480000,
+      "source_start": 1725.0,
+      "source_end": 1730.0,
+      "vad_speech_seconds": 5.0,
+      "label": "unlabelled",
+      "cosine": 0.011270197108387947
+    },
+    {
+      "start_sample": 8440000,
+      "end_sample": 8520000,
+      "source_start": 1727.5,
+      "source_end": 1732.5,
+      "vad_speech_seconds": 5.0,
+      "label": "unlabelled",
+      "cosine": 0.09075528383255005
+    },
+    {
+      "start_sample": 8480000,
+      "end_sample": 8560000,
+      "source_start": 1730.0,
+      "source_end": 1735.0,
+      "vad_speech_seconds": 4.804,
+      "label": "unlabelled",
+      "cosine": 0.15852874517440796
+    },
+    {
+      "start_sample": 8520000,
+      "end_sample": 8600000,
+      "source_start": 1732.5,
+      "source_end": 1737.5,
+      "vad_speech_seconds": 4.804,
+      "label": "unlabelled",
+      "cosine": 0.13151881098747253
+    },
+    {
+      "start_sample": 8560000,
+      "end_sample": 8640000,
+      "source_start": 1735.0,
+      "source_end": 1740.0,
+      "vad_speech_seconds": 5.0,
+      "label": "unlabelled",
+      "cosine": 0.23902782797813416
+    },
+    {
+      "start_sample": 8600000,
+      "end_sample": 8680000,
+      "source_start": 1737.5,
+      "source_end": 1742.5,
+      "vad_speech_seconds": 5.0,
+      "label": "unlabelled",
+      "cosine": 0.3038609027862549
+    },
+    {
+      "start_sample": 8640000,
+      "end_sample": 8720000,
+      "source_start": 1740.0,
+      "source_end": 1745.0,
+      "vad_speech_seconds": 5.0,
+      "label": "unlabelled",
+      "cosine": 0.17791122198104858
+    },
+    {
+      "start_sample": 8680000,
+      "end_sample": 8760000,
+      "source_start": 1742.5,
+      "source_end": 1747.5,
+      "vad_speech_seconds": 5.0,
+      "label": "unlabelled",
+      "cosine": 0.14035475254058838
+    },
+    {
+      "start_sample": 8720000,
+      "end_sample": 8800000,
+      "source_start": 1745.0,
+      "source_end": 1750.0,
+      "vad_speech_seconds": 4.836,
+      "label": "unlabelled",
+      "cosine": 0.07902804017066956
+    },
+    {
+      "start_sample": 8760000,
+      "end_sample": 8840000,
+      "source_start": 1747.5,
+      "source_end": 1752.5,
+      "vad_speech_seconds": 4.512,
+      "label": "unlabelled",
+      "cosine": -0.01725824922323227
+    },
+    {
+      "start_sample": 8800000,
+      "end_sample": 8880000,
+      "source_start": 1750.0,
+      "source_end": 1755.0,
+      "vad_speech_seconds": 4.326,
+      "label": "unlabelled",
+      "cosine": 0.08886098861694336
+    },
+    {
+      "start_sample": 8840000,
+      "end_sample": 8920000,
+      "source_start": 1752.5,
+      "source_end": 1757.5,
+      "vad_speech_seconds": 4.124,
+      "label": "unlabelled",
+      "cosine": 0.09258625656366348
+    },
+    {
+      "start_sample": 8880000,
+      "end_sample": 8960000,
+      "source_start": 1755.0,
+      "source_end": 1760.0,
+      "vad_speech_seconds": 4.474,
+      "label": "unlabelled",
+      "cosine": 0.15684856474399567
+    },
+    {
+      "start_sample": 8920000,
+      "end_sample": 9000000,
+      "source_start": 1757.5,
+      "source_end": 1762.5,
+      "vad_speech_seconds": 5.0,
+      "label": "unlabelled",
+      "cosine": 0.17984730005264282
+    },
+    {
+      "start_sample": 8960000,
+      "end_sample": 9040000,
+      "source_start": 1760.0,
+      "source_end": 1765.0,
+      "vad_speech_seconds": 4.766,
+      "label": "unlabelled",
+      "cosine": 0.2540656626224518
+    },
+    {
+      "start_sample": 9000000,
+      "end_sample": 9080000,
+      "source_start": 1762.5,
+      "source_end": 1767.5,
+      "vad_speech_seconds": 3.062,
+      "label": "unlabelled",
+      "cosine": 0.2286214381456375
+    },
+    {
+      "start_sample": 9040000,
+      "end_sample": 9120000,
+      "source_start": 1765.0,
+      "source_end": 1770.0,
+      "vad_speech_seconds": 1.834,
+      "label": "unlabelled",
+      "cosine": 0.1583203226327896
+    },
+    {
+      "start_sample": 9080000,
+      "end_sample": 9160000,
+      "source_start": 1767.5,
+      "source_end": 1772.5,
+      "vad_speech_seconds": 3.538,
+      "label": "unlabelled",
+      "cosine": 0.23741963505744934
+    },
+    {
+      "start_sample": 9120000,
+      "end_sample": 9200000,
+      "source_start": 1770.0,
+      "source_end": 1775.0,
+      "vad_speech_seconds": 5.0,
+      "label": "unlabelled",
+      "cosine": 0.2692604959011078
+    },
+    {
+      "start_sample": 9160000,
+      "end_sample": 9240000,
+      "source_start": 1772.5,
+      "source_end": 1777.5,
+      "vad_speech_seconds": 5.0,
+      "label": "unlabelled",
+      "cosine": 0.15264028310775757
+    },
+    {
+      "start_sample": 9200000,
+      "end_sample": 9280000,
+      "source_start": 1775.0,
+      "source_end": 1780.0,
+      "vad_speech_seconds": 5.0,
+      "label": "unlabelled",
+      "cosine": 0.04940144717693329
+    },
+    {
+      "start_sample": 9240000,
+      "end_sample": 9320000,
+      "source_start": 1777.5,
+      "source_end": 1782.5,
+      "vad_speech_seconds": 4.772,
+      "label": "unlabelled",
+      "cosine": 0.028774576261639595
+    },
+    {
+      "start_sample": 9280000,
+      "end_sample": 9360000,
+      "source_start": 1780.0,
+      "source_end": 1785.0,
+      "vad_speech_seconds": 4.448,
+      "label": "unlabelled",
+      "cosine": 0.07363362610340118
+    },
+    {
+      "start_sample": 9320000,
+      "end_sample": 9400000,
+      "source_start": 1782.5,
+      "source_end": 1787.5,
+      "vad_speech_seconds": 4.676,
+      "label": "unlabelled",
+      "cosine": 0.07973635196685791
+    },
+    {
+      "start_sample": 9360000,
+      "end_sample": 9440000,
+      "source_start": 1785.0,
+      "source_end": 1790.0,
+      "vad_speech_seconds": 5.0,
+      "label": "unlabelled",
+      "cosine": 0.11561449617147446
+    },
+    {
+      "start_sample": 9400000,
+      "end_sample": 9480000,
+      "source_start": 1787.5,
+      "source_end": 1792.5,
+      "vad_speech_seconds": 4.676,
+      "label": "unlabelled",
+      "cosine": 0.15771633386611938
+    },
+    {
+      "start_sample": 9440000,
+      "end_sample": 9520000,
+      "source_start": 1790.0,
+      "source_end": 1795.0,
+      "vad_speech_seconds": 4.676,
+      "label": "unlabelled",
+      "cosine": 0.19418705999851227
+    },
+    {
+      "start_sample": 9480000,
+      "end_sample": 9560000,
+      "source_start": 1792.5,
+      "source_end": 1797.5,
+      "vad_speech_seconds": 5.0,
+      "label": "unlabelled",
+      "cosine": 0.10403771698474884
+    },
+    {
+      "start_sample": 9520000,
+      "end_sample": 9600000,
+      "source_start": 1795.0,
+      "source_end": 1800.0,
+      "vad_speech_seconds": 4.678,
+      "label": "unlabelled",
+      "cosine": 0.054954733699560165
+    },
+    {
+      "start_sample": 9560000,
+      "end_sample": 9640000,
+      "source_start": 1797.5,
+      "source_end": 1802.5,
+      "vad_speech_seconds": 2.596,
+      "label": "unlabelled",
+      "cosine": 0.14168502390384674
+    },
+    {
+      "start_sample": 9600000,
+      "end_sample": 9680000,
+      "source_start": 1800.0,
+      "source_end": 1805.0,
+      "vad_speech_seconds": 2.53,
+      "label": "unlabelled",
+      "cosine": 0.15506891906261444
+    },
+    {
+      "start_sample": 9640000,
+      "end_sample": 9720000,
+      "source_start": 1802.5,
+      "source_end": 1807.5,
+      "vad_speech_seconds": 4.022,
+      "label": "unlabelled",
+      "cosine": 0.12634819746017456
+    },
+    {
+      "start_sample": 9680000,
+      "end_sample": 9760000,
+      "source_start": 1805.0,
+      "source_end": 1810.0,
+      "vad_speech_seconds": 2.308,
+      "label": "unlabelled",
+      "cosine": 0.07305765897035599
+    },
+    {
+      "start_sample": 9720000,
+      "end_sample": 9800000,
+      "source_start": 1807.5,
+      "source_end": 1812.5,
+      "vad_speech_seconds": 0.796,
+      "label": "unlabelled",
+      "cosine": 0.06990359723567963
+    },
+    {
+      "start_sample": 9760000,
+      "end_sample": 9840000,
+      "source_start": 1810.0,
+      "source_end": 1815.0,
+      "vad_speech_seconds": 0.398,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 9800000,
+      "end_sample": 9880000,
+      "source_start": 1812.5,
+      "source_end": 1817.5,
+      "vad_speech_seconds": 1.69,
+      "label": "unlabelled",
+      "cosine": 0.16877295076847076
+    },
+    {
+      "start_sample": 9840000,
+      "end_sample": 9920000,
+      "source_start": 1815.0,
+      "source_end": 1820.0,
+      "vad_speech_seconds": 3.224,
+      "label": "unlabelled",
+      "cosine": 0.16604070365428925
+    },
+    {
+      "start_sample": 9880000,
+      "end_sample": 9960000,
+      "source_start": 1817.5,
+      "source_end": 1822.5,
+      "vad_speech_seconds": 2.362,
+      "label": "unlabelled",
+      "cosine": 0.16912324726581573
+    },
+    {
+      "start_sample": 9920000,
+      "end_sample": 10000000,
+      "source_start": 1820.0,
+      "source_end": 1825.0,
+      "vad_speech_seconds": 0.828,
+      "label": "unlabelled",
+      "cosine": 0.022757768630981445
+    },
+    {
+      "start_sample": 9960000,
+      "end_sample": 10040000,
+      "source_start": 1822.5,
+      "source_end": 1827.5,
+      "vad_speech_seconds": 0.732,
+      "label": "unlabelled",
+      "cosine": 0.11459345370531082
+    },
+    {
+      "start_sample": 10000000,
+      "end_sample": 10080000,
+      "source_start": 1825.0,
+      "source_end": 1830.0,
+      "vad_speech_seconds": 0.732,
+      "label": "unlabelled",
+      "cosine": 0.22739700973033905
+    },
+    {
+      "start_sample": 10040000,
+      "end_sample": 10120000,
+      "source_start": 1827.5,
+      "source_end": 1832.5,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 10080000,
+      "end_sample": 10160000,
+      "source_start": 1830.0,
+      "source_end": 1835.0,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 10120000,
+      "end_sample": 10200000,
+      "source_start": 1832.5,
+      "source_end": 1837.5,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 10160000,
+      "end_sample": 10240000,
+      "source_start": 1835.0,
+      "source_end": 1840.0,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 10200000,
+      "end_sample": 10280000,
+      "source_start": 1837.5,
+      "source_end": 1842.5,
+      "vad_speech_seconds": 0.802,
+      "label": "unlabelled",
+      "cosine": 0.5009019374847412
+    },
+    {
+      "start_sample": 10240000,
+      "end_sample": 10320000,
+      "source_start": 1840.0,
+      "source_end": 1845.0,
+      "vad_speech_seconds": 1.5,
+      "label": "unlabelled",
+      "cosine": 0.4666111469268799
+    },
+    {
+      "start_sample": 10280000,
+      "end_sample": 10360000,
+      "source_start": 1842.5,
+      "source_end": 1847.5,
+      "vad_speech_seconds": 0.698,
+      "label": "unlabelled",
+      "cosine": 0.06212255358695984
+    },
+    {
+      "start_sample": 10320000,
+      "end_sample": 10400000,
+      "source_start": 1845.0,
+      "source_end": 1850.0,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 10360000,
+      "end_sample": 10440000,
+      "source_start": 1847.5,
+      "source_end": 1852.5,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 10400000,
+      "end_sample": 10480000,
+      "source_start": 1850.0,
+      "source_end": 1855.0,
+      "vad_speech_seconds": 0.54,
+      "label": "unlabelled",
+      "cosine": 0.21368034183979034
+    },
+    {
+      "start_sample": 10440000,
+      "end_sample": 10520000,
+      "source_start": 1852.5,
+      "source_end": 1857.5,
+      "vad_speech_seconds": 0.54,
+      "label": "unlabelled",
+      "cosine": 0.15911075472831726
+    },
+    {
+      "start_sample": 10480000,
+      "end_sample": 10560000,
+      "source_start": 1855.0,
+      "source_end": 1860.0,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 10520000,
+      "end_sample": 10600000,
+      "source_start": 1857.5,
+      "source_end": 1862.5,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 10560000,
+      "end_sample": 10640000,
+      "source_start": 1860.0,
+      "source_end": 1865.0,
+      "vad_speech_seconds": 1.336,
+      "label": "unlabelled",
+      "cosine": 0.24626754224300385
+    },
+    {
+      "start_sample": 10600000,
+      "end_sample": 10680000,
+      "source_start": 1862.5,
+      "source_end": 1867.5,
+      "vad_speech_seconds": 2.612,
+      "label": "unlabelled",
+      "cosine": 0.16166633367538452
+    },
+    {
+      "start_sample": 10640000,
+      "end_sample": 10720000,
+      "source_start": 1865.0,
+      "source_end": 1870.0,
+      "vad_speech_seconds": 1.276,
+      "label": "unlabelled",
+      "cosine": 0.10414980351924896
+    },
+    {
+      "start_sample": 10680000,
+      "end_sample": 10760000,
+      "source_start": 1867.5,
+      "source_end": 1872.5,
+      "vad_speech_seconds": 1.902,
+      "label": "unlabelled",
+      "cosine": 0.13761161267757416
+    },
+    {
+      "start_sample": 10720000,
+      "end_sample": 10800000,
+      "source_start": 1870.0,
+      "source_end": 1875.0,
+      "vad_speech_seconds": 4.402,
+      "label": "unlabelled",
+      "cosine": 0.5613777041435242
+    },
+    {
+      "start_sample": 10760000,
+      "end_sample": 10840000,
+      "source_start": 1872.5,
+      "source_end": 1877.5,
+      "vad_speech_seconds": 3.712,
+      "label": "unlabelled",
+      "cosine": 0.5898366570472717
+    },
+    {
+      "start_sample": 10800000,
+      "end_sample": 10880000,
+      "source_start": 1875.0,
+      "source_end": 1880.0,
+      "vad_speech_seconds": 3.452,
+      "label": "unlabelled",
+      "cosine": 0.4682430624961853
+    },
+    {
+      "start_sample": 10840000,
+      "end_sample": 10920000,
+      "source_start": 1877.5,
+      "source_end": 1882.5,
+      "vad_speech_seconds": 4.576,
+      "label": "unlabelled",
+      "cosine": 0.30102261900901794
+    },
+    {
+      "start_sample": 10880000,
+      "end_sample": 10960000,
+      "source_start": 1880.0,
+      "source_end": 1885.0,
+      "vad_speech_seconds": 3.68,
+      "label": "unlabelled",
+      "cosine": 0.18833523988723755
+    },
+    {
+      "start_sample": 10920000,
+      "end_sample": 11000000,
+      "source_start": 1882.5,
+      "source_end": 1887.5,
+      "vad_speech_seconds": 2.908,
+      "label": "unlabelled",
+      "cosine": 0.22552992403507233
+    },
+    {
+      "start_sample": 10960000,
+      "end_sample": 11040000,
+      "source_start": 1885.0,
+      "source_end": 1890.0,
+      "vad_speech_seconds": 2.844,
+      "label": "unlabelled",
+      "cosine": 0.16735270619392395
+    },
+    {
+      "start_sample": 11000000,
+      "end_sample": 11080000,
+      "source_start": 1887.5,
+      "source_end": 1892.5,
+      "vad_speech_seconds": 3.78,
+      "label": "unlabelled",
+      "cosine": 0.07590104639530182
+    },
+    {
+      "start_sample": 11040000,
+      "end_sample": 11120000,
+      "source_start": 1890.0,
+      "source_end": 1895.0,
+      "vad_speech_seconds": 3.822,
+      "label": "unlabelled",
+      "cosine": 0.010575506836175919
+    },
+    {
+      "start_sample": 11080000,
+      "end_sample": 11160000,
+      "source_start": 1892.5,
+      "source_end": 1897.5,
+      "vad_speech_seconds": 1.322,
+      "label": "unlabelled",
+      "cosine": 0.011420432478189468
+    },
+    {
+      "start_sample": 11120000,
+      "end_sample": 11200000,
+      "source_start": 1895.0,
+      "source_end": 1900.0,
+      "vad_speech_seconds": 1.948,
+      "label": "unlabelled",
+      "cosine": 0.41889825463294983
+    },
+    {
+      "start_sample": 11160000,
+      "end_sample": 11240000,
+      "source_start": 1897.5,
+      "source_end": 1902.5,
+      "vad_speech_seconds": 1.948,
+      "label": "unlabelled",
+      "cosine": 0.44746407866477966
+    },
+    {
+      "start_sample": 11200000,
+      "end_sample": 11280000,
+      "source_start": 1900.0,
+      "source_end": 1905.0,
+      "vad_speech_seconds": 0.508,
+      "label": "unlabelled",
+      "cosine": 0.12325946986675262
+    },
+    {
+      "start_sample": 11240000,
+      "end_sample": 11320000,
+      "source_start": 1902.5,
+      "source_end": 1907.5,
+      "vad_speech_seconds": 0.508,
+      "label": "unlabelled",
+      "cosine": 0.06280048191547394
+    },
+    {
+      "start_sample": 11280000,
+      "end_sample": 11360000,
+      "source_start": 1905.0,
+      "source_end": 1910.0,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 11320000,
+      "end_sample": 11400000,
+      "source_start": 1907.5,
+      "source_end": 1912.5,
+      "vad_speech_seconds": 1.468,
+      "label": "unlabelled",
+      "cosine": 0.005617665126919746
+    },
+    {
+      "start_sample": 11360000,
+      "end_sample": 11440000,
+      "source_start": 1910.0,
+      "source_end": 1915.0,
+      "vad_speech_seconds": 1.468,
+      "label": "unlabelled",
+      "cosine": -0.02544812671840191
+    },
+    {
+      "start_sample": 11400000,
+      "end_sample": 11480000,
+      "source_start": 1912.5,
+      "source_end": 1917.5,
+      "vad_speech_seconds": 0.956,
+      "label": "unlabelled",
+      "cosine": 0.012055926024913788
+    },
+    {
+      "start_sample": 11440000,
+      "end_sample": 11520000,
+      "source_start": 1915.0,
+      "source_end": 1920.0,
+      "vad_speech_seconds": 0.956,
+      "label": "unlabelled",
+      "cosine": -0.030833566561341286
+    },
+    {
+      "start_sample": 11480000,
+      "end_sample": 11560000,
+      "source_start": 1917.5,
+      "source_end": 1922.5,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 11520000,
+      "end_sample": 11600000,
+      "source_start": 1920.0,
+      "source_end": 1925.0,
+      "vad_speech_seconds": 0.582,
+      "label": "unlabelled",
+      "cosine": 0.0421207994222641
+    },
+    {
+      "start_sample": 11560000,
+      "end_sample": 11640000,
+      "source_start": 1922.5,
+      "source_end": 1927.5,
+      "vad_speech_seconds": 1.432,
+      "label": "unlabelled",
+      "cosine": -0.03695142641663551
+    },
+    {
+      "start_sample": 11600000,
+      "end_sample": 11680000,
+      "source_start": 1925.0,
+      "source_end": 1930.0,
+      "vad_speech_seconds": 2.698,
+      "label": "unlabelled",
+      "cosine": 0.09889848530292511
+    },
+    {
+      "start_sample": 11640000,
+      "end_sample": 11720000,
+      "source_start": 1927.5,
+      "source_end": 1932.5,
+      "vad_speech_seconds": 2.9,
+      "label": "unlabelled",
+      "cosine": 0.09448560327291489
+    },
+    {
+      "start_sample": 11680000,
+      "end_sample": 11760000,
+      "source_start": 1930.0,
+      "source_end": 1935.0,
+      "vad_speech_seconds": 1.816,
+      "label": "unlabelled",
+      "cosine": 0.5032583475112915
+    },
+    {
+      "start_sample": 11720000,
+      "end_sample": 11800000,
+      "source_start": 1932.5,
+      "source_end": 1937.5,
+      "vad_speech_seconds": 1.81,
+      "label": "unlabelled",
+      "cosine": 0.07624760270118713
+    },
+    {
+      "start_sample": 11760000,
+      "end_sample": 11840000,
+      "source_start": 1935.0,
+      "source_end": 1940.0,
+      "vad_speech_seconds": 3.414,
+      "label": "unlabelled",
+      "cosine": 0.07676975429058075
+    },
+    {
+      "start_sample": 11800000,
+      "end_sample": 11880000,
+      "source_start": 1937.5,
+      "source_end": 1942.5,
+      "vad_speech_seconds": 4.352,
+      "label": "unlabelled",
+      "cosine": 0.14101050794124603
+    },
+    {
+      "start_sample": 11840000,
+      "end_sample": 11920000,
+      "source_start": 1940.0,
+      "source_end": 1945.0,
+      "vad_speech_seconds": 4.484,
+      "label": "unlabelled",
+      "cosine": 0.17741759121418
+    },
+    {
+      "start_sample": 11880000,
+      "end_sample": 11960000,
+      "source_start": 1942.5,
+      "source_end": 1947.5,
+      "vad_speech_seconds": 4.79,
+      "label": "unlabelled",
+      "cosine": 0.06630641967058182
+    },
+    {
+      "start_sample": 11920000,
+      "end_sample": 12000000,
+      "source_start": 1945.0,
+      "source_end": 1950.0,
+      "vad_speech_seconds": 4.206,
+      "label": "unlabelled",
+      "cosine": 0.06196359544992447
+    },
+    {
+      "start_sample": 11960000,
+      "end_sample": 12040000,
+      "source_start": 1947.5,
+      "source_end": 1952.5,
+      "vad_speech_seconds": 1.916,
+      "label": "unlabelled",
+      "cosine": 0.3284337520599365
+    },
+    {
+      "start_sample": 12000000,
+      "end_sample": 12080000,
+      "source_start": 1950.0,
+      "source_end": 1955.0,
+      "vad_speech_seconds": 2.102,
+      "label": "unlabelled",
+      "cosine": 0.05187118425965309
+    },
+    {
+      "start_sample": 12040000,
+      "end_sample": 12120000,
+      "source_start": 1952.5,
+      "source_end": 1957.5,
+      "vad_speech_seconds": 4.406,
+      "label": "unlabelled",
+      "cosine": -0.006709271110594273
+    },
+    {
+      "start_sample": 12080000,
+      "end_sample": 12160000,
+      "source_start": 1955.0,
+      "source_end": 1960.0,
+      "vad_speech_seconds": 3.454,
+      "label": "unlabelled",
+      "cosine": -0.014740660786628723
+    },
+    {
+      "start_sample": 12120000,
+      "end_sample": 12200000,
+      "source_start": 1957.5,
+      "source_end": 1962.5,
+      "vad_speech_seconds": 1.658,
+      "label": "unlabelled",
+      "cosine": 0.17527875304222107
+    },
+    {
+      "start_sample": 12160000,
+      "end_sample": 12240000,
+      "source_start": 1960.0,
+      "source_end": 1965.0,
+      "vad_speech_seconds": 0.508,
+      "label": "unlabelled",
+      "cosine": 0.08938750624656677
+    },
+    {
+      "start_sample": 12200000,
+      "end_sample": 12280000,
+      "source_start": 1962.5,
+      "source_end": 1967.5,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 12240000,
+      "end_sample": 12320000,
+      "source_start": 1965.0,
+      "source_end": 1970.0,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 12280000,
+      "end_sample": 12360000,
+      "source_start": 1967.5,
+      "source_end": 1972.5,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 12320000,
+      "end_sample": 12400000,
+      "source_start": 1970.0,
+      "source_end": 1975.0,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 12360000,
+      "end_sample": 12440000,
+      "source_start": 1972.5,
+      "source_end": 1977.5,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 12400000,
+      "end_sample": 12480000,
+      "source_start": 1975.0,
+      "source_end": 1980.0,
+      "vad_speech_seconds": 0.862,
+      "label": "unlabelled",
+      "cosine": 0.33438214659690857
+    },
+    {
+      "start_sample": 12440000,
+      "end_sample": 12520000,
+      "source_start": 1977.5,
+      "source_end": 1982.5,
+      "vad_speech_seconds": 2.712,
+      "label": "unlabelled",
+      "cosine": 0.5354843735694885
+    },
+    {
+      "start_sample": 12480000,
+      "end_sample": 12560000,
+      "source_start": 1980.0,
+      "source_end": 1985.0,
+      "vad_speech_seconds": 1.85,
+      "label": "unlabelled",
+      "cosine": 0.5292273163795471
+    },
+    {
+      "start_sample": 12520000,
+      "end_sample": 12600000,
+      "source_start": 1982.5,
+      "source_end": 1987.5,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 12560000,
+      "end_sample": 12640000,
+      "source_start": 1985.0,
+      "source_end": 1990.0,
+      "vad_speech_seconds": 0.348,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 12600000,
+      "end_sample": 12680000,
+      "source_start": 1987.5,
+      "source_end": 1992.5,
+      "vad_speech_seconds": 1.272,
+      "label": "unlabelled",
+      "cosine": 0.5606269836425781
+    },
+    {
+      "start_sample": 12640000,
+      "end_sample": 12720000,
+      "source_start": 1990.0,
+      "source_end": 1995.0,
+      "vad_speech_seconds": 1.944,
+      "label": "unlabelled",
+      "cosine": 0.4546179175376892
+    },
+    {
+      "start_sample": 12680000,
+      "end_sample": 12760000,
+      "source_start": 1992.5,
+      "source_end": 1997.5,
+      "vad_speech_seconds": 1.02,
+      "label": "unlabelled",
+      "cosine": 0.14295701682567596
+    },
+    {
+      "start_sample": 12720000,
+      "end_sample": 12800000,
+      "source_start": 1995.0,
+      "source_end": 2000.0,
+      "vad_speech_seconds": 1.854,
+      "label": "unlabelled",
+      "cosine": 0.29276135563850403
+    },
+    {
+      "start_sample": 12760000,
+      "end_sample": 12840000,
+      "source_start": 1997.5,
+      "source_end": 2002.5,
+      "vad_speech_seconds": 4.19,
+      "label": "unlabelled",
+      "cosine": 0.20948860049247742
+    },
+    {
+      "start_sample": 12800000,
+      "end_sample": 12880000,
+      "source_start": 2000.0,
+      "source_end": 2005.0,
+      "vad_speech_seconds": 4.836,
+      "label": "unlabelled",
+      "cosine": 0.1763065755367279
+    },
+    {
+      "start_sample": 12840000,
+      "end_sample": 12920000,
+      "source_start": 2002.5,
+      "source_end": 2007.5,
+      "vad_speech_seconds": 5.0,
+      "label": "unlabelled",
+      "cosine": 0.43804773688316345
+    },
+    {
+      "start_sample": 12880000,
+      "end_sample": 12960000,
+      "source_start": 2005.0,
+      "source_end": 2010.0,
+      "vad_speech_seconds": 4.416,
+      "label": "unlabelled",
+      "cosine": 0.462994247674942
+    },
+    {
+      "start_sample": 12920000,
+      "end_sample": 13000000,
+      "source_start": 2007.5,
+      "source_end": 2012.5,
+      "vad_speech_seconds": 4.416,
+      "label": "unlabelled",
+      "cosine": 0.37942320108413696
+    },
+    {
+      "start_sample": 12960000,
+      "end_sample": 13040000,
+      "source_start": 2010.0,
+      "source_end": 2015.0,
+      "vad_speech_seconds": 4.682,
+      "label": "unlabelled",
+      "cosine": 0.3534228801727295
+    },
+    {
+      "start_sample": 13000000,
+      "end_sample": 13080000,
+      "source_start": 2012.5,
+      "source_end": 2017.5,
+      "vad_speech_seconds": 4.672,
+      "label": "unlabelled",
+      "cosine": 0.35912609100341797
+    },
+    {
+      "start_sample": 13040000,
+      "end_sample": 13120000,
+      "source_start": 2015.0,
+      "source_end": 2020.0,
+      "vad_speech_seconds": 3.64,
+      "label": "unlabelled",
+      "cosine": 0.33083000779151917
+    },
+    {
+      "start_sample": 13080000,
+      "end_sample": 13160000,
+      "source_start": 2017.5,
+      "source_end": 2022.5,
+      "vad_speech_seconds": 1.696,
+      "label": "unlabelled",
+      "cosine": 0.20804572105407715
+    },
+    {
+      "start_sample": 13120000,
+      "end_sample": 13200000,
+      "source_start": 2020.0,
+      "source_end": 2025.0,
+      "vad_speech_seconds": 2.2,
+      "label": "unlabelled",
+      "cosine": 0.16096128523349762
+    },
+    {
+      "start_sample": 13160000,
+      "end_sample": 13240000,
+      "source_start": 2022.5,
+      "source_end": 2027.5,
+      "vad_speech_seconds": 3.612,
+      "label": "unlabelled",
+      "cosine": 0.23860342800617218
+    },
+    {
+      "start_sample": 13200000,
+      "end_sample": 13280000,
+      "source_start": 2025.0,
+      "source_end": 2030.0,
+      "vad_speech_seconds": 4.166,
+      "label": "unlabelled",
+      "cosine": 0.49228593707084656
+    },
+    {
+      "start_sample": 13240000,
+      "end_sample": 13320000,
+      "source_start": 2027.5,
+      "source_end": 2032.5,
+      "vad_speech_seconds": 4.544,
+      "label": "unlabelled",
+      "cosine": 0.3967629373073578
+    },
+    {
+      "start_sample": 13280000,
+      "end_sample": 13360000,
+      "source_start": 2030.0,
+      "source_end": 2035.0,
+      "vad_speech_seconds": 4.64,
+      "label": "unlabelled",
+      "cosine": 0.2720671594142914
+    },
+    {
+      "start_sample": 13320000,
+      "end_sample": 13400000,
+      "source_start": 2032.5,
+      "source_end": 2037.5,
+      "vad_speech_seconds": 4.544,
+      "label": "unlabelled",
+      "cosine": 0.3710593581199646
+    },
+    {
+      "start_sample": 13360000,
+      "end_sample": 13440000,
+      "source_start": 2035.0,
+      "source_end": 2040.0,
+      "vad_speech_seconds": 4.74,
+      "label": "unlabelled",
+      "cosine": 0.3755824863910675
+    },
+    {
+      "start_sample": 13400000,
+      "end_sample": 13480000,
+      "source_start": 2037.5,
+      "source_end": 2042.5,
+      "vad_speech_seconds": 4.066,
+      "label": "unlabelled",
+      "cosine": 0.3670775890350342
+    },
+    {
+      "start_sample": 13440000,
+      "end_sample": 13520000,
+      "source_start": 2040.0,
+      "source_end": 2045.0,
+      "vad_speech_seconds": 3.478,
+      "label": "unlabelled",
+      "cosine": 0.3628080487251282
+    },
+    {
+      "start_sample": 13480000,
+      "end_sample": 13560000,
+      "source_start": 2042.5,
+      "source_end": 2047.5,
+      "vad_speech_seconds": 2.114,
+      "label": "unlabelled",
+      "cosine": 0.19040706753730774
+    },
+    {
+      "start_sample": 13520000,
+      "end_sample": 13600000,
+      "source_start": 2045.0,
+      "source_end": 2050.0,
+      "vad_speech_seconds": 2.702,
+      "label": "unlabelled",
+      "cosine": 0.2081187665462494
+    },
+    {
+      "start_sample": 13560000,
+      "end_sample": 13640000,
+      "source_start": 2047.5,
+      "source_end": 2052.5,
+      "vad_speech_seconds": 3.95,
+      "label": "unlabelled",
+      "cosine": 0.2958674430847168
+    },
+    {
+      "start_sample": 13600000,
+      "end_sample": 13680000,
+      "source_start": 2050.0,
+      "source_end": 2055.0,
+      "vad_speech_seconds": 2.246,
+      "label": "unlabelled",
+      "cosine": 0.31704556941986084
+    },
+    {
+      "start_sample": 13640000,
+      "end_sample": 13720000,
+      "source_start": 2052.5,
+      "source_end": 2057.5,
+      "vad_speech_seconds": 1.11,
+      "label": "unlabelled",
+      "cosine": 0.32230344414711
+    },
+    {
+      "start_sample": 13680000,
+      "end_sample": 13760000,
+      "source_start": 2055.0,
+      "source_end": 2060.0,
+      "vad_speech_seconds": 2.042,
+      "label": "unlabelled",
+      "cosine": 0.4470091462135315
+    },
+    {
+      "start_sample": 13720000,
+      "end_sample": 13800000,
+      "source_start": 2057.5,
+      "source_end": 2062.5,
+      "vad_speech_seconds": 2.336,
+      "label": "unlabelled",
+      "cosine": 0.28246575593948364
+    },
+    {
+      "start_sample": 13760000,
+      "end_sample": 13840000,
+      "source_start": 2060.0,
+      "source_end": 2065.0,
+      "vad_speech_seconds": 2.912,
+      "label": "unlabelled",
+      "cosine": 0.08359275013208389
+    },
+    {
+      "start_sample": 13800000,
+      "end_sample": 13880000,
+      "source_start": 2062.5,
+      "source_end": 2067.5,
+      "vad_speech_seconds": 4.804,
+      "label": "unlabelled",
+      "cosine": 0.1997542381286621
+    },
+    {
+      "start_sample": 13840000,
+      "end_sample": 13920000,
+      "source_start": 2065.0,
+      "source_end": 2070.0,
+      "vad_speech_seconds": 5.0,
+      "label": "unlabelled",
+      "cosine": 0.5207149982452393
+    },
+    {
+      "start_sample": 13880000,
+      "end_sample": 13960000,
+      "source_start": 2067.5,
+      "source_end": 2072.5,
+      "vad_speech_seconds": 5.0,
+      "label": "unlabelled",
+      "cosine": 0.4241829216480255
+    },
+    {
+      "start_sample": 13920000,
+      "end_sample": 14000000,
+      "source_start": 2070.0,
+      "source_end": 2075.0,
+      "vad_speech_seconds": 5.0,
+      "label": "unlabelled",
+      "cosine": 0.34964287281036377
+    },
+    {
+      "start_sample": 13960000,
+      "end_sample": 14040000,
+      "source_start": 2072.5,
+      "source_end": 2077.5,
+      "vad_speech_seconds": 3.594,
+      "label": "unlabelled",
+      "cosine": 0.3791954517364502
+    },
+    {
+      "start_sample": 14000000,
+      "end_sample": 14080000,
+      "source_start": 2075.0,
+      "source_end": 2080.0,
+      "vad_speech_seconds": 1.094,
+      "label": "unlabelled",
+      "cosine": 0.2525566816329956
+    },
+    {
+      "start_sample": 14040000,
+      "end_sample": 14120000,
+      "source_start": 2077.5,
+      "source_end": 2082.5,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 14080000,
+      "end_sample": 14160000,
+      "source_start": 2080.0,
+      "source_end": 2085.0,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 14120000,
+      "end_sample": 14200000,
+      "source_start": 2082.5,
+      "source_end": 2087.5,
+      "vad_speech_seconds": 0.618,
+      "label": "unlabelled",
+      "cosine": 0.4865347146987915
+    },
+    {
+      "start_sample": 14160000,
+      "end_sample": 14240000,
+      "source_start": 2085.0,
+      "source_end": 2090.0,
+      "vad_speech_seconds": 2.858,
+      "label": "unlabelled",
+      "cosine": 0.24696260690689087
+    },
+    {
+      "start_sample": 14200000,
+      "end_sample": 14280000,
+      "source_start": 2087.5,
+      "source_end": 2092.5,
+      "vad_speech_seconds": 4.384,
+      "label": "unlabelled",
+      "cosine": 0.2194969356060028
+    },
+    {
+      "start_sample": 14240000,
+      "end_sample": 14320000,
+      "source_start": 2090.0,
+      "source_end": 2095.0,
+      "vad_speech_seconds": 4.644,
+      "label": "unlabelled",
+      "cosine": 0.15124543011188507
+    },
+    {
+      "start_sample": 14280000,
+      "end_sample": 14360000,
+      "source_start": 2092.5,
+      "source_end": 2097.5,
+      "vad_speech_seconds": 4.644,
+      "label": "unlabelled",
+      "cosine": 0.4292392134666443
+    },
+    {
+      "start_sample": 14320000,
+      "end_sample": 14400000,
+      "source_start": 2095.0,
+      "source_end": 2100.0,
+      "vad_speech_seconds": 4.512,
+      "label": "unlabelled",
+      "cosine": 0.5608623027801514
+    },
+    {
+      "start_sample": 14360000,
+      "end_sample": 14440000,
+      "source_start": 2097.5,
+      "source_end": 2102.5,
+      "vad_speech_seconds": 4.64,
+      "label": "unlabelled",
+      "cosine": 0.44648128747940063
+    },
+    {
+      "start_sample": 14400000,
+      "end_sample": 14480000,
+      "source_start": 2100.0,
+      "source_end": 2105.0,
+      "vad_speech_seconds": 4.448,
+      "label": "unlabelled",
+      "cosine": 0.4903932213783264
+    },
+    {
+      "start_sample": 14440000,
+      "end_sample": 14520000,
+      "source_start": 2102.5,
+      "source_end": 2107.5,
+      "vad_speech_seconds": 4.676,
+      "label": "unlabelled",
+      "cosine": 0.46855854988098145
+    },
+    {
+      "start_sample": 14480000,
+      "end_sample": 14560000,
+      "source_start": 2105.0,
+      "source_end": 2110.0,
+      "vad_speech_seconds": 5.0,
+      "label": "unlabelled",
+      "cosine": 0.48970484733581543
+    },
+    {
+      "start_sample": 14520000,
+      "end_sample": 14600000,
+      "source_start": 2107.5,
+      "source_end": 2112.5,
+      "vad_speech_seconds": 4.868,
+      "label": "unlabelled",
+      "cosine": 0.257574200630188
+    },
+    {
+      "start_sample": 14560000,
+      "end_sample": 14640000,
+      "source_start": 2110.0,
+      "source_end": 2115.0,
+      "vad_speech_seconds": 4.868,
+      "label": "unlabelled",
+      "cosine": 0.21942080557346344
+    },
+    {
+      "start_sample": 14600000,
+      "end_sample": 14680000,
+      "source_start": 2112.5,
+      "source_end": 2117.5,
+      "vad_speech_seconds": 5.0,
+      "label": "unlabelled",
+      "cosine": 0.40322741866111755
+    },
+    {
+      "start_sample": 14640000,
+      "end_sample": 14720000,
+      "source_start": 2115.0,
+      "source_end": 2120.0,
+      "vad_speech_seconds": 4.836,
+      "label": "unlabelled",
+      "cosine": 0.6678050756454468
+    },
+    {
+      "start_sample": 14680000,
+      "end_sample": 14760000,
+      "source_start": 2117.5,
+      "source_end": 2122.5,
+      "vad_speech_seconds": 4.836,
+      "label": "unlabelled",
+      "cosine": 0.6400183439254761
+    },
+    {
+      "start_sample": 14720000,
+      "end_sample": 14800000,
+      "source_start": 2120.0,
+      "source_end": 2125.0,
+      "vad_speech_seconds": 3.712,
+      "label": "unlabelled",
+      "cosine": 0.4733666777610779
+    },
+    {
+      "start_sample": 14760000,
+      "end_sample": 14840000,
+      "source_start": 2122.5,
+      "source_end": 2127.5,
+      "vad_speech_seconds": 3.712,
+      "label": "unlabelled",
+      "cosine": 0.5927034616470337
+    },
+    {
+      "start_sample": 14800000,
+      "end_sample": 14880000,
+      "source_start": 2125.0,
+      "source_end": 2130.0,
+      "vad_speech_seconds": 5.0,
+      "label": "unlabelled",
+      "cosine": 0.6054548025131226
+    },
+    {
+      "start_sample": 14840000,
+      "end_sample": 14920000,
+      "source_start": 2127.5,
+      "source_end": 2132.5,
+      "vad_speech_seconds": 4.868,
+      "label": "unlabelled",
+      "cosine": 0.5846158266067505
+    },
+    {
+      "start_sample": 14880000,
+      "end_sample": 14960000,
+      "source_start": 2130.0,
+      "source_end": 2135.0,
+      "vad_speech_seconds": 4.384,
+      "label": "unlabelled",
+      "cosine": 0.5648447871208191
+    },
+    {
+      "start_sample": 14920000,
+      "end_sample": 15000000,
+      "source_start": 2132.5,
+      "source_end": 2137.5,
+      "vad_speech_seconds": 4.39,
+      "label": "unlabelled",
+      "cosine": 0.5439492464065552
+    },
+    {
+      "start_sample": 14960000,
+      "end_sample": 15040000,
+      "source_start": 2135.0,
+      "source_end": 2140.0,
+      "vad_speech_seconds": 4.804,
+      "label": "unlabelled",
+      "cosine": 0.32244613766670227
+    },
+    {
+      "start_sample": 15000000,
+      "end_sample": 15080000,
+      "source_start": 2137.5,
+      "source_end": 2142.5,
+      "vad_speech_seconds": 4.734,
+      "label": "unlabelled",
+      "cosine": 0.29734984040260315
+    },
+    {
+      "start_sample": 15040000,
+      "end_sample": 15120000,
+      "source_start": 2140.0,
+      "source_end": 2145.0,
+      "vad_speech_seconds": 4.506,
+      "label": "unlabelled",
+      "cosine": 0.4492134153842926
+    },
+    {
+      "start_sample": 15080000,
+      "end_sample": 15160000,
+      "source_start": 2142.5,
+      "source_end": 2147.5,
+      "vad_speech_seconds": 4.452,
+      "label": "unlabelled",
+      "cosine": 0.4956103563308716
+    },
+    {
+      "start_sample": 15120000,
+      "end_sample": 15200000,
+      "source_start": 2145.0,
+      "source_end": 2150.0,
+      "vad_speech_seconds": 4.444,
+      "label": "unlabelled",
+      "cosine": 0.4646558165550232
+    },
+    {
+      "start_sample": 15160000,
+      "end_sample": 15240000,
+      "source_start": 2147.5,
+      "source_end": 2152.5,
+      "vad_speech_seconds": 3.492,
+      "label": "unlabelled",
+      "cosine": 0.47977855801582336
+    },
+    {
+      "start_sample": 15200000,
+      "end_sample": 15280000,
+      "source_start": 2150.0,
+      "source_end": 2155.0,
+      "vad_speech_seconds": 3.698,
+      "label": "unlabelled",
+      "cosine": 0.5799455046653748
+    },
+    {
+      "start_sample": 15240000,
+      "end_sample": 15320000,
+      "source_start": 2152.5,
+      "source_end": 2157.5,
+      "vad_speech_seconds": 4.9,
+      "label": "unlabelled",
+      "cosine": 0.5985039472579956
+    },
+    {
+      "start_sample": 15280000,
+      "end_sample": 15360000,
+      "source_start": 2155.0,
+      "source_end": 2160.0,
+      "vad_speech_seconds": 4.0,
+      "label": "unlabelled",
+      "cosine": 0.44334864616394043
+    },
+    {
+      "start_sample": 15320000,
+      "end_sample": 15400000,
+      "source_start": 2157.5,
+      "source_end": 2162.5,
+      "vad_speech_seconds": 3.42,
+      "label": "unlabelled",
+      "cosine": 0.5535962581634521
+    },
+    {
+      "start_sample": 15360000,
+      "end_sample": 15440000,
+      "source_start": 2160.0,
+      "source_end": 2165.0,
+      "vad_speech_seconds": 3.574,
+      "label": "unlabelled",
+      "cosine": 0.5901209115982056
+    },
+    {
+      "start_sample": 15400000,
+      "end_sample": 15480000,
+      "source_start": 2162.5,
+      "source_end": 2167.5,
+      "vad_speech_seconds": 3.936,
+      "label": "unlabelled",
+      "cosine": 0.7371593713760376
+    },
+    {
+      "start_sample": 15440000,
+      "end_sample": 15520000,
+      "source_start": 2165.0,
+      "source_end": 2170.0,
+      "vad_speech_seconds": 4.508,
+      "label": "unlabelled",
+      "cosine": 0.7415435314178467
+    },
+    {
+      "start_sample": 15480000,
+      "end_sample": 15560000,
+      "source_start": 2167.5,
+      "source_end": 2172.5,
+      "vad_speech_seconds": 3.758,
+      "label": "unlabelled",
+      "cosine": 0.6301565170288086
+    },
+    {
+      "start_sample": 15520000,
+      "end_sample": 15600000,
+      "source_start": 2170.0,
+      "source_end": 2175.0,
+      "vad_speech_seconds": 3.822,
+      "label": "unlabelled",
+      "cosine": 0.6092774868011475
+    },
+    {
+      "start_sample": 15560000,
+      "end_sample": 15640000,
+      "source_start": 2172.5,
+      "source_end": 2177.5,
+      "vad_speech_seconds": 4.244,
+      "label": "unlabelled",
+      "cosine": 0.6774774193763733
+    },
+    {
+      "start_sample": 15600000,
+      "end_sample": 15680000,
+      "source_start": 2175.0,
+      "source_end": 2180.0,
+      "vad_speech_seconds": 4.448,
+      "label": "unlabelled",
+      "cosine": 0.6401224136352539
+    },
+    {
+      "start_sample": 15640000,
+      "end_sample": 15720000,
+      "source_start": 2177.5,
+      "source_end": 2182.5,
+      "vad_speech_seconds": 4.994,
+      "label": "unlabelled",
+      "cosine": 0.6369838714599609
+    },
+    {
+      "start_sample": 15680000,
+      "end_sample": 15760000,
+      "source_start": 2180.0,
+      "source_end": 2185.0,
+      "vad_speech_seconds": 4.086,
+      "label": "unlabelled",
+      "cosine": 0.5540863871574402
+    },
+    {
+      "start_sample": 15720000,
+      "end_sample": 15800000,
+      "source_start": 2182.5,
+      "source_end": 2187.5,
+      "vad_speech_seconds": 3.964,
+      "label": "unlabelled",
+      "cosine": 0.6621108055114746
+    },
+    {
+      "start_sample": 15760000,
+      "end_sample": 15840000,
+      "source_start": 2185.0,
+      "source_end": 2190.0,
+      "vad_speech_seconds": 4.778,
+      "label": "unlabelled",
+      "cosine": 0.6305105090141296
+    },
+    {
+      "start_sample": 15800000,
+      "end_sample": 15880000,
+      "source_start": 2187.5,
+      "source_end": 2192.5,
+      "vad_speech_seconds": 4.672,
+      "label": "unlabelled",
+      "cosine": 0.7232880592346191
+    },
+    {
+      "start_sample": 15840000,
+      "end_sample": 15920000,
+      "source_start": 2190.0,
+      "source_end": 2195.0,
+      "vad_speech_seconds": 3.2,
+      "label": "unlabelled",
+      "cosine": 0.6778834462165833
+    },
+    {
+      "start_sample": 15880000,
+      "end_sample": 15960000,
+      "source_start": 2192.5,
+      "source_end": 2197.5,
+      "vad_speech_seconds": 3.008,
+      "label": "unlabelled",
+      "cosine": 0.3233599364757538
+    },
+    {
+      "start_sample": 15920000,
+      "end_sample": 16000000,
+      "source_start": 2195.0,
+      "source_end": 2200.0,
+      "vad_speech_seconds": 3.612,
+      "label": "unlabelled",
+      "cosine": 0.3419743776321411
+    },
+    {
+      "start_sample": 15960000,
+      "end_sample": 16040000,
+      "source_start": 2197.5,
+      "source_end": 2202.5,
+      "vad_speech_seconds": 3.612,
+      "label": "unlabelled",
+      "cosine": 0.27789056301116943
+    },
+    {
+      "start_sample": 16000000,
+      "end_sample": 16080000,
+      "source_start": 2200.0,
+      "source_end": 2205.0,
+      "vad_speech_seconds": 4.58,
+      "label": "unlabelled",
+      "cosine": 0.5656723380088806
+    },
+    {
+      "start_sample": 16040000,
+      "end_sample": 16120000,
+      "source_start": 2202.5,
+      "source_end": 2207.5,
+      "vad_speech_seconds": 4.602,
+      "label": "unlabelled",
+      "cosine": 0.6553022265434265
+    },
+    {
+      "start_sample": 16080000,
+      "end_sample": 16160000,
+      "source_start": 2205.0,
+      "source_end": 2210.0,
+      "vad_speech_seconds": 3.972,
+      "label": "unlabelled",
+      "cosine": 0.6349602937698364
+    },
+    {
+      "start_sample": 16120000,
+      "end_sample": 16200000,
+      "source_start": 2207.5,
+      "source_end": 2212.5,
+      "vad_speech_seconds": 4.06,
+      "label": "unlabelled",
+      "cosine": 0.6875845789909363
+    },
+    {
+      "start_sample": 16160000,
+      "end_sample": 16240000,
+      "source_start": 2210.0,
+      "source_end": 2215.0,
+      "vad_speech_seconds": 4.548,
+      "label": "unlabelled",
+      "cosine": 0.7043399810791016
+    },
+    {
+      "start_sample": 16200000,
+      "end_sample": 16280000,
+      "source_start": 2212.5,
+      "source_end": 2217.5,
+      "vad_speech_seconds": 4.63,
+      "label": "unlabelled",
+      "cosine": 0.6338114738464355
+    },
+    {
+      "start_sample": 16240000,
+      "end_sample": 16320000,
+      "source_start": 2215.0,
+      "source_end": 2220.0,
+      "vad_speech_seconds": 4.772,
+      "label": "unlabelled",
+      "cosine": 0.5556609034538269
+    },
+    {
+      "start_sample": 16280000,
+      "end_sample": 16360000,
+      "source_start": 2217.5,
+      "source_end": 2222.5,
+      "vad_speech_seconds": 4.094,
+      "label": "unlabelled",
+      "cosine": 0.0972646027803421
+    },
+    {
+      "start_sample": 16320000,
+      "end_sample": 16400000,
+      "source_start": 2220.0,
+      "source_end": 2225.0,
+      "vad_speech_seconds": 3.868,
+      "label": "unlabelled",
+      "cosine": 0.10457466542720795
+    },
+    {
+      "start_sample": 16360000,
+      "end_sample": 16440000,
+      "source_start": 2222.5,
+      "source_end": 2227.5,
+      "vad_speech_seconds": 3.106,
+      "label": "unlabelled",
+      "cosine": 0.4252129793167114
+    },
+    {
+      "start_sample": 16400000,
+      "end_sample": 16480000,
+      "source_start": 2225.0,
+      "source_end": 2230.0,
+      "vad_speech_seconds": 2.962,
+      "label": "unlabelled",
+      "cosine": 0.6231933236122131
+    },
+    {
+      "start_sample": 16440000,
+      "end_sample": 16520000,
+      "source_start": 2227.5,
+      "source_end": 2232.5,
+      "vad_speech_seconds": 3.854,
+      "label": "unlabelled",
+      "cosine": 0.626746416091919
+    },
+    {
+      "start_sample": 16480000,
+      "end_sample": 16560000,
+      "source_start": 2230.0,
+      "source_end": 2235.0,
+      "vad_speech_seconds": 3.982,
+      "label": "unlabelled",
+      "cosine": 0.6615907549858093
+    },
+    {
+      "start_sample": 16520000,
+      "end_sample": 16600000,
+      "source_start": 2232.5,
+      "source_end": 2237.5,
+      "vad_speech_seconds": 3.986,
+      "label": "unlabelled",
+      "cosine": 0.6962053775787354
+    },
+    {
+      "start_sample": 16560000,
+      "end_sample": 16640000,
+      "source_start": 2235.0,
+      "source_end": 2240.0,
+      "vad_speech_seconds": 2.816,
+      "label": "unlabelled",
+      "cosine": 0.5099101066589355
+    },
+    {
+      "start_sample": 16600000,
+      "end_sample": 16680000,
+      "source_start": 2237.5,
+      "source_end": 2242.5,
+      "vad_speech_seconds": 3.326,
+      "label": "unlabelled",
+      "cosine": 0.5334307551383972
+    },
+    {
+      "start_sample": 16640000,
+      "end_sample": 16720000,
+      "source_start": 2240.0,
+      "source_end": 2245.0,
+      "vad_speech_seconds": 2.238,
+      "label": "unlabelled",
+      "cosine": 0.49840256571769714
+    },
+    {
+      "start_sample": 16680000,
+      "end_sample": 16760000,
+      "source_start": 2242.5,
+      "source_end": 2247.5,
+      "vad_speech_seconds": 0.0,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 16720000,
+      "end_sample": 16800000,
+      "source_start": 2245.0,
+      "source_end": 2250.0,
+      "vad_speech_seconds": 2.186,
+      "label": "unlabelled",
+      "cosine": 0.01320673618465662
+    },
+    {
+      "start_sample": 16760000,
+      "end_sample": 16840000,
+      "source_start": 2247.5,
+      "source_end": 2252.5,
+      "vad_speech_seconds": 4.586,
+      "label": "unlabelled",
+      "cosine": 0.025308219715952873
+    },
+    {
+      "start_sample": 16800000,
+      "end_sample": 16880000,
+      "source_start": 2250.0,
+      "source_end": 2255.0,
+      "vad_speech_seconds": 4.8,
+      "label": "unlabelled",
+      "cosine": 0.13754229247570038
+    },
+    {
+      "start_sample": 16840000,
+      "end_sample": 16920000,
+      "source_start": 2252.5,
+      "source_end": 2257.5,
+      "vad_speech_seconds": 4.348,
+      "label": "unlabelled",
+      "cosine": 0.2011253982782364
+    },
+    {
+      "start_sample": 16880000,
+      "end_sample": 16960000,
+      "source_start": 2255.0,
+      "source_end": 2260.0,
+      "vad_speech_seconds": 4.062,
+      "label": "unlabelled",
+      "cosine": 0.4983765780925751
+    },
+    {
+      "start_sample": 16920000,
+      "end_sample": 17000000,
+      "source_start": 2257.5,
+      "source_end": 2262.5,
+      "vad_speech_seconds": 3.006,
+      "label": "unlabelled",
+      "cosine": 0.5728781223297119
+    },
+    {
+      "start_sample": 16960000,
+      "end_sample": 17040000,
+      "source_start": 2260.0,
+      "source_end": 2265.0,
+      "vad_speech_seconds": 2.398,
+      "label": "unlabelled",
+      "cosine": 0.17880447208881378
+    },
+    {
+      "start_sample": 17000000,
+      "end_sample": 17080000,
+      "source_start": 2262.5,
+      "source_end": 2267.5,
+      "vad_speech_seconds": 2.914,
+      "label": "unlabelled",
+      "cosine": 0.21863752603530884
+    },
+    {
+      "start_sample": 17040000,
+      "end_sample": 17120000,
+      "source_start": 2265.0,
+      "source_end": 2270.0,
+      "vad_speech_seconds": 1.97,
+      "label": "unlabelled",
+      "cosine": 0.35796505212783813
+    },
+    {
+      "start_sample": 17080000,
+      "end_sample": 17160000,
+      "source_start": 2267.5,
+      "source_end": 2272.5,
+      "vad_speech_seconds": 1.06,
+      "label": "unlabelled",
+      "cosine": 0.17845681309700012
+    },
+    {
+      "start_sample": 17120000,
+      "end_sample": 17200000,
+      "source_start": 2270.0,
+      "source_end": 2275.0,
+      "vad_speech_seconds": 2.998,
+      "label": "unlabelled",
+      "cosine": 0.04870716109871864
+    },
+    {
+      "start_sample": 17160000,
+      "end_sample": 17240000,
+      "source_start": 2272.5,
+      "source_end": 2277.5,
+      "vad_speech_seconds": 4.868,
+      "label": "unlabelled",
+      "cosine": 0.054651740938425064
+    },
+    {
+      "start_sample": 17200000,
+      "end_sample": 17280000,
+      "source_start": 2275.0,
+      "source_end": 2280.0,
+      "vad_speech_seconds": 4.868,
+      "label": "unlabelled",
+      "cosine": 0.058379773050546646
+    },
+    {
+      "start_sample": 17240000,
+      "end_sample": 17320000,
+      "source_start": 2277.5,
+      "source_end": 2282.5,
+      "vad_speech_seconds": 4.612,
+      "label": "unlabelled",
+      "cosine": 0.07342376559972763
+    },
+    {
+      "start_sample": 17280000,
+      "end_sample": 17360000,
+      "source_start": 2280.0,
+      "source_end": 2285.0,
+      "vad_speech_seconds": 4.09,
+      "label": "unlabelled",
+      "cosine": 0.05389110743999481
+    },
+    {
+      "start_sample": 17320000,
+      "end_sample": 17400000,
+      "source_start": 2282.5,
+      "source_end": 2287.5,
+      "vad_speech_seconds": 3.716,
+      "label": "unlabelled",
+      "cosine": 0.1172090619802475
+    },
+    {
+      "start_sample": 17360000,
+      "end_sample": 17440000,
+      "source_start": 2285.0,
+      "source_end": 2290.0,
+      "vad_speech_seconds": 3.882,
+      "label": "unlabelled",
+      "cosine": 0.0883949026465416
+    },
+    {
+      "start_sample": 17400000,
+      "end_sample": 17480000,
+      "source_start": 2287.5,
+      "source_end": 2292.5,
+      "vad_speech_seconds": 2.826,
+      "label": "unlabelled",
+      "cosine": 0.11228285729885101
+    },
+    {
+      "start_sample": 17440000,
+      "end_sample": 17520000,
+      "source_start": 2290.0,
+      "source_end": 2295.0,
+      "vad_speech_seconds": 0.682,
+      "label": "unlabelled",
+      "cosine": 0.06675048917531967
+    },
+    {
+      "start_sample": 17480000,
+      "end_sample": 17560000,
+      "source_start": 2292.5,
+      "source_end": 2297.5,
+      "vad_speech_seconds": 0.346,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 17520000,
+      "end_sample": 17600000,
+      "source_start": 2295.0,
+      "source_end": 2300.0,
+      "vad_speech_seconds": 1.53,
+      "label": "unlabelled",
+      "cosine": 0.5804193019866943
+    },
+    {
+      "start_sample": 17560000,
+      "end_sample": 17640000,
+      "source_start": 2297.5,
+      "source_end": 2302.5,
+      "vad_speech_seconds": 2.014,
+      "label": "unlabelled",
+      "cosine": 0.4694708585739136
+    },
+    {
+      "start_sample": 17600000,
+      "end_sample": 17680000,
+      "source_start": 2300.0,
+      "source_end": 2305.0,
+      "vad_speech_seconds": 1.338,
+      "label": "unlabelled",
+      "cosine": 0.18733376264572144
+    },
+    {
+      "start_sample": 17640000,
+      "end_sample": 17720000,
+      "source_start": 2302.5,
+      "source_end": 2307.5,
+      "vad_speech_seconds": 1.944,
+      "label": "unlabelled",
+      "cosine": 0.13530083000659943
+    },
+    {
+      "start_sample": 17680000,
+      "end_sample": 17760000,
+      "source_start": 2305.0,
+      "source_end": 2310.0,
+      "vad_speech_seconds": 1.436,
+      "label": "unlabelled",
+      "cosine": 0.14038950204849243
+    },
+    {
+      "start_sample": 17720000,
+      "end_sample": 17800000,
+      "source_start": 2307.5,
+      "source_end": 2312.5,
+      "vad_speech_seconds": 0.05,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 17760000,
+      "end_sample": 17840000,
+      "source_start": 2310.0,
+      "source_end": 2315.0,
+      "vad_speech_seconds": 0.444,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 17800000,
+      "end_sample": 17880000,
+      "source_start": 2312.5,
+      "source_end": 2317.5,
+      "vad_speech_seconds": 0.394,
+      "label": "unlabelled",
+      "cosine": null
+    },
+    {
+      "start_sample": 17840000,
+      "end_sample": 17920000,
+      "source_start": 2315.0,
+      "source_end": 2320.0,
+      "vad_speech_seconds": 0.766,
+      "label": "unlabelled",
+      "cosine": 0.1053064838051796
+    },
+    {
+      "start_sample": 17880000,
+      "end_sample": 17960000,
+      "source_start": 2317.5,
+      "source_end": 2322.5,
+      "vad_speech_seconds": 3.006,
+      "label": "unlabelled",
+      "cosine": 0.099550262093544
+    },
+    {
+      "start_sample": 17920000,
+      "end_sample": 18000000,
+      "source_start": 2320.0,
+      "source_end": 2325.0,
+      "vad_speech_seconds": 4.22,
+      "label": "unlabelled",
+      "cosine": 0.06287038326263428
+    },
+    {
+      "start_sample": 17960000,
+      "end_sample": 18040000,
+      "source_start": 2322.5,
+      "source_end": 2327.5,
+      "vad_speech_seconds": 4.306,
+      "label": "unlabelled",
+      "cosine": 0.010206460021436214
+    },
+    {
+      "start_sample": 18000000,
+      "end_sample": 18080000,
+      "source_start": 2325.0,
+      "source_end": 2330.0,
+      "vad_speech_seconds": 3.648,
+      "label": "unlabelled",
+      "cosine": -0.001423487439751625
+    },
+    {
+      "start_sample": 18040000,
+      "end_sample": 18120000,
+      "source_start": 2327.5,
+      "source_end": 2332.5,
+      "vad_speech_seconds": 3.21,
+      "label": "unlabelled",
+      "cosine": 0.20874066650867462
+    },
+    {
+      "start_sample": 18080000,
+      "end_sample": 18160000,
+      "source_start": 2330.0,
+      "source_end": 2335.0,
+      "vad_speech_seconds": 4.096,
+      "label": "unlabelled",
+      "cosine": 0.09632647037506104
+    },
+    {
+      "start_sample": 18120000,
+      "end_sample": 18200000,
+      "source_start": 2332.5,
+      "source_end": 2337.5,
+      "vad_speech_seconds": 4.544,
+      "label": "unlabelled",
+      "cosine": 0.10862912237644196
+    },
+    {
+      "start_sample": 18160000,
+      "end_sample": 18240000,
+      "source_start": 2335.0,
+      "source_end": 2340.0,
+      "vad_speech_seconds": 4.48,
+      "label": "unlabelled",
+      "cosine": 0.18609467148780823
+    },
+    {
+      "start_sample": 18200000,
+      "end_sample": 18280000,
+      "source_start": 2337.5,
+      "source_end": 2342.5,
+      "vad_speech_seconds": 4.644,
+      "label": "unlabelled",
+      "cosine": 0.35305315256118774
+    },
+    {
+      "start_sample": 18240000,
+      "end_sample": 18320000,
+      "source_start": 2340.0,
+      "source_end": 2345.0,
+      "vad_speech_seconds": 5.0,
+      "label": "unlabelled",
+      "cosine": 0.3155480623245239
+    },
+    {
+      "start_sample": 18280000,
+      "end_sample": 18360000,
+      "source_start": 2342.5,
+      "source_end": 2347.5,
+      "vad_speech_seconds": 4.986,
+      "label": "unlabelled",
+      "cosine": 0.15434905886650085
+    },
+    {
+      "start_sample": 18320000,
+      "end_sample": 18400000,
+      "source_start": 2345.0,
+      "source_end": 2350.0,
+      "vad_speech_seconds": 3.748,
+      "label": "unlabelled",
+      "cosine": 0.303503155708313
+    },
+    {
+      "start_sample": 18360000,
+      "end_sample": 18440000,
+      "source_start": 2347.5,
+      "source_end": 2352.5,
+      "vad_speech_seconds": 3.762,
+      "label": "unlabelled",
+      "cosine": 0.40269261598587036
+    },
+    {
+      "start_sample": 18400000,
+      "end_sample": 18480000,
+      "source_start": 2350.0,
+      "source_end": 2355.0,
+      "vad_speech_seconds": 5.0,
+      "label": "unlabelled",
+      "cosine": 0.07234040647745132
+    },
+    {
+      "start_sample": 18440000,
+      "end_sample": 18520000,
+      "source_start": 2352.5,
+      "source_end": 2357.5,
+      "vad_speech_seconds": 3.91,
+      "label": "unlabelled",
+      "cosine": 0.025376811623573303
+    },
+    {
+      "start_sample": 18480000,
+      "end_sample": 18560000,
+      "source_start": 2355.0,
+      "source_end": 2360.0,
+      "vad_speech_seconds": 2.556,
+      "label": "unlabelled",
+      "cosine": -8.506327867507935e-05
+    },
+    {
+      "start_sample": 18520000,
+      "end_sample": 18600000,
+      "source_start": 2357.5,
+      "source_end": 2362.5,
+      "vad_speech_seconds": 2.17,
+      "label": "unlabelled",
+      "cosine": 0.08016794919967651
+    },
+    {
+      "start_sample": 18560000,
+      "end_sample": 18640000,
+      "source_start": 2360.0,
+      "source_end": 2365.0,
+      "vad_speech_seconds": 2.88,
+      "label": "unlabelled",
+      "cosine": 0.1319378763437271
+    },
+    {
+      "start_sample": 18600000,
+      "end_sample": 18680000,
+      "source_start": 2362.5,
+      "source_end": 2367.5,
+      "vad_speech_seconds": 4.224,
+      "label": "unlabelled",
+      "cosine": 0.09291978180408478
+    },
+    {
+      "start_sample": 18640000,
+      "end_sample": 18720000,
+      "source_start": 2365.0,
+      "source_end": 2370.0,
+      "vad_speech_seconds": 4.384,
+      "label": "unlabelled",
+      "cosine": 0.2410687655210495
+    },
+    {
+      "start_sample": 18680000,
+      "end_sample": 18760000,
+      "source_start": 2367.5,
+      "source_end": 2372.5,
+      "vad_speech_seconds": 2.958,
+      "label": "unlabelled",
+      "cosine": 0.2562350332736969
+    },
+    {
+      "start_sample": 18720000,
+      "end_sample": 18800000,
+      "source_start": 2370.0,
+      "source_end": 2375.0,
+      "vad_speech_seconds": 2.98,
+      "label": "unlabelled",
+      "cosine": 0.07902560383081436
+    },
+    {
+      "start_sample": 18760000,
+      "end_sample": 18840000,
+      "source_start": 2372.5,
+      "source_end": 2377.5,
+      "vad_speech_seconds": 4.152,
+      "label": "unlabelled",
+      "cosine": 0.05537358298897743
+    },
+    {
+      "start_sample": 18800000,
+      "end_sample": 18880000,
+      "source_start": 2375.0,
+      "source_end": 2380.0,
+      "vad_speech_seconds": 4.256,
+      "label": "unlabelled",
+      "cosine": 0.04457113891839981
+    },
+    {
+      "start_sample": 18840000,
+      "end_sample": 18920000,
+      "source_start": 2377.5,
+      "source_end": 2382.5,
+      "vad_speech_seconds": 4.478,
+      "label": "unlabelled",
+      "cosine": 0.07571913301944733
+    },
+    {
+      "start_sample": 18880000,
+      "end_sample": 18960000,
+      "source_start": 2380.0,
+      "source_end": 2385.0,
+      "vad_speech_seconds": 4.836,
+      "label": "unlabelled",
+      "cosine": 0.13255129754543304
+    },
+    {
+      "start_sample": 18920000,
+      "end_sample": 19000000,
+      "source_start": 2382.5,
+      "source_end": 2387.5,
+      "vad_speech_seconds": 5.0,
+      "label": "unlabelled",
+      "cosine": 0.08848563581705093
+    },
+    {
+      "start_sample": 18960000,
+      "end_sample": 19040000,
+      "source_start": 2385.0,
+      "source_end": 2390.0,
+      "vad_speech_seconds": 5.0,
+      "label": "unlabelled",
+      "cosine": -0.0320439487695694
+    },
+    {
+      "start_sample": 19000000,
+      "end_sample": 19080000,
+      "source_start": 2387.5,
+      "source_end": 2392.5,
+      "vad_speech_seconds": 5.0,
+      "label": "unlabelled",
+      "cosine": 0.07631886750459671
+    },
+    {
+      "start_sample": 19040000,
+      "end_sample": 19120000,
+      "source_start": 2390.0,
+      "source_end": 2395.0,
+      "vad_speech_seconds": 5.0,
+      "label": "unlabelled",
+      "cosine": 0.08090873062610626
+    },
+    {
+      "start_sample": 19080000,
+      "end_sample": 19160000,
+      "source_start": 2392.5,
+      "source_end": 2397.5,
+      "vad_speech_seconds": 4.772,
+      "label": "unlabelled",
+      "cosine": 0.07230382412672043
+    },
+    {
+      "start_sample": 19120000,
+      "end_sample": 19200000,
+      "source_start": 2395.0,
+      "source_end": 2400.0,
+      "vad_speech_seconds": 4.772,
+      "label": "unlabelled",
+      "cosine": 0.06345553696155548
+    },
+    {
+      "start_sample": 19160000,
+      "end_sample": 19200000,
+      "source_start": 2397.5,
+      "source_end": 2400.0,
+      "vad_speech_seconds": 2.5,
+      "label": "unlabelled",
+      "cosine": 0.08033660054206848
+    }
+  ],
+  "score_quantiles": {
+    "min": -0.03695142641663551,
+    "p10": 0.06232593208551407,
+    "median": 0.22937411069869995,
+    "p90": 0.5654240727424622,
+    "max": 0.7415435314178467
+  },
+  "listening_examples": [
+    {
+      "start_sample": 2920000,
+      "end_sample": 3000000,
+      "source_start": 1382.5,
+      "source_end": 1387.5,
+      "vad_speech_seconds": 2.166,
+      "label": "unlabelled",
+      "cosine": 0.02481444552540779,
+      "quantile": 0.05,
+      "file": "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-multi-speaker-8Xyb7UB3OlM\\listen-1382500.wav"
+    },
+    {
+      "start_sample": 17400000,
+      "end_sample": 17480000,
+      "source_start": 2287.5,
+      "source_end": 2292.5,
+      "vad_speech_seconds": 2.826,
+      "label": "unlabelled",
+      "cosine": 0.11228285729885101,
+      "quantile": 0.25,
+      "file": "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-multi-speaker-8Xyb7UB3OlM\\listen-2287500.wav"
+    },
+    {
+      "start_sample": 9000000,
+      "end_sample": 9080000,
+      "source_start": 1762.5,
+      "source_end": 1767.5,
+      "vad_speech_seconds": 3.062,
+      "label": "unlabelled",
+      "cosine": 0.2286214381456375,
+      "quantile": 0.5,
+      "file": "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-multi-speaker-8Xyb7UB3OlM\\listen-1762500.wav"
+    },
+    {
+      "start_sample": 14280000,
+      "end_sample": 14360000,
+      "source_start": 2092.5,
+      "source_end": 2097.5,
+      "vad_speech_seconds": 4.644,
+      "label": "unlabelled",
+      "cosine": 0.4292392134666443,
+      "quantile": 0.75,
+      "file": "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-multi-speaker-8Xyb7UB3OlM\\listen-2092500.wav"
+    },
+    {
+      "start_sample": 16440000,
+      "end_sample": 16520000,
+      "source_start": 2227.5,
+      "source_end": 2232.5,
+      "vad_speech_seconds": 3.854,
+      "label": "unlabelled",
+      "cosine": 0.626746416091919,
+      "quantile": 0.95,
+      "file": "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-multi-speaker-8Xyb7UB3OlM\\listen-2227500.wav"
+    }
+  ],
+  "vad_elapsed_seconds": 21.822088900007657,
+  "total_elapsed_seconds": 73.79771090000577,
+  "memory_samples": [
+    {
+      "stage": "vad",
+      "seconds": 300.0,
+      "working_set": 302845952,
+      "peak_working_set": 302845952
+    },
+    {
+      "stage": "vad",
+      "seconds": 600.0,
+      "working_set": 303390720,
+      "peak_working_set": 303390720
+    },
+    {
+      "stage": "vad",
+      "seconds": 900.0,
+      "working_set": 303652864,
+      "peak_working_set": 303669248
+    },
+    {
+      "stage": "vad",
+      "seconds": 1200.0,
+      "working_set": 303996928,
+      "peak_working_set": 303996928
+    },
+    {
+      "stage": "ecapa",
+      "windows": 60,
+      "working_set": 523706368,
+      "peak_working_set": 525221888
+    },
+    {
+      "stage": "ecapa",
+      "windows": 120,
+      "working_set": 523800576,
+      "peak_working_set": 525225984
+    },
+    {
+      "stage": "ecapa",
+      "windows": 180,
+      "working_set": 523825152,
+      "peak_working_set": 525225984
+    },
+    {
+      "stage": "ecapa",
+      "windows": 240,
+      "working_set": 523849728,
+      "peak_working_set": 525225984
+    },
+    {
+      "stage": "ecapa",
+      "windows": 300,
+      "working_set": 523874304,
+      "peak_working_set": 525225984
+    },
+    {
+      "stage": "ecapa",
+      "windows": 360,
+      "working_set": 523968512,
+      "peak_working_set": 525283328
+    },
+    {
+      "stage": "ecapa",
+      "windows": 420,
+      "working_set": 523993088,
+      "peak_working_set": 525312000
+    },
+    {
+      "stage": "ecapa",
+      "windows": 480,
+      "working_set": 527372288,
+      "peak_working_set": 527372288
+    },
+    {
+      "stage": "done",
+      "working_set": 527794176,
+      "peak_working_set": 529829888
+    }
+  ],
+  "identity_accuracy": null,
+  "classification_threshold": null,
+  "limitations": [
+    "No target/non-target/overlap ground truth in new clip; no accuracy or threshold validation",
+    "Scores on 5s windows may include mixed speakers, silence, BGM",
+    "VAD non-detection is not proof of non-speech; no audio source separation",
+    "20-minute excerpt is not full 7-hour execution"
+  ]
+}

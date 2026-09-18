@@ -1,0 +1,22 @@
+[
+  {
+    "file": "normal-operations.aup2",
+    "sha256": "01B1A5C8905FECF05F88D9D02D50D0827E2CD8A559910BF676D89E18451EB7B0",
+    "isolated_copy_matches": true
+  },
+  {
+    "file": "subtitle-roundtrip.aup2",
+    "sha256": "9FFC5DB9F7C89858FB81A3DCF8B65A5BF86BC7AAFD4AE3758546E9C9EA528EB8",
+    "isolated_copy_matches": true
+  },
+  {
+    "file": "subtitle-duplicate.aup2",
+    "sha256": "6E80113308C85B88BAEAAA4193A0F4BAB1D6458FE9432C8F85B8F9EBC4368600",
+    "isolated_copy_matches": true
+  },
+  {
+    "file": "subtitle-placement.aup2",
+    "sha256": "3DFAFF36721813C403756C7E1B15941C6B8A13858042ACC7403B61B2B3B6C628",
+    "isolated_copy_matches": true
+  }
+]

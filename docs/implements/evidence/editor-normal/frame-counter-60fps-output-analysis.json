@@ -1,0 +1,165 @@
+{
+  "output": "frame-counter-60fps-output.avi",
+  "output_rate": 60,
+  "source_frame_markers_all480_valid": true,
+  "output_count": 480,
+  "clip0_error_count": 0,
+  "clip4_error_count": 22,
+  "errors": [
+    {
+      "output_frame": 278,
+      "clip_frame": 38,
+      "expected": 278,
+      "actual": 277,
+      "delta": -1
+    },
+    {
+      "output_frame": 293,
+      "clip_frame": 53,
+      "expected": 293,
+      "actual": 292,
+      "delta": -1
+    },
+    {
+      "output_frame": 308,
+      "clip_frame": 68,
+      "expected": 308,
+      "actual": 307,
+      "delta": -1
+    },
+    {
+      "output_frame": 323,
+      "clip_frame": 83,
+      "expected": 323,
+      "actual": 322,
+      "delta": -1
+    },
+    {
+      "output_frame": 338,
+      "clip_frame": 98,
+      "expected": 338,
+      "actual": 337,
+      "delta": -1
+    },
+    {
+      "output_frame": 353,
+      "clip_frame": 113,
+      "expected": 353,
+      "actual": 352,
+      "delta": -1
+    },
+    {
+      "output_frame": 368,
+      "clip_frame": 128,
+      "expected": 368,
+      "actual": 367,
+      "delta": -1
+    },
+    {
+      "output_frame": 370,
+      "clip_frame": 130,
+      "expected": 370,
+      "actual": 369,
+      "delta": -1
+    },
+    {
+      "output_frame": 383,
+      "clip_frame": 143,
+      "expected": 383,
+      "actual": 382,
+      "delta": -1
+    },
+    {
+      "output_frame": 385,
+      "clip_frame": 145,
+      "expected": 385,
+      "actual": 384,
+      "delta": -1
+    },
+    {
+      "output_frame": 398,
+      "clip_frame": 158,
+      "expected": 398,
+      "actual": 397,
+      "delta": -1
+    },
+    {
+      "output_frame": 400,
+      "clip_frame": 160,
+      "expected": 400,
+      "actual": 399,
+      "delta": -1
+    },
+    {
+      "output_frame": 413,
+      "clip_frame": 173,
+      "expected": 413,
+      "actual": 412,
+      "delta": -1
+    },
+    {
+      "output_frame": 415,
+      "clip_frame": 175,
+      "expected": 415,
+      "actual": 414,
+      "delta": -1
+    },
+    {
+      "output_frame": 428,
+      "clip_frame": 188,
+      "expected": 428,
+      "actual": 427,
+      "delta": -1
+    },
+    {
+      "output_frame": 430,
+      "clip_frame": 190,
+      "expected": 430,
+      "actual": 429,
+      "delta": -1
+    },
+    {
+      "output_frame": 443,
+      "clip_frame": 203,
+      "expected": 443,
+      "actual": 442,
+      "delta": -1
+    },
+    {
+      "output_frame": 445,
+      "clip_frame": 205,
+      "expected": 445,
+      "actual": 444,
+      "delta": -1
+    },
+    {
+      "output_frame": 458,
+      "clip_frame": 218,
+      "expected": 458,
+      "actual": 457,
+      "delta": -1
+    },
+    {
+      "output_frame": 460,
+      "clip_frame": 220,
+      "expected": 460,
+      "actual": 459,
+      "delta": -1
+    },
+    {
+      "output_frame": 473,
+      "clip_frame": 233,
+      "expected": 473,
+      "actual": 472,
+      "delta": -1
+    },
+    {
+      "output_frame": 475,
+      "clip_frame": 235,
+      "expected": 475,
+      "actual": 474,
+      "delta": -1
+    }
+  ],
+  "sha256": "72e4d9f23959b1078446b26c5981ddc9c33af4d2ef0863bdac176b5dc3778428"
+}

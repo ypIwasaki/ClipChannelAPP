@@ -1,0 +1,60 @@
+{
+  "local_root": "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-multiaudio-dzctr0h5",
+  "source_sha256": "14b296d01a84dd427d9114335102ce037424035f13900ea93f36002916d1c9d9",
+  "asr": {
+    "rate": 16000,
+    "duration": 2.0,
+    "measured_Hz": 440.0
+  },
+  "finished": {
+    "rate": 48000,
+    "duration": 2.0,
+    "measured_Hz": 879.3333333333334
+  },
+  "checks": {
+    "zscale_available": true,
+    "tonemap_available": true,
+    "libx264_available": true,
+    "aac_available": true,
+    "asr_first_track": true,
+    "finished_second_track": true,
+    "one_AAC_LC_track": true,
+    "source_unchanged": true
+  },
+  "runs": [
+    {
+      "stage": "filters",
+      "exit_code": 0
+    },
+    {
+      "stage": "encoders",
+      "exit_code": 0
+    },
+    {
+      "stage": "create",
+      "exit_code": 0
+    },
+    {
+      "stage": "select-asr",
+      "exit_code": 0
+    },
+    {
+      "stage": "select-finished",
+      "exit_code": 0
+    },
+    {
+      "stage": "decode-finished",
+      "exit_code": 0
+    },
+    {
+      "stage": "probe-finished",
+      "exit_code": 0
+    }
+  ],
+  "limits": [
+    "Synthetic tones, not speaker recognition.",
+    "Both tracks start at zero; offset tracks not tested.",
+    "No GUI choice/persistence or AviUtl2 track routing tested.",
+    "HDR filters listed only; PQ/HLG color conversion not validated."
+  ]
+}

@@ -1,0 +1,23 @@
+[
+  {
+    "time": "2026-09-18T11:46:46.5717490+09:00",
+    "app": "aviutl2.exe",
+    "exception_code": "c0000005",
+    "offset": "00000000002cb60c",
+    "report_id": "02c8dd99-9105-48e9-9fc0-64a0926795ba"
+  },
+  {
+    "time": "2026-09-18T11:45:46.0051488+09:00",
+    "app": "aviutl2.exe",
+    "exception_code": "c0000005",
+    "offset": "00000000001d2214",
+    "report_id": "dc6ffdc2-e91f-49f8-995d-1e45e57b289f"
+  },
+  {
+    "time": "2026-09-18T11:39:59.1138829+09:00",
+    "app": "aviutl2.exe",
+    "exception_code": "c0000005",
+    "offset": "00000000001d2226",
+    "report_id": "420f97d2-10ba-413b-82ec-dd6a0578c7bf"
+  }
+]

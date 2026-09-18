@@ -1,0 +1,321 @@
+{
+  "versions": {
+    "SudachiPy": "0.6.11",
+    "SudachiDict-core": "20260723"
+  },
+  "mode": "C",
+  "checks": {
+    "m07_three_occurrences_two_utterances": true,
+    "exclusion_no_shorter_rematch": true,
+    "speaker_exclusion": true,
+    "verb_inflection": true,
+    "noun_surface_variants_separate": true,
+    "source_and_old_result_unchanged": true,
+    "registered_unicode_span": true,
+    "utterance_times": true
+  },
+  "results": {
+    "base": {
+      "counts": {
+        "ゲーム大会": 3
+      },
+      "utterance_ids": {
+        "ゲーム大会": [
+          "U1",
+          "U2"
+        ]
+      },
+      "rows": [
+        {
+          "id": "U1",
+          "time": [
+            10,
+            12
+          ],
+          "span": [
+            0,
+            5
+          ],
+          "raw": "ゲーム大会",
+          "key": "ゲーム大会",
+          "registered": true
+        },
+        {
+          "id": "U1",
+          "time": [
+            10,
+            12
+          ],
+          "span": [
+            6,
+            11
+          ],
+          "raw": "ゲーム大会",
+          "key": "ゲーム大会",
+          "registered": true
+        },
+        {
+          "id": "U2",
+          "time": [
+            20,
+            22
+          ],
+          "span": [
+            0,
+            5
+          ],
+          "raw": "ゲーム大会",
+          "key": "ゲーム大会",
+          "registered": true
+        }
+      ]
+    },
+    "excluded": {
+      "counts": {},
+      "utterance_ids": {},
+      "rows": []
+    },
+    "speaker_excluded": {
+      "counts": {
+        "ゲーム大会": 2
+      },
+      "utterance_ids": {
+        "ゲーム大会": [
+          "U1"
+        ]
+      },
+      "rows": [
+        {
+          "id": "U1",
+          "time": [
+            10,
+            12
+          ],
+          "span": [
+            0,
+            5
+          ],
+          "raw": "ゲーム大会",
+          "key": "ゲーム大会",
+          "registered": true
+        },
+        {
+          "id": "U1",
+          "time": [
+            10,
+            12
+          ],
+          "span": [
+            6,
+            11
+          ],
+          "raw": "ゲーム大会",
+          "key": "ゲーム大会",
+          "registered": true
+        }
+      ]
+    },
+    "verbs": {
+      "counts": {
+        "走る": 2
+      },
+      "utterance_ids": {
+        "走る": [
+          "V1",
+          "V2"
+        ]
+      },
+      "rows": [
+        {
+          "id": "V1",
+          "time": [
+            0,
+            1
+          ],
+          "span": [
+            0,
+            2
+          ],
+          "raw": "走っ",
+          "key": "走る",
+          "registered": false
+        },
+        {
+          "id": "V2",
+          "time": [
+            1,
+            2
+          ],
+          "span": [
+            0,
+            2
+          ],
+          "raw": "走る",
+          "key": "走る",
+          "registered": false
+        }
+      ]
+    },
+    "noun_variants": {
+      "counts": {
+        "猫": 1,
+        "ネコ": 1,
+        "CAT": 1,
+        "cat": 1,
+        "ＣＡＴ": 1
+      },
+      "utterance_ids": {
+        "猫": [
+          "N"
+        ],
+        "ネコ": [
+          "N"
+        ],
+        "CAT": [
+          "N"
+        ],
+        "cat": [
+          "N"
+        ],
+        "ＣＡＴ": [
+          "N"
+        ]
+      },
+      "rows": [
+        {
+          "id": "N",
+          "time": [
+            0,
+            3
+          ],
+          "span": [
+            0,
+            1
+          ],
+          "raw": "猫",
+          "key": "猫",
+          "registered": false
+        },
+        {
+          "id": "N",
+          "time": [
+            0,
+            3
+          ],
+          "span": [
+            2,
+            4
+          ],
+          "raw": "ネコ",
+          "key": "ネコ",
+          "registered": false
+        },
+        {
+          "id": "N",
+          "time": [
+            0,
+            3
+          ],
+          "span": [
+            5,
+            8
+          ],
+          "raw": "CAT",
+          "key": "CAT",
+          "registered": false
+        },
+        {
+          "id": "N",
+          "time": [
+            0,
+            3
+          ],
+          "span": [
+            9,
+            12
+          ],
+          "raw": "cat",
+          "key": "cat",
+          "registered": false
+        },
+        {
+          "id": "N",
+          "time": [
+            0,
+            3
+          ],
+          "span": [
+            13,
+            16
+          ],
+          "raw": "ＣＡＴ",
+          "key": "ＣＡＴ",
+          "registered": false
+        }
+      ]
+    },
+    "unicode_offsets": {
+      "counts": {
+        "ゲーム大会": 1,
+        "走る": 1
+      },
+      "utterance_ids": {
+        "ゲーム大会": [
+          "X"
+        ],
+        "走る": [
+          "X"
+        ]
+      },
+      "rows": [
+        {
+          "id": "X",
+          "time": [
+            0,
+            3
+          ],
+          "span": [
+            1,
+            6
+          ],
+          "raw": "ゲーム大会",
+          "key": "ゲーム大会",
+          "registered": true
+        },
+        {
+          "id": "X",
+          "time": [
+            0,
+            3
+          ],
+          "span": [
+            7,
+            9
+          ],
+          "raw": "走っ",
+          "key": "走る",
+          "registered": false
+        }
+      ]
+    }
+  },
+  "distribution_files": [
+    {
+      "distribution": "SudachiDict-core",
+      "file": "sudachidict_core-20260723.dist-info/licenses/LICENSE-2.0.txt",
+      "bytes": 11358,
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+    },
+    {
+      "distribution": "SudachiDict-core",
+      "file": "sudachidict_core/resources/system.dic",
+      "bytes": 217466039,
+      "sha256": "53fa281d11eef3769712fe1c3c892117338f9892bee6daf4dad51daa5281bb6f"
+    }
+  ],
+  "limits": [
+    "Fixture-only prototype; no product UI/persistence.",
+    "No general guarantee for all inflections or lexical ambiguity.",
+    "Spans are Python Unicode code-point offsets, not UTF-16 indices."
+  ]
+}

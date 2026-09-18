@@ -1,0 +1,20 @@
+
+7-Zip 26.03 (x64) : Copyright (c) 1999-2026 Igor Pavlov : 2026-09-03
+
+Scanning the drive for archives:
+1 file, 917851 bytes (897 KiB)
+
+Testing archive: C:\Users\raimu\AppData\Local\Temp\clipchannel-archive-large-f5lbwz8z\large.7z
+--
+Path = C:\Users\raimu\AppData\Local\Temp\clipchannel-archive-large-f5lbwz8z\large.7z
+Type = 7z
+Physical Size = 917851
+Headers Size = 122
+Method = LZMA2:18
+Solid = -
+Blocks = 1
+
+Everything is Ok
+
+Size:       4296015872
+Compressed: 917851

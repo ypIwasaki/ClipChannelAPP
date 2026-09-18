@@ -1,0 +1,109 @@
+{
+  "video_id": "8Xyb7UB3OlM",
+  "url": "https://www.youtube.com/watch?v=8Xyb7UB3OlM",
+  "archive_duration_seconds": 25567,
+  "availability": "public",
+  "source_range_seconds": [
+    1200,
+    2400
+  ],
+  "download_settings": [
+    "--ignore-config",
+    "--no-playlist",
+    "--no-cache-dir",
+    "--compat-options no-certifi",
+    "format 251/bestaudio",
+    "--download-sections *00:20:00-00:40:00",
+    "--force-keyframes-at-cuts"
+  ],
+  "authentication_used": false,
+  "format": {
+    "filename": "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-multi-speaker-8Xyb7UB3OlM\\source-20m40m.webm",
+    "nb_streams": 1,
+    "nb_programs": 0,
+    "nb_stream_groups": 0,
+    "format_name": "matroska,webm",
+    "format_long_name": "Matroska / WebM",
+    "start_time": "0.000000",
+    "duration": "1200.008000",
+    "size": "12764894",
+    "bit_rate": "85098",
+    "probe_score": 100,
+    "tags": {
+      "ENCODER": "Lavf63.1.101"
+    }
+  },
+  "streams": [
+    {
+      "index": 0,
+      "codec_name": "opus",
+      "codec_long_name": "Opus (Opus Interactive Audio Codec)",
+      "codec_type": "audio",
+      "codec_tag_string": "[0][0][0][0]",
+      "codec_tag": "0x0000",
+      "mime_codec_string": "opus",
+      "sample_fmt": "fltp",
+      "sample_rate": "48000",
+      "channels": 2,
+      "channel_layout": "stereo",
+      "bits_per_sample": 0,
+      "initial_padding": 312,
+      "r_frame_rate": "0/0",
+      "avg_frame_rate": "0/0",
+      "time_base": "1/1000",
+      "start_pts": 0,
+      "start_time": "0.000000",
+      "extradata_size": 19,
+      "disposition": {
+        "default": 1,
+        "dub": 0,
+        "original": 0,
+        "comment": 0,
+        "lyrics": 0,
+        "karaoke": 0,
+        "forced": 0,
+        "hearing_impaired": 0,
+        "visual_impaired": 0,
+        "clean_effects": 0,
+        "attached_pic": 0,
+        "timed_thumbnails": 0,
+        "non_diegetic": 0,
+        "captions": 0,
+        "descriptions": 0,
+        "metadata": 0,
+        "dependent": 0,
+        "still_image": 0,
+        "multilayer": 0
+      },
+      "tags": {
+        "language": "eng",
+        "ENCODER": "Lavc63.1.101 libopus",
+        "DURATION": "00:20:00.008000000"
+      }
+    }
+  ],
+  "pcm": {
+    "sample_rate": 16000,
+    "channels": 1,
+    "sample_width": 2,
+    "frames": 19200000
+  },
+  "files": {
+    "source-20m40m.webm": {
+      "bytes": 12764894,
+      "sha256": "580ac5c3e50410b2c30bb294453cd429ffb83a5414b684b6d22284697f3e2deb"
+    },
+    "audio-20m40m.wav": {
+      "bytes": 38400078,
+      "sha256": "2c0c196f6c79e0579afbc97b33f3c83ef669dda1321b346e51172124fd42a4bd"
+    }
+  },
+  "conversion_exit": 0,
+  "conversion_stderr": "",
+  "source_time_mapping": "PCM time + 1200s based on accurate-seek re-encoded acquisition request; no independent waveform alignment to full archive",
+  "limits": [
+    "Audio excerpt only; no new video format or AviUtl2 test",
+    "20 minutes is not full 7h06m07s execution",
+    "No target/other/overlap ground-truth timestamps supplied"
+  ]
+}

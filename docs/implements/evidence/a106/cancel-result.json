@@ -1,0 +1,12 @@
+{
+  "state": "cancelled",
+  "segments_published": 0,
+  "completed_output": false,
+  "exit_code": 0,
+  "process_exited": true,
+  "alive_at_request": true,
+  "stop_latency_seconds": 18.360000000000582,
+  "source_hashes_unchanged": true,
+  "work": "C:\\Users\\raimu\\AppData\\Local\\ClipChannelAPP-validation\\cancel-probe-2b4ce05d",
+  "mechanism": "cooperative check after ASR generator yields; not immediate interruption inside native inference"
+}

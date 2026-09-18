@@ -1,0 +1,31 @@
+{
+    "programs": [
+
+    ],
+    "stream_groups": [
+
+    ],
+    "streams": [
+        {
+            "index": 0,
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1280,
+            "height": 720,
+            "start_time": "3.979000"
+        },
+        {
+            "index": 1,
+            "codec_name": "opus",
+            "codec_type": "audio",
+            "sample_rate": "48000",
+            "channels": 2,
+            "start_time": "0.000000"
+        }
+    ],
+    "format": {
+        "start_time": "0.000000",
+        "duration": "310.000000",
+        "size": "67507503"
+    }
+}

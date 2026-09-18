@@ -1,0 +1,129 @@
+{
+  "file": "C:\\Users\\raimu\\AppData\\Local\\ClipChannelAPP-validation\\editor-sdk-observer\\plugin2.h",
+  "sha256": "814c3e03a2d166d22889f9bc40147390090acd80014869b562d8fc2351a89145",
+  "function_pointer_declarations": 132,
+  "relevant_declarations": {
+    "project": [
+      {
+        "name": "get_project_file",
+        "line": 243
+      },
+      {
+        "name": "get_project_file_path",
+        "line": 891
+      },
+      {
+        "name": "register_project_load_handler",
+        "line": 943
+      },
+      {
+        "name": "register_project_save_handler",
+        "line": 947
+      }
+    ],
+    "save": [
+      {
+        "name": "register_project_save_handler",
+        "line": 947
+      }
+    ],
+    "load": [
+      {
+        "name": "register_project_load_handler",
+        "line": 943
+      }
+    ],
+    "undo": [],
+    "redo": [],
+    "batch": [],
+    "rendering": [
+      {
+        "name": "rendering_scene_video",
+        "line": 784
+      },
+      {
+        "name": "rendering_scene_audio",
+        "line": 796
+      },
+      {
+        "name": "wait_rendering_task",
+        "line": 800
+      },
+      {
+        "name": "rendering_object_video",
+        "line": 825
+      },
+      {
+        "name": "rendering_object_audio",
+        "line": 839
+      }
+    ],
+    "event": [
+      {
+        "name": "register_event_listener",
+        "line": 1058
+      }
+    ],
+    "menu": [
+      {
+        "name": "register_import_menu",
+        "line": 924
+      },
+      {
+        "name": "register_export_menu",
+        "line": 929
+      },
+      {
+        "name": "register_layer_menu",
+        "line": 952
+      },
+      {
+        "name": "register_object_menu",
+        "line": 957
+      },
+      {
+        "name": "register_config_menu",
+        "line": 963
+      },
+      {
+        "name": "register_edit_menu",
+        "line": 968
+      },
+      {
+        "name": "register_import_menu_param",
+        "line": 983
+      },
+      {
+        "name": "register_export_menu_param",
+        "line": 990
+      },
+      {
+        "name": "register_layer_menu_param",
+        "line": 997
+      },
+      {
+        "name": "register_object_menu_param",
+        "line": 1004
+      },
+      {
+        "name": "register_edit_menu_param",
+        "line": 1011
+      },
+      {
+        "name": "register_object_item_menu",
+        "line": 1032
+      },
+      {
+        "name": "register_object_item_menu_param",
+        "line": 1041
+      }
+    ],
+    "edit_state": [
+      {
+        "name": "get_edit_state",
+        "line": 729
+      }
+    ]
+  },
+  "scope": "Name inventory supports manual header review; absence of a matching name alone is not proof of impossibility."
+}

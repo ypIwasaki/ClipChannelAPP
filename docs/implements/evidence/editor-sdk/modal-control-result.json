@@ -1,0 +1,28 @@
+{
+  "scope": "Latest recorded modal only; bounded alias snapshot, not complete project state",
+  "duration_ms": 32454,
+  "sample_count": 32,
+  "events": [
+    "modal_begin",
+    "modal_end",
+    "modal_sample"
+  ],
+  "recorded_checks": {
+    "samples_present": true,
+    "all_sample_and_end_values_equal_begin": true,
+    "no_save_load_update_or_compound_event": true
+  },
+  "ui_observations": {
+    "save_as_request_utc": "2026-09-18T07:21:04.618Z",
+    "open_request_utc": "2026-09-18T07:21:11.624Z",
+    "during_modal": "Host disabled; Ctrl+Shift+S and Ctrl+O did not open their dialogs",
+    "controls": "Open succeeded before modal; Save As opened after modal and was cancelled without saving"
+  },
+  "observed_fixture_sha256_before_and_after": "D2231369D203AC961D811FE59E7CFA5A83C5E0D31C5561CCA40211A175295B3F",
+  "verdict": "Modal plus injected keyboard control fails the entry condition; protected automatic recovery and save-to-batch remain unproven",
+  "limits": [
+    "No UIA Invoke test",
+    "No failure injection or compound Apply",
+    "No proof that every possible controller route is unavailable"
+  ]
+}

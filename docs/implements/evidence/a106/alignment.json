@@ -1,0 +1,16 @@
+[
+  {
+    "input": "RWM4SdTZ1t8-180-480",
+    "accurate_samples": 320000,
+    "lag_samples": 159664,
+    "lag_seconds": 9.979,
+    "normalized_correlation": 0.996224568223682
+  },
+  {
+    "input": "lxYJTSK0y50-420-720",
+    "accurate_samples": 320000,
+    "lag_samples": 159664,
+    "lag_seconds": 9.979,
+    "normalized_correlation": 0.9986805028035383
+  }
+]

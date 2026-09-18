@@ -1,0 +1,46 @@
+{
+  "checks": {
+    "bytes_unchanged_while_locked": true,
+    "unlocked_write_possible": true,
+    "reader_allowed": true,
+    "write_denied": true,
+    "delete_access_denied": true,
+    "release_restores_write_access": true,
+    "preexisting_writer_rejected": true,
+    "whole_file_copy_preserves_all_serialized_bytes": true
+  },
+  "observations": {
+    "unlocked_write": {
+      "opened": true,
+      "error": 0
+    },
+    "locked_read": {
+      "opened": true,
+      "error": 0
+    },
+    "locked_write": {
+      "opened": false,
+      "error": 32
+    },
+    "locked_delete_or_replace_access": {
+      "opened": false,
+      "error": 32
+    },
+    "released_write": {
+      "opened": true,
+      "error": 0
+    },
+    "existing_writer_blocks_freeze": {
+      "opened": false,
+      "error": 32
+    }
+  },
+  "work_directory": "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-frozen-file-_0ouce5u",
+  "sha256": "d2231369d203ac961d811fe59e7cfa5a83c5e0d31c5561cca40211a175295b3f",
+  "limits": [
+    "File layer only. Does not prove host in-memory equality, save completion, loading, render, or automatic recovery.",
+    "External media and plugin/model files are not frozen by locking the project.",
+    "No target file contents were deliberately corrupted; access probes opened handles only.",
+    "All source evidence remains unchanged. No extra application failure was injected."
+  ]
+}

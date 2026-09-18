@@ -1,0 +1,37 @@
+[
+  {
+    "Algorithm": "SHA256",
+    "Hash": "FD9E3634FE68BD0A427C95E354C0C677374F62B3F434E45B78599950D860D535",
+    "Path": "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-a105-speaker\\model\\classifier.ckpt"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "15FF7AFAD09ADEC0936C31493A7397C13F855914F4579A8393FE82649778A664",
+    "Path": "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-a105-speaker\\model\\config.json"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "0575CB64845E6B9A10DB9BCB74D5AC32B326B8DC90352671D345E2EE3D0126A2",
+    "Path": "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-a105-speaker\\model\\embedding_model.ckpt"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "6F78854FA04BA59E761437B76A2575D3ABA5E5016DE3E9B69F0C9A5077FB1A41",
+    "Path": "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-a105-speaker\\model\\hyperparams.yaml"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "E13C3A167BB4112685670EE896D20E2B565AF16B3A4CEEAA8689FA4D22ADB8B9",
+    "Path": "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-a105-speaker\\model\\label_encoder.txt"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "CD70225B05B37BE64FC5A95E24395D804231D43F74B2E1E5A513DB7B69B34C33",
+    "Path": "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-a105-speaker\\model\\mean_var_norm_emb.ckpt"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "00F58C3CBD7A7510DE9374080DA0E82A4C4E8F4DF567F7338FE6EFE108BE705A",
+    "Path": "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-a105-speaker\\model\\README.md"
+  }
+]

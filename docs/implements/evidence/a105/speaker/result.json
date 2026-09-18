@@ -1,0 +1,50 @@
+{
+  "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "windows": "win32",
+  "admin": false,
+  "torch": "2.8.0+cpu",
+  "cuda_build": null,
+  "speechbrain": "1.1.1",
+  "model_revision": "0f99f2d0ebe89ac095bcc5903c4dd8f72b367286",
+  "input": {
+    "type": "synthetic harmonics, not person speech",
+    "sample_rate": 16000,
+    "samples": 32000,
+    "channels": 1,
+    "dtype": "torch.float32",
+    "sha256": "4c5ccccd1a2e46958ab4746b008de335d29befcc3179ace94b15882172226793"
+  },
+  "embedding_shape": [
+    1,
+    1,
+    192
+  ],
+  "finite": true,
+  "embedding_raw_sha256": "3beea6dfac415c1935e6026b497d133beea63bc67719ea2723e34299c83a3891",
+  "saved_equal": true,
+  "load_seconds": 17.079182500005118,
+  "encode_seconds": 0.05594169998948928,
+  "network_attempts": [],
+  "loaded_files": [
+    {
+      "name": "classifier.ckpt",
+      "symlink": false
+    },
+    {
+      "name": "embedding_model.ckpt",
+      "symlink": false
+    },
+    {
+      "name": "hyperparams.yaml",
+      "symlink": false
+    },
+    {
+      "name": "label_encoder.ckpt",
+      "symlink": false
+    },
+    {
+      "name": "mean_var_norm_emb.ckpt",
+      "symlink": false
+    }
+  ]
+}

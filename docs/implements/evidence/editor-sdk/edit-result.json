@@ -1,0 +1,52 @@
+{
+  "checks": {
+    "one_sdk_request": true,
+    "both_setters_success": true,
+    "edit_section_return_success": true,
+    "aliases_only_intended_X_changes": true,
+    "prior_unsaved_Y_seen_by_sdk": true,
+    "single_undo_saved_objects_match_prior_unsaved_state": true,
+    "no_save_before_sdk_return": true
+  },
+  "updates": [
+    {
+      "index": 8,
+      "tick_ms": 108272156,
+      "thread": 19992,
+      "event": "update_object",
+      "value": ""
+    },
+    {
+      "index": 15,
+      "tick_ms": 108316656,
+      "thread": 19992,
+      "event": "update_object",
+      "value": ""
+    },
+    {
+      "index": 17,
+      "tick_ms": 108341859,
+      "thread": 19992,
+      "event": "update_object",
+      "value": ""
+    }
+  ],
+  "request_begin_index": 9,
+  "request_return_index": 16,
+  "first_alias_base": {
+    "frame": "0,119"
+  },
+  "original_object_base": {
+    "layer": "1",
+    "frame": "0,119",
+    "group": "1"
+  },
+  "pre_save_disk_sha256_observed": "c713741d176ebdffcfa357f15194fdfc0dc53d7b2cd167880f13845b759879b8",
+  "final_sha256": "987fb178f11e6f3732e604f290913bc13930b67cf9f1d5497f179a05f561f9a7",
+  "limitations": [
+    "Normal two-setter edit, not injected failure or automatic rollback.",
+    "Undo initiated through host UI, not an SDK Undo function.",
+    "Alias base omits layer/group present in this project object.",
+    "No actor ID in notification; ordering in this log is not a universal guarantee."
+  ]
+}

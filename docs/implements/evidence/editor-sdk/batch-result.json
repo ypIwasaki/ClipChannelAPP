@@ -1,0 +1,23 @@
+{
+  "checks": {
+    "registered_objects_equal_saved_baseline": true,
+    "later_saved_edit_is_X70_only": true,
+    "final_objects_restored": true,
+    "output_360_frames": true,
+    "output_12_seconds": true,
+    "full_decode_without_errors": true
+  },
+  "output_sha256": "104228a5ae0e5176c6f15d194755aa82a8236342d94b84d16ddd089df4eeb147",
+  "output_path": "C:\\Users\\raimu\\AppData\\Local\\ClipChannelAPP-validation\\editor-sdk-observer\\batch-frozen-x6",
+  "output_size": 64346184,
+  "visual_observations": [
+    "Host displayed X=6 while batch output ran and X=70 after completion.",
+    "Decoded frame359 shows caption at central X6 position, not right-shifted X70. This is visual verification, not whole-video reference pixel comparison."
+  ],
+  "limits": [
+    "UI batch route only; no programmatic SDK entry proved.",
+    "Save-to-batch-registration gap not protected.",
+    "Normal output completion restoration is not failure rollback.",
+    "Referenced media/plugins not frozen; output settings vary by plugin."
+  ]
+}

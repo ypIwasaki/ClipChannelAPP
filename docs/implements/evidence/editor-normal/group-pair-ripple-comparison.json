@@ -1,0 +1,26 @@
+{
+  "operation": "Select current-frame objects at 1.66 seconds, Ctrl+Shift+X, save, single Undo/save, single Redo/save",
+  "checks": {
+    "cut_keeps_only_original_pair_shifted_minus120": true,
+    "single_undo_restores_all4": true,
+    "single_redo_restores_cut_state": true
+  },
+  "files": [
+    {
+      "file": "group-pair-reopened.aup2",
+      "sha256": "b2a74450591f9fad7af5c611ee8fa63ceaacd109678159ec0fc9deaf3f841f8c"
+    },
+    {
+      "file": "group-pair-ripple-cut.aup2",
+      "sha256": "d7ea291701a6aadead1e7bd2c4e3edc11f2248307d82cb0eae3a2bc8a7da9407"
+    },
+    {
+      "file": "group-pair-ripple-undo.aup2",
+      "sha256": "e2c47459e1224f315b803f940ed76a9c05b37ed621e1c67d5e5dc305bb643012"
+    },
+    {
+      "file": "group-pair-ripple-redo.aup2",
+      "sha256": "d7ea291701a6aadead1e7bd2c4e3edc11f2248307d82cb0eae3a2bc8a7da9407"
+    }
+  ]
+}

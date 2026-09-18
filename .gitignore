@@ -1,0 +1,33 @@
+# Local development environments and regenerated data
+/.local/
+/.venv*/
+/venv/
+**/__pycache__/
+*.py[cod]
+node_modules/
+# Credentials
+.env
+.env.*
+!.env.example
+cookies*.txt
+# Downloaded media, models, tools and archives (keep outside Git)
+*.wav
+*.mp3
+*.m4a
+*.mp4
+*.mkv
+*.webm
+*.avi
+*.part
+*.pt
+*.ckpt
+*.safetensors
+*.bin
+*.exe
+*.dll
+*.aux2
+*.aui2
+*.auo2
+*.zip
+*.7z
+# .scratch is intentionally not ignored: it is the local Markdown tracker.

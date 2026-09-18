@@ -1,0 +1,33 @@
+{
+  "version": "2026.08.19",
+  "network_requests": 0,
+  "real_credentials_used": false,
+  "cookie": {
+    "loaded_count": 1,
+    "local_header_contains_dummy": true,
+    "jar_filename": null,
+    "close_save_calls": 0,
+    "external_bytes_unchanged": true,
+    "external_mtime_unchanged": true,
+    "directory_files_before_config_creation": 1
+  },
+  "alias_effective_options": {
+    "format": "bestaudio",
+    "postprocessors": [
+      {
+        "key": "FFmpegExtractAudio",
+        "preferredcodec": "wav"
+      },
+      {
+        "key": "FFmpegConcat",
+        "preferredcodec": null
+      }
+    ]
+  },
+  "explicit_config_with_ignore_config_format": "worst",
+  "limitations": [
+    "Normal in-process close only; not crash or OS paging proof.",
+    "No authenticated download or full CLI compatibility tested.",
+    "Do not persist raw parser errors, cookie warning lines or generated headers."
+  ]
+}

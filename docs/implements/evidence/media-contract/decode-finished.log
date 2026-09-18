@@ -1,0 +1,31 @@
+[in#0 @ 000002a55050dc00] UDTA parsing failed retrying raw
+Input #0, mov,mp4,m4a,3gp,3g2,mj2, from 'C:\Users\raimu\AppData\Local\Temp\clipchannel-multiaudio-dzctr0h5\finished.mp4':
+  Metadata:
+    major_brand     : isom
+    minor_version   : 512
+    compatible_brands: isomiso2avc1mp41
+    encoder         : Lavf63.1.101
+  Duration: 00:00:02.00, start: 0.000000, bitrate: 428 kb/s
+  Stream #0:0[0x1](und): Video: h264 (Constrained Baseline) (avc1 / 0x31637661), yuv420p(progressive), 160x90 [SAR 1:1 DAR 16:9], 343 kb/s, 30 fps, 30 tbr, 16k tbn (default)
+    Metadata:
+      handler_name    : VideoHandler
+      encoder         : Lavc63.1.101 libx264
+  Stream #0:1[0x2](und): Audio: aac (LC) (mp4a / 0x6134706D), 48000 Hz, mono, fltp, 69 kb/s (default)
+    Metadata:
+      handler_name    : SoundHandler
+      name            : finished-880Hz
+Stream mapping:
+  Stream #0:1 -> #0:0 (aac (native) -> pcm_s16le (native))
+Output #0, wav, to 'C:\Users\raimu\AppData\Local\Temp\clipchannel-multiaudio-dzctr0h5\finished.wav':
+  Metadata:
+    major_brand     : isom
+    minor_version   : 512
+    compatible_brands: isomiso2avc1mp41
+    ISFT            : Lavf63.1.101
+  Stream #0:0(und): Audio: pcm_s16le ([1][0][0][0] / 0x0001), 48000 Hz, mono, s16, 768 kb/s (default)
+    Metadata:
+      encoder         : Lavc63.1.101 pcm_s16le
+      handler_name    : SoundHandler
+      name            : finished-880Hz
+[out#0/wav @ 000002a55052b200] video:0KiB audio:188KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: 0.040625%
+size=     188KiB time=00:00:02.00 bitrate= 768.3kbits/s speed= 333x elapsed=0:00:00.00    

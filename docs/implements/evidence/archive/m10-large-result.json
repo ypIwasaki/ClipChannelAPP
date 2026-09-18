@@ -1,0 +1,39 @@
+{
+  "tool": "7-Zip26.03 x64",
+  "payload": "synthetic zero bytes, not a video",
+  "settings": "7z/LZMA2 mx1 mmt2",
+  "source_bytes": 4296015872,
+  "restored_bytes": 4296015872,
+  "archive_bytes": 917851,
+  "source_sha256": "829816e339ff597ec3ada4c30fc840d3f2298444169d242952a54bcf3fcd7747",
+  "restored_sha256": "829816e339ff597ec3ada4c30fc840d3f2298444169d242952a54bcf3fcd7747",
+  "runs": [
+    {
+      "stage": "compress",
+      "exit_code": 0,
+      "seconds": 7.076495999994222
+    },
+    {
+      "stage": "test",
+      "exit_code": 0,
+      "seconds": 1.0618590999947628
+    },
+    {
+      "stage": "extract",
+      "exit_code": 0,
+      "seconds": 10.067377800005488
+    }
+  ],
+  "local_root": "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-archive-large-f5lbwz8z",
+  "checks": {
+    "over_4GiB": true,
+    "size_equal": true,
+    "hash_equal": true,
+    "both_retained": true
+  },
+  "limits": [
+    "Checks individual uncompressed file size >4GiB, not archive size >4GiB.",
+    "Zero-filled data does not predict real-media compression or memory/performance.",
+    "No ZIP64, external-drive or cancellation validation here."
+  ]
+}

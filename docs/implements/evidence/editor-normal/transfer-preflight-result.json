@@ -1,0 +1,13 @@
+{
+  "checks": {
+    "all_nonpath_text_preserved": true,
+    "two_video_references_relocated": true,
+    "copied_media_equal": true,
+    "source_media_unchanged": true
+  },
+  "host_reopen": "pending: concurrent user input detected; stopped UI before opening transferred project",
+  "limits": [
+    "Path rewrite is a fixture preparation technique, not an adopted project-format API.",
+    "Original source remains present; cannot claim absence/fallback handling tested."
+  ]
+}

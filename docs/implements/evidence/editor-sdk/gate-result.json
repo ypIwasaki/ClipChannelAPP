@@ -1,0 +1,24 @@
+{
+  "checks": {
+    "one_deliberate_failure": true,
+    "two_successful_changes_before_failure": true,
+    "partial_state_only_two_expected_changes": true,
+    "recovery_all_captured_objects_equal": true,
+    "saved_objects_include_prior_Y_and_preserve_other_fields": true,
+    "scene_content_preserved": true,
+    "save_marker_matches_file_and_reload": true,
+    "reloaded_snapshot_matches_recovery": true,
+    "no_save_before_recovery": true,
+    "output_edit_request_rejected": true,
+    "output_state_returns_to_edit": true,
+    "output_all_360_frames_decoded": true
+  },
+  "saved_sha256": "5913e59e8dc5eb9a0e1e8d2e455881e6421caa48f068ee15995433c4bbc09a34",
+  "marker": "19044-108897593-1",
+  "limits": [
+    "Only two property setters compensated; not crash, object deletion/creation, or generic rollback.",
+    "Output no-op edit section rejection only; hand-edit exclusion during applying and save-to-output race not tested.",
+    "Save content and same-process reload verified; no power-loss durability or save-error injection.",
+    "Alias capture has eight fixed objects; saved object comparison separately includes group/layer."
+  ]
+}

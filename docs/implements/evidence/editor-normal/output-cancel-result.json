@@ -1,0 +1,25 @@
+{
+  "action": "Requested Escape after starting standard AVI output; observed editor again afterward.",
+  "result": "Full 3600-frame 60-second output exists. Cancellation NOT demonstrated; completion/cancel timing is unknown.",
+  "probe": {
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+      {
+        "index": 0,
+        "codec_name": "rawvideo",
+        "duration": "60.000000",
+        "nb_read_frames": "3600"
+      },
+      {
+        "index": 1,
+        "codec_name": "pcm_s16le",
+        "nb_read_frames": "3600"
+      }
+    ]
+  },
+  "output_bytes": 632840904,
+  "sha256": "3f0c271e58586e51260bdd58d953c482793df5e6485b8051592657096eaad329",
+  "saved_object_sections_unchanged": true,
+  "log_directory_files": 0
+}

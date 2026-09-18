@@ -1,0 +1,88 @@
+{
+  "output": "frame-counter-output.avi",
+  "output_rate": 30,
+  "source_frame_markers_all480_valid": true,
+  "output_count": 240,
+  "clip0_error_count": 0,
+  "clip4_error_count": 11,
+  "errors": [
+    {
+      "output_frame": 139,
+      "clip_frame": 19,
+      "expected": 278,
+      "actual": 277,
+      "delta": -1
+    },
+    {
+      "output_frame": 154,
+      "clip_frame": 34,
+      "expected": 308,
+      "actual": 307,
+      "delta": -1
+    },
+    {
+      "output_frame": 169,
+      "clip_frame": 49,
+      "expected": 338,
+      "actual": 337,
+      "delta": -1
+    },
+    {
+      "output_frame": 184,
+      "clip_frame": 64,
+      "expected": 368,
+      "actual": 367,
+      "delta": -1
+    },
+    {
+      "output_frame": 185,
+      "clip_frame": 65,
+      "expected": 370,
+      "actual": 369,
+      "delta": -1
+    },
+    {
+      "output_frame": 199,
+      "clip_frame": 79,
+      "expected": 398,
+      "actual": 397,
+      "delta": -1
+    },
+    {
+      "output_frame": 200,
+      "clip_frame": 80,
+      "expected": 400,
+      "actual": 399,
+      "delta": -1
+    },
+    {
+      "output_frame": 214,
+      "clip_frame": 94,
+      "expected": 428,
+      "actual": 427,
+      "delta": -1
+    },
+    {
+      "output_frame": 215,
+      "clip_frame": 95,
+      "expected": 430,
+      "actual": 429,
+      "delta": -1
+    },
+    {
+      "output_frame": 229,
+      "clip_frame": 109,
+      "expected": 458,
+      "actual": 457,
+      "delta": -1
+    },
+    {
+      "output_frame": 230,
+      "clip_frame": 110,
+      "expected": 460,
+      "actual": 459,
+      "delta": -1
+    }
+  ],
+  "sha256": "261609373ac64b31fd35178291aec8526559826dfbfc237a3a73e01934a1e4ae"
+}

@@ -1,0 +1,11 @@
+{
+  "normal_exit_and_new_launch_observed": true,
+  "reopened_video_and_caption_at_seconds": 5.3,
+  "saved_file_byte_identical": true,
+  "sha256": "e6ddb8e6e20444fb45de4cd65f1f37609042fbe65dabf2095c6c163206047bbc",
+  "limits": [
+    "Same PC and installed plugin configuration.",
+    "Original media remains present.",
+    "Not unsaved-state recovery or cross-PC migration."
+  ]
+}

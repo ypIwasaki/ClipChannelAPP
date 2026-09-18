@@ -1,0 +1,22 @@
+{
+  "checks": {
+    "undo_preserves_prior_unsaved_X_and_all_other_object_values": true,
+    "redo_moves_both_pair_objects_only": true,
+    "second_undo_matches_first": true,
+    "final_saved_bytes_match_first_undo": true,
+    "scene_content_unchanged": true
+  },
+  "hashes": {
+    "unsaved-after-undo.aup2": "e6370a810d4bdd3f2814d2444ba319434b5d4eae960bade926aeaf12a44e2328",
+    "unsaved-final.aup2": "e6370a810d4bdd3f2814d2444ba319434b5d4eae960bade926aeaf12a44e2328",
+    "unsaved-after-redo.aup2": "d749cfab8c522b6cfa9b1c6ea98a960e536a7b984fc2c24e6b2c1ef1c3721f68",
+    "unsaved-before.aup2": "8b3f298f079a30d80b39f319a8f5169d7c873330ba2cc2bf6c4427c8a885edb1"
+  },
+  "observation": "No save occurred between X=10 input, pair movement and initial Undo. Subsequent save materialized the resulting state.",
+  "limits": [
+    "Normal host Undo only; no failure injection or SDK transaction.",
+    "Excludes focus and scene cursor/display/preview UI state.",
+    "No auxiliary material, third-party effect state or app IDs in this fixture.",
+    "Ctrl+Y and Ctrl+Shift+Z attempts did not visibly redo in this run; menu popup selection did."
+  ]
+}

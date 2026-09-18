@@ -1,0 +1,50 @@
+{
+  "person_name": "変幻リメ",
+  "label_source": "user A107",
+  "reference": {
+    "video": "RWM4SdTZ1t8",
+    "start": 180,
+    "end": 200
+  },
+  "positive_test": {
+    "video": "lxYJTSK0y50",
+    "start": 420,
+    "end": 440
+  },
+  "model_revision": "0f99f2d0ebe89ac095bcc5903c4dd8f72b367286",
+  "preprocessing": "16kHz mono float32; encode_batch normalize=False; cosine comparison",
+  "reference_feature_shape": [
+    192
+  ],
+  "reload_equal_to_recomputed": true,
+  "positive_20s_cosine": 0.74855637550354,
+  "positive_5s_windows": [
+    {
+      "source_start": 420,
+      "source_end": 425,
+      "cosine": 0.7354976534843445
+    },
+    {
+      "source_start": 425,
+      "source_end": 430,
+      "cosine": 0.6671549677848816
+    },
+    {
+      "source_start": 430,
+      "source_end": 435,
+      "cosine": 0.48612186312675476
+    },
+    {
+      "source_start": 435,
+      "source_end": 440,
+      "cosine": 0.6585548520088196
+    }
+  ],
+  "audio_sha256": {
+    "accurate-first.wav": "c27c313d1b840ed300edc561f6e039ece3e6fdba358a823b999e346fa3ffc4fd",
+    "accurate-second.wav": "e7c3ff2ea647079dc21a340371658c41f1dd8bd2ddf6737f5ac320321ef53019"
+  },
+  "threshold": null,
+  "negative_examples": 0,
+  "limits": "Single confirmed person, two recordings. No accuracy, false-positive, VAD or ASR verdict."
+}

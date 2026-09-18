@@ -1,0 +1,15 @@
+{
+  "action": "Ctrl+C sent via exec PTY during mx9 LZMA2 compression, two threads",
+  "observed_message": "Break signaled",
+  "exec_session_exit_code": 1,
+  "note": "Exit code belongs to enclosing PowerShell command; native 7z exit code not captured.",
+  "input_bytes": 4296015872,
+  "input_hash_unchanged": true,
+  "archive_exists": false,
+  "archive_bytes": null,
+  "limits": [
+    "Console interruption only, not GUI/worker cancellation integration.",
+    "Break occurred near end; no claim of cancellation latency bound.",
+    "No forced process termination or fault injection."
+  ]
+}

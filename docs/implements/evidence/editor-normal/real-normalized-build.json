@@ -1,0 +1,8 @@
+{
+  "source": "input-check/corrected.mp4",
+  "source_frames": "240..479",
+  "source_audio_seconds": "4..8",
+  "encode_seconds": 0.5219801999919582,
+  "bytes": 1529552,
+  "settings": "libx264 CRF18 veryfast yuv420p; AAC default bitrate; reset video/audio PTS to zero"
+}

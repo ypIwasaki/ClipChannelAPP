@@ -1,0 +1,26 @@
+[
+  {
+    "Hash": "A9306624F5EC14270A014B647E5C316B6E03A662C369758D1B90697A7B0655B9",
+    "Path": "C:\\Users\\raimu\\AppData\\Local\\ClipChannelAPP-validation\\asr-probe\\model\\config.json"
+  },
+  {
+    "Hash": "69F74147E3334731BC3A76048724833325D2EC74642FB52620EDA87352E3D4F1",
+    "Path": "C:\\Users\\raimu\\AppData\\Local\\ClipChannelAPP-validation\\asr-probe\\model\\model.bin"
+  },
+  {
+    "Hash": "7CCC62C6F2765AF1F3B46C00C9B5894426835A05021C8B9C01EECB6DFB542711",
+    "Path": "C:\\Users\\raimu\\AppData\\Local\\ClipChannelAPP-validation\\asr-probe\\model\\preprocessor_config.json"
+  },
+  {
+    "Hash": "39E96252229F5A3D0141DC81AFB65A36FD205461AC21E5B70F2CD1248EF0082C",
+    "Path": "C:\\Users\\raimu\\AppData\\Local\\ClipChannelAPP-validation\\asr-probe\\model\\README.md"
+  },
+  {
+    "Hash": "6D8CBD7CD0D8D5815E478DAC67B85A26BBE77C1F5E0C6D76D1CE2ABC0E5F21CA",
+    "Path": "C:\\Users\\raimu\\AppData\\Local\\ClipChannelAPP-validation\\asr-probe\\model\\tokenizer.json"
+  },
+  {
+    "Hash": "C69260F2AB26D659B7C398F9A2B2B48ED0DF16C3B47D7326782FD9CBA71690C1",
+    "Path": "C:\\Users\\raimu\\AppData\\Local\\ClipChannelAPP-validation\\asr-probe\\model\\vocabulary.json"
+  }
+]

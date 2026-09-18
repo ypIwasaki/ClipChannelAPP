@@ -1,0 +1,84 @@
+[
+  {
+    "file": "RWM4SdTZ1t8-180-480.mkv",
+    "stream": 0,
+    "packet_count": 18361,
+    "first_pts": 3.979,
+    "last_pts": 309.979,
+    "last_duration": "0.016000",
+    "end_pts": 309.995,
+    "span": 306.016,
+    "pts_step_counts": {
+      "0.016000": 6120,
+      "0.017000": 12240
+    }
+  },
+  {
+    "file": "RWM4SdTZ1t8-180-480.mkv",
+    "stream": 1,
+    "packet_count": 15500,
+    "first_pts": -0.007,
+    "last_pts": 309.973,
+    "last_duration": "0.020000",
+    "end_pts": 309.993,
+    "span": 310.0,
+    "pts_step_counts": {
+      "0.020000": 15499
+    }
+  },
+  {
+    "file": "lxYJTSK0y50-420-720.mkv",
+    "stream": 0,
+    "packet_count": 18361,
+    "first_pts": 3.979,
+    "last_pts": 309.979,
+    "last_duration": "0.016000",
+    "end_pts": 309.995,
+    "span": 306.016,
+    "pts_step_counts": {
+      "0.016000": 6120,
+      "0.017000": 12240
+    }
+  },
+  {
+    "file": "lxYJTSK0y50-420-720.mkv",
+    "stream": 1,
+    "packet_count": 15500,
+    "first_pts": -0.007,
+    "last_pts": 309.973,
+    "last_duration": "0.020000",
+    "end_pts": 309.993,
+    "span": 310.0,
+    "pts_step_counts": {
+      "0.020000": 15499
+    }
+  },
+  {
+    "file": "lxYJTSK0y50-420-720-corrected.mp4",
+    "stream": 0,
+    "packet_count": 18000,
+    "first_pts": 0.0,
+    "last_pts": 299.983333,
+    "last_duration": "0.016667",
+    "end_pts": 300.0,
+    "span": 300.0,
+    "pts_step_counts": {
+      "0.016666": 6000,
+      "0.016667": 11999
+    }
+  },
+  {
+    "file": "lxYJTSK0y50-420-720-corrected.mp4",
+    "stream": 1,
+    "packet_count": 14064,
+    "first_pts": -0.021333,
+    "last_pts": 299.989333,
+    "last_duration": "0.010667",
+    "end_pts": 300.0,
+    "span": 300.021333,
+    "pts_step_counts": {
+      "0.021334": 4687,
+      "0.021333": 9376
+    }
+  }
+]

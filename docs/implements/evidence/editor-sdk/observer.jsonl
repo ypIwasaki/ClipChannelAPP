@@ -1,0 +1,16 @@
+{"tick_ms":107785750,"thread":24228,"event":"initialize","value":"2010900"}
+{"tick_ms":107785750,"thread":24228,"event":"registered","value":""}
+{"tick_ms":107785984,"thread":24228,"event":"load_marker","value":"<absent>"}
+{"tick_ms":107785984,"thread":32884,"event":"change_scene","value":""}
+{"tick_ms":107834546,"thread":24228,"event":"load_marker","value":"<absent>"}
+{"tick_ms":107834546,"thread":32884,"event":"change_scene","value":""}
+{"tick_ms":107834562,"thread":24228,"event":"load_marker","value":"<absent>"}
+{"tick_ms":107834562,"thread":32884,"event":"change_scene","value":""}
+{"tick_ms":107844609,"thread":24228,"event":"save_before","value":"5140-107785750-1"}
+{"tick_ms":107865531,"thread":24228,"event":"load_marker","value":"<absent>"}
+{"tick_ms":107865531,"thread":32884,"event":"change_scene","value":""}
+{"tick_ms":107865546,"thread":24228,"event":"load_marker","value":"5140-107785750-1"}
+{"tick_ms":107865546,"thread":32884,"event":"change_scene","value":""}
+{"tick_ms":107876515,"thread":32884,"event":"update_object","value":""}
+{"tick_ms":107884578,"thread":32884,"event":"update_object","value":""}
+{"tick_ms":107897328,"thread":24228,"event":"save_before","value":"5140-107785750-2"}

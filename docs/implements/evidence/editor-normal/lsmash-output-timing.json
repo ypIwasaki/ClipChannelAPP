@@ -1,0 +1,310 @@
+{
+  "method": {
+    "audio": "FFmpeg decode to mono 16k float32; normalized correlation of output seconds 1..7 against source first 20 seconds; inferred origin = match time - 1 second",
+    "video": "FFmpeg gray 80x45 decode; MSE match selected output frames against first 1200 source frames; decoded source frame index, not container timestamp"
+  },
+  "cases": [
+    {
+      "kind": "original",
+      "output_sha256": "4351ea64b01eb30a829650d310b35a6853f4c2d41850fd237ea67f17376905f6",
+      "output_bytes": 42898824,
+      "probe": {
+        "streams": [
+          {
+            "index": 0,
+            "codec_name": "rawvideo",
+            "codec_long_name": "raw video",
+            "codec_type": "video",
+            "codec_tag_string": "[0][0][0][0]",
+            "codec_tag": "0x0000",
+            "width": 320,
+            "height": 180,
+            "coded_width": 320,
+            "coded_height": 180,
+            "has_b_frames": 0,
+            "pix_fmt": "bgr24",
+            "level": -99,
+            "r_frame_rate": "30/1",
+            "avg_frame_rate": "30/1",
+            "time_base": "1/30",
+            "start_pts": 0,
+            "start_time": "0.000000",
+            "duration_ts": 240,
+            "duration": "8.000000",
+            "bit_rate": "41645523",
+            "nb_frames": "240",
+            "extradata_size": 9,
+            "disposition": {
+              "default": 0,
+              "dub": 0,
+              "original": 0,
+              "comment": 0,
+              "lyrics": 0,
+              "karaoke": 0,
+              "forced": 0,
+              "hearing_impaired": 0,
+              "visual_impaired": 0,
+              "clean_effects": 0,
+              "attached_pic": 0,
+              "timed_thumbnails": 0,
+              "non_diegetic": 0,
+              "captions": 0,
+              "descriptions": 0,
+              "metadata": 0,
+              "dependent": 0,
+              "still_image": 0,
+              "multilayer": 0
+            }
+          },
+          {
+            "index": 1,
+            "codec_name": "pcm_s16le",
+            "codec_long_name": "PCM signed 16-bit little-endian",
+            "codec_type": "audio",
+            "codec_tag_string": "[1][0][0][0]",
+            "codec_tag": "0x0001",
+            "sample_fmt": "s16",
+            "sample_rate": "44100",
+            "channels": 2,
+            "bits_per_sample": 16,
+            "initial_padding": 0,
+            "r_frame_rate": "0/0",
+            "avg_frame_rate": "0/0",
+            "time_base": "1/44100",
+            "start_pts": 0,
+            "start_time": "0.000000",
+            "bit_rate": "1411200",
+            "nb_frames": "352800",
+            "disposition": {
+              "default": 0,
+              "dub": 0,
+              "original": 0,
+              "comment": 0,
+              "lyrics": 0,
+              "karaoke": 0,
+              "forced": 0,
+              "hearing_impaired": 0,
+              "visual_impaired": 0,
+              "clean_effects": 0,
+              "attached_pic": 0,
+              "timed_thumbnails": 0,
+              "non_diegetic": 0,
+              "captions": 0,
+              "descriptions": 0,
+              "metadata": 0,
+              "dependent": 0,
+              "still_image": 0,
+              "multilayer": 0
+            }
+          }
+        ],
+        "format": {
+          "filename": "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-a105-editor-6f349375\\timing-original-8s.avi",
+          "nb_streams": 2,
+          "nb_programs": 0,
+          "nb_stream_groups": 0,
+          "format_name": "avi",
+          "format_long_name": "AVI (Audio Video Interleaved)",
+          "start_time": "0.000000",
+          "duration": "8.000000",
+          "size": "42898824",
+          "bit_rate": "42898824",
+          "probe_score": 100
+        }
+      },
+      "audio_output_samples_16k": 128000,
+      "audio_match_source_sample": 79776,
+      "audio_inferred_origin_seconds": 3.9859999999999998,
+      "audio_correlation": 0.9999402363062155,
+      "video_output_frames": 240,
+      "frame_matches": [
+        {
+          "output_frame": 0,
+          "output_time": 0.0,
+          "source_decoded_frame": 0,
+          "source_time_from_first_video_frame": 0.0,
+          "mse": 32.52111053466797
+        },
+        {
+          "output_frame": 30,
+          "output_time": 1.0,
+          "source_decoded_frame": 60,
+          "source_time_from_first_video_frame": 1.0,
+          "mse": 32.7944450378418
+        },
+        {
+          "output_frame": 90,
+          "output_time": 3.0,
+          "source_decoded_frame": 180,
+          "source_time_from_first_video_frame": 3.0,
+          "mse": 32.49444580078125
+        },
+        {
+          "output_frame": 180,
+          "output_time": 6.0,
+          "source_decoded_frame": 360,
+          "source_time_from_first_video_frame": 6.0,
+          "mse": 32.32416534423828
+        },
+        {
+          "output_frame": 239,
+          "output_time": 7.966666666666667,
+          "source_decoded_frame": 478,
+          "source_time_from_first_video_frame": 7.966666666666667,
+          "mse": 32.2772216796875
+        }
+      ]
+    },
+    {
+      "kind": "corrected",
+      "output_sha256": "1906c5d345028679468a0ffbaae71f920ced2291094d7f54382b67d6b6032a82",
+      "output_bytes": 42898824,
+      "probe": {
+        "streams": [
+          {
+            "index": 0,
+            "codec_name": "rawvideo",
+            "codec_long_name": "raw video",
+            "codec_type": "video",
+            "codec_tag_string": "[0][0][0][0]",
+            "codec_tag": "0x0000",
+            "width": 320,
+            "height": 180,
+            "coded_width": 320,
+            "coded_height": 180,
+            "has_b_frames": 0,
+            "pix_fmt": "bgr24",
+            "level": -99,
+            "r_frame_rate": "30/1",
+            "avg_frame_rate": "30/1",
+            "time_base": "1/30",
+            "start_pts": 0,
+            "start_time": "0.000000",
+            "duration_ts": 240,
+            "duration": "8.000000",
+            "bit_rate": "41645523",
+            "nb_frames": "240",
+            "extradata_size": 9,
+            "disposition": {
+              "default": 0,
+              "dub": 0,
+              "original": 0,
+              "comment": 0,
+              "lyrics": 0,
+              "karaoke": 0,
+              "forced": 0,
+              "hearing_impaired": 0,
+              "visual_impaired": 0,
+              "clean_effects": 0,
+              "attached_pic": 0,
+              "timed_thumbnails": 0,
+              "non_diegetic": 0,
+              "captions": 0,
+              "descriptions": 0,
+              "metadata": 0,
+              "dependent": 0,
+              "still_image": 0,
+              "multilayer": 0
+            }
+          },
+          {
+            "index": 1,
+            "codec_name": "pcm_s16le",
+            "codec_long_name": "PCM signed 16-bit little-endian",
+            "codec_type": "audio",
+            "codec_tag_string": "[1][0][0][0]",
+            "codec_tag": "0x0001",
+            "sample_fmt": "s16",
+            "sample_rate": "44100",
+            "channels": 2,
+            "bits_per_sample": 16,
+            "initial_padding": 0,
+            "r_frame_rate": "0/0",
+            "avg_frame_rate": "0/0",
+            "time_base": "1/44100",
+            "start_pts": 0,
+            "start_time": "0.000000",
+            "bit_rate": "1411200",
+            "nb_frames": "352800",
+            "disposition": {
+              "default": 0,
+              "dub": 0,
+              "original": 0,
+              "comment": 0,
+              "lyrics": 0,
+              "karaoke": 0,
+              "forced": 0,
+              "hearing_impaired": 0,
+              "visual_impaired": 0,
+              "clean_effects": 0,
+              "attached_pic": 0,
+              "timed_thumbnails": 0,
+              "non_diegetic": 0,
+              "captions": 0,
+              "descriptions": 0,
+              "metadata": 0,
+              "dependent": 0,
+              "still_image": 0,
+              "multilayer": 0
+            }
+          }
+        ],
+        "format": {
+          "filename": "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-a105-editor-6f349375\\timing-corrected-8s.avi",
+          "nb_streams": 2,
+          "nb_programs": 0,
+          "nb_stream_groups": 0,
+          "format_name": "avi",
+          "format_long_name": "AVI (Audio Video Interleaved)",
+          "start_time": "0.000000",
+          "duration": "8.000000",
+          "size": "42898824",
+          "bit_rate": "42898824",
+          "probe_score": 100
+        }
+      },
+      "audio_output_samples_16k": 128000,
+      "audio_match_source_sample": 16000,
+      "audio_inferred_origin_seconds": 0.0,
+      "audio_correlation": 0.9999349951737373,
+      "video_output_frames": 240,
+      "frame_matches": [
+        {
+          "output_frame": 0,
+          "output_time": 0.0,
+          "source_decoded_frame": 0,
+          "source_time_from_first_video_frame": 0.0,
+          "mse": 32.375831604003906
+        },
+        {
+          "output_frame": 30,
+          "output_time": 1.0,
+          "source_decoded_frame": 60,
+          "source_time_from_first_video_frame": 1.0,
+          "mse": 32.329166412353516
+        },
+        {
+          "output_frame": 90,
+          "output_time": 3.0,
+          "source_decoded_frame": 181,
+          "source_time_from_first_video_frame": 3.0166666666666666,
+          "mse": 31.969999313354492
+        },
+        {
+          "output_frame": 180,
+          "output_time": 6.0,
+          "source_decoded_frame": 359,
+          "source_time_from_first_video_frame": 5.983333333333333,
+          "mse": 30.52638816833496
+        },
+        {
+          "output_frame": 239,
+          "output_time": 7.966666666666667,
+          "source_decoded_frame": 478,
+          "source_time_from_first_video_frame": 7.966666666666667,
+          "mse": 32.02805709838867
+        }
+      ]
+    }
+  ]
+}

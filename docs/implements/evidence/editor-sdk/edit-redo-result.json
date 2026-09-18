@@ -1,0 +1,12 @@
+{
+  "checks": {
+    "redo_changes_both_X_only": true,
+    "redo_preserves_prior_Y": true,
+    "second_undo_matches_first": true
+  },
+  "limits": [
+    "Host UI redo, no new SDK invocation.",
+    "Original prior-unsaved Y had been saved after first Undo; this round tests history across that save.",
+    "Plugin save markers change on each save; full file byte equality is not expected."
+  ]
+}

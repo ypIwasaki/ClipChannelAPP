@@ -1,0 +1,18 @@
+[
+  {
+    "step": "file-menu",
+    "tree": "\t\t\t74 メニュー バー システム ID: MenuBar\n\t\t\t\t85 メニュー項目 システム\n\t\t79 メニュー バー アプリケーション ID: MenuBar\n\t\t\t86 メニュー項目 ファイル\n\t\t\t87 メニュー項目 編集\n\t\t\t88 メニュー項目 表示\n\t\t\t89 メニュー項目 設定\n\t\t\t90 メニュー項目 その他\n\t\t91 メニュー ファイル\n\t\t\t92 メニュー項目 プロジェクトを新規作成 Ctrl+N ID: 40000\n\t\t\t93 メニュー項目 プロジェクトを開く Ctrl+O ID: 40001\n\t\t\t94 メニュー項目 プロジェクトを閉じる ID: 40002\n\t\t\t95 メニュー項目 最近使ったプロジェクト\n\t\t\t96 メニュー項目 バックアップしたプロジェクト\n\t\t\t97 メニュー項目 プロジェクトを保存 Ctrl+S ID: 40203\n\t\t\t98 メニュー項目 プロジェクトを別名で保存 Ctrl+Shift+S ID: 40204\n\t\t\t99 メニュー項目 ファイル出力\n\t\t\t100 メニュー項目 バッチ出力 ID: 40209\n\t\t\t101 メニュー項目 プロジェクトを保存して終了 ID: 40210\n\t\t\t102 メニュー項目 終了 ID: 40211"
+  },
+  {
+    "step": "save-dialog",
+    "tree": "\t\t103 ダイアログ 名前を付けて保存 Secondary Actions: Raise\n\t\t\t\t\t149 編集 ファイル名: ID: 1001\n\t\t\t159 ボタン 保存(S) ID: 1\n\t\t\t160 ボタン キャンセル ID: 2\n\t\t103 ダイアログ 名前を付けて保存 Secondary Actions: Raise\n\t\t\t\t\t149 編集 ファイル名: ID: 1001\n\t\t\t159 ボタン 保存(S) ID: 1\n\t\t\t160 ボタン キャンセル ID: 2"
+  },
+  {
+    "step": "edit-menu",
+    "tree": "\t\t\t229 メニュー項目 (disabled) 元に戻す Ctrl+Z ID: 40303\n\t\t\t230 メニュー項目 (disabled) やり直し Ctrl+Shift+Z ID: 40304\n\t\t\t229 メニュー項目 (disabled) 元に戻す Ctrl+Z ID: 40303\n\t\t\t230 メニュー項目 (disabled) やり直し Ctrl+Shift+Z ID: 40304"
+  },
+  {
+    "step": "output-menu",
+    "tree": "\t\t\t253 メニュー項目 ファイル出力\n\t\t257 メニュー ファイル出力\n\t\t\t258 メニュー項目 AVIファイル出力 ID: 40205\n\t\t\t259 メニュー項目 PNGファイル出力 ID: 40206\n\t\t\t260 メニュー項目 JPEGファイル出力 ID: 40207\n\t\t\t261 メニュー項目 連番ファイル出力 ID: 40208\n\t\t\t253 メニュー項目 ファイル出力"
+  }
+]

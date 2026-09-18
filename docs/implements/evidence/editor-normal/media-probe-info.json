@@ -1,0 +1,24 @@
+{
+    "programs": [
+
+    ],
+    "stream_groups": [
+
+    ],
+    "streams": [
+        {
+            "codec_name": "rawvideo",
+            "width": 320,
+            "height": 180,
+            "pix_fmt": "bgr24",
+            "duration": "8.000000",
+            "nb_frames": "240"
+        },
+        {
+            "codec_name": "pcm_s16le",
+            "sample_rate": "44100",
+            "channels": 2,
+            "nb_frames": "352800"
+        }
+    ]
+}

@@ -1,0 +1,59 @@
+{
+  "checks": {
+    "all8_shift_120_frames_only": true,
+    "plain_selection_duplicates_only_video_count9": true,
+    "pair_base_two_same_group": true,
+    "pair_dup_preserves_all_properties_except_layer_group": true,
+    "pair_move_preserves_all_except_time_layer_group": true,
+    "moved_pair_groups_separate": true,
+    "only_copy_text_changed": true,
+    "fresh_process_reopen_objects_equal": true
+  },
+  "notes": [
+    "Object focus and project/scene state excluded.",
+    "Group IDs can be renumbered; compare pair partitions separately.",
+    "Highlight B-ABC insertion not completed by these operations."
+  ],
+  "files": [
+    {
+      "file": "highlight-generated.aup2",
+      "sha256": "1e673794b1208333ebc2735c31d2a68c50df9e1d0b98f5081c606e5ce1934e66",
+      "objects": 8
+    },
+    {
+      "file": "highlight-shifted.aup2",
+      "sha256": "01544711026a31b4b5efb6cc19931c88cdd66fa4c10b4a6c0f3e1b3b8538534c",
+      "objects": 8
+    },
+    {
+      "file": "highlight-single-selection.aup2",
+      "sha256": "26fa3f6d04ddd271617d6310e649a532871c8626f81b35cf4d34ea6f82082886",
+      "objects": 9
+    },
+    {
+      "file": "group-pair.aup2",
+      "sha256": "f0473f31ddd6a7d26198a677e2518461ba55bd0599bc1af385f1a5f1516a057a",
+      "objects": 2
+    },
+    {
+      "file": "group-pair-duplicated.aup2",
+      "sha256": "4146a8676010e472142c7239bcaffd52f67ba03677a89a02dfc6aa7f662d02fd",
+      "objects": 4
+    },
+    {
+      "file": "group-pair-moved.aup2",
+      "sha256": "31c5a3ab826c59679556654ab4f44812373bc9ce3affb4c1aced663a8eb301da",
+      "objects": 4
+    },
+    {
+      "file": "group-pair-edited.aup2",
+      "sha256": "b2a74450591f9fad7af5c611ee8fa63ceaacd109678159ec0fc9deaf3f841f8c",
+      "objects": 4
+    },
+    {
+      "file": "group-pair-reopened.aup2",
+      "sha256": "b2a74450591f9fad7af5c611ee8fa63ceaacd109678159ec0fc9deaf3f841f8c",
+      "objects": 4
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "tool": "7-Zip 26.03 x64",
+  "settings": "7z/LZMA2 mx5 mmt2",
+  "source_bytes": 80499844,
+  "archive_bytes": 80132006,
+  "ratio": 0.9954305749958969,
+  "saved_bytes": 367838,
+  "source_sha256": "6d8705a7fc92a155134c59453fa9704280deee99936e3101c1218b86d268aad9",
+  "restored_sha256": "6d8705a7fc92a155134c59453fa9704280deee99936e3101c1218b86d268aad9",
+  "checks": {
+    "roundtrip_exact": true,
+    "source_unchanged": true,
+    "input_copy_retained": true,
+    "archive_retained": true
+  },
+  "runs": [
+    {
+      "stage": "compress",
+      "exit_code": 0,
+      "seconds": 5.795275800002855
+    },
+    {
+      "stage": "test",
+      "exit_code": 0,
+      "seconds": 0.09573519999685232
+    },
+    {
+      "stage": "extract",
+      "exit_code": 0,
+      "seconds": 0.11801700000069104
+    }
+  ],
+  "binaries": {
+    "7z.exe": "6ee3c0ed0b27663c1b948ae85a7c0bb073aed1498983182f3f0df1f6a8c30b2f",
+    "7z.dll": "65e4c1f855f9ef6e8f0f5df8e3f27d9eb5f07311408639da0a1ca0b8f4871b0d"
+  },
+  "local_root": "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-archive-bvh0689s",
+  "limits": [
+    "Single 300-second MP4, same PC/local volume.",
+    "Not video re-encoding; restored bytes must match.",
+    "No GUI, cancellation, >4GiB file or failure injection tested."
+  ]
+}

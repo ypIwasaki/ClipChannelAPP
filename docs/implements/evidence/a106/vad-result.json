@@ -1,0 +1,84 @@
+{
+  "silero_version": "6.2.2",
+  "weight_sha256": "e1122837f4154c511485fe0b9c64455f7b929c96fbb8d79fbdb336383ebd3720",
+  "settings": {
+    "threshold": 0.5,
+    "min_speech_duration_ms": 250,
+    "min_silence_duration_ms": 100,
+    "speech_pad_ms": 30,
+    "sampling_rate": 16000
+  },
+  "elapsed_seconds": 1.549713000000338,
+  "segments": [
+    {
+      "file": "vad-second-00.wav",
+      "input": "second",
+      "start_sample": 32,
+      "end_sample": 19424,
+      "source_start": 420.002,
+      "source_end": 421.214,
+      "cosine": 0.5774610042572021,
+      "label": "target-only per user A107; not automatic classification"
+    },
+    {
+      "file": "vad-second-01.wav",
+      "input": "second",
+      "start_sample": 24608,
+      "end_sample": 40928,
+      "source_start": 421.538,
+      "source_end": 422.558,
+      "cosine": 0.667385995388031,
+      "label": "target-only per user A107; not automatic classification"
+    },
+    {
+      "file": "vad-second-02.wav",
+      "input": "second",
+      "start_sample": 44064,
+      "end_sample": 142304,
+      "source_start": 422.754,
+      "source_end": 428.894,
+      "cosine": 0.7401873469352722,
+      "label": "target-only per user A107; not automatic classification"
+    },
+    {
+      "file": "vad-second-03.wav",
+      "input": "second",
+      "start_sample": 156192,
+      "end_sample": 187360,
+      "source_start": 429.762,
+      "source_end": 431.71,
+      "cosine": 0.2957375943660736,
+      "label": "target-only per user A107; not automatic classification"
+    },
+    {
+      "file": "vad-second-04.wav",
+      "input": "second",
+      "start_sample": 211488,
+      "end_sample": 222688,
+      "source_start": 433.218,
+      "source_end": 433.918,
+      "cosine": 0.4624681770801544,
+      "label": "target-only per user A107; not automatic classification"
+    },
+    {
+      "file": "vad-second-05.wav",
+      "input": "second",
+      "start_sample": 227360,
+      "end_sample": 237536,
+      "source_start": 434.21,
+      "source_end": 434.846,
+      "cosine": 0.45407676696777344,
+      "label": "target-only per user A107; not automatic classification"
+    },
+    {
+      "file": "vad-second-06.wav",
+      "input": "second",
+      "start_sample": 242208,
+      "end_sample": 299488,
+      "source_start": 435.138,
+      "source_end": 438.718,
+      "cosine": 0.6464422345161438,
+      "label": "target-only per user A107; not automatic classification"
+    }
+  ]
+}

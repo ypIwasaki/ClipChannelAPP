@@ -1,0 +1,16 @@
+[
+  {
+    "file": "RWM4SdTZ1t8-180-480.mkv",
+    "bytes": 67507503,
+    "sha256": "F1AAF19828595A32FAFEA7E342F04567D36AE0B176F03ADEF55CAA731867E738",
+    "decode_exit": 0,
+    "decode_error_log_bytes": 0
+  },
+  {
+    "file": "lxYJTSK0y50-420-720.mkv",
+    "bytes": 72045758,
+    "sha256": "E4B70E8EE6599AE2BE63A42870CCCDD21C6350106FEAC894B613F4A35E296090",
+    "decode_exit": 0,
+    "decode_error_log_bytes": 0
+  }
+]

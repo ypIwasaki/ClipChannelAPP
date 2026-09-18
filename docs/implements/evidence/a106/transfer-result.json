@@ -1,0 +1,19 @@
+{
+  "target": "C:\\Users\\raimu\\AppData\\Local\\ClipChannelAPP-validation\\person-transfer-7c0aba64",
+  "copied_files": [
+    "accurate-first.wav",
+    "confirmed-reference.pt",
+    "confirmed-reuse.json"
+  ],
+  "hashes": {
+    "accurate-first.wav": "c27c313d1b840ed300edc561f6e039ece3e6fdba358a823b999e346fa3ffc4fd",
+    "confirmed-reference.pt": "a784449ca9bd1b57ae8fbfa26c6399e452ae36d1e98d86a81bef04816c500c86",
+    "confirmed-reuse.json": "0f4f195c118db31d111ad776dd8da50559e9348b11e831fc92c3c87ea4bdd002"
+  },
+  "source_unchanged": true,
+  "metadata_read_before_model_load": true,
+  "common_model_in_transfer": false,
+  "cosine": 0.74855637550354,
+  "score_delta": 0.0,
+  "scope": "same PC and same runtime, different folder; not app import, other-PC compatibility or missing-dependency UI test"
+}

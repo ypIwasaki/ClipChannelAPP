@@ -1,0 +1,26 @@
+{
+  "python": "3.12.14",
+  "sqlite": "3.53.1",
+  "checks": {
+    "backup_relations_equal": true,
+    "sqlite_integrity": true,
+    "foreign_key_integrity": true,
+    "included_hashes_equal": true,
+    "media_not_bundled": true,
+    "saved_text_read_without_models": true,
+    "hidden_person_preserved": true,
+    "reconnect_identity_and_links_preserved": true,
+    "source_unchanged": true
+  },
+  "archive_bytes": 29728,
+  "archive_sha256": "0140e2af844feea9be65671ac958fa67e13cc556b845683b486ac79ead199c43",
+  "item_count": 9,
+  "local_fixture_root": "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-storage-2u0wlllt",
+  "limits": [
+    "Toy schema and synthetic payloads; not adopted product format.",
+    "No real editor/model reopening, cross-PC or external-drive test.",
+    "ZIP64 enabled, but no >4GiB entry tested.",
+    "No fault injection, deletion, crash recovery or concurrent-write test.",
+    "Only trusted generated archive; no untrusted archive safety claim."
+  ]
+}

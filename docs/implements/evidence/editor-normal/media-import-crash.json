@@ -1,0 +1,10 @@
+{
+  "time": "2026-09-18T11:39:59.1138829+09:00",
+  "event_id": 1000,
+  "app": "aviutl2.exe",
+  "module": "aviutl2.exe",
+  "exception_code": "c0000005",
+  "offset": "00000000001d2226",
+  "app_path": "C:\\Users\\raimu\\appdata\\local\\temp\\clipchannel-a105-editor-6f349375\\aviutl2.exe",
+  "report_id": "420f97d2-10ba-413b-82ec-dd6a0578c7bf"
+}

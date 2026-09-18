@@ -1,0 +1,10 @@
+{
+  "output": "frame-counter-normalized-output.avi",
+  "output_rate": 60,
+  "source_frame_markers_all480_valid": true,
+  "output_count": 480,
+  "clip0_error_count": 0,
+  "clip4_error_count": 0,
+  "errors": [],
+  "sha256": "8c7d8e8cbbaf92144fdac348b2068b56c2f3bae45b4a3d0967cfb430f324fa70"
+}

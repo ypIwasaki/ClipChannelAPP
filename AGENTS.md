@@ -12,3 +12,6 @@ Issue の分類時は `docs/agents/triage-labels.md` を読む。
 単一コンテキストとし、用語集は `CONTEXT.md`、
 設計判断は `docs/adr/` に置く。
 コード調査・設計時は `docs/agents/domain.md` を読む。
+
+### 作業再開
+別PCでの再開・引き継ぎ時は `docs/development-handoff.md` を読む。

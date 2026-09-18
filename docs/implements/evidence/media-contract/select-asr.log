@@ -1,0 +1,32 @@
+[aist#0:1/pcm_s16le @ 000001c72d2aecc0] Guessed Channel Layout: mono
+[aist#0:2/pcm_s16le @ 000001c72d236140] Guessed Channel Layout: mono
+Input #0, matroska,webm, from 'C:\Users\raimu\AppData\Local\Temp\clipchannel-multiaudio-dzctr0h5\two-tracks.mkv':
+  Metadata:
+    ENCODER         : Lavf63.1.101
+  Duration: 00:00:02.00, start: 0.000000, bitrate: 1890 kb/s
+  Stream #0:0: Video: h264 (Constrained Baseline), yuv420p(tv, progressive), 160x90 [SAR 1:1 DAR 16:9], 30 fps, 30 tbr, 1k tbn
+    Metadata:
+      ENCODER         : Lavc63.1.101 libx264
+      DURATION        : 00:00:02.000000000
+  Stream #0:1: Audio: pcm_s16le, 48000 Hz, mono, s16, 768 kb/s (default)
+    Metadata:
+      title           : reference-440Hz
+      ENCODER         : Lavc63.1.101 pcm_s16le
+      DURATION        : 00:00:02.000000000
+  Stream #0:2: Audio: pcm_s16le, 48000 Hz, mono, s16, 768 kb/s
+    Metadata:
+      title           : finished-880Hz
+      ENCODER         : Lavc63.1.101 pcm_s16le
+      DURATION        : 00:00:02.000000000
+Stream mapping:
+  Stream #0:1 -> #0:0 (pcm_s16le (native) -> pcm_s16le (native))
+Output #0, wav, to 'C:\Users\raimu\AppData\Local\Temp\clipchannel-multiaudio-dzctr0h5\asr.wav':
+  Metadata:
+    ISFT            : Lavf63.1.101
+  Stream #0:0: Audio: pcm_s16le ([1][0][0][0] / 0x0001), 16000 Hz, mono, s16, 256 kb/s (default)
+    Metadata:
+      encoder         : Lavc63.1.101 pcm_s16le
+      title           : reference-440Hz
+      DURATION        : 00:00:02.000000000
+[out#0/wav @ 000001c72d1ecd00] video:0KiB audio:62KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: 0.121875%
+size=      63KiB time=00:00:02.00 bitrate= 256.3kbits/s speed= 347x elapsed=0:00:00.00    

@@ -1,0 +1,65 @@
+{
+  "checks": {
+    "undo_restores_all_object_fields_preserving_prior_X6": true,
+    "restored_caption_and_video_group": true,
+    "compound_changes_snapshot": true,
+    "pre_apply_samples_unchanged": true,
+    "post_apply_samples_unchanged": true,
+    "modal_end_matches_applied_state": true,
+    "compound_edit_section_succeeded": true,
+    "disk_save_marker_armed": true,
+    "output_entry_state_unavailable": true,
+    "output_rejected_without_receipt_event": true
+  },
+  "modal_samples": 72,
+  "modal_duration_ms": 73313,
+  "updates_inside_modal": [
+    {
+      "tick_ms": 111527734,
+      "event": "update",
+      "value": "6"
+    }
+  ],
+  "applied_object_headers": {
+    "0": {
+      "layer": "0",
+      "frame": "0,119"
+    },
+    "1": {
+      "layer": "0",
+      "frame": "120,239",
+      "group": "1"
+    },
+    "2": {
+      "layer": "0",
+      "frame": "240,359"
+    },
+    "3": {
+      "layer": "1",
+      "frame": "0,119"
+    },
+    "4": {
+      "layer": "1",
+      "frame": "240,359"
+    },
+    "5": {
+      "layer": "2",
+      "frame": "0,119"
+    },
+    "6": {
+      "layer": "3",
+      "frame": "60,299"
+    },
+    "7": {
+      "layer": "5",
+      "frame": "0,119"
+    }
+  },
+  "verdicts": {
+    "manual_edit_exclusion": "Observed for modal-owned main window drag and Undo only; not all writers.",
+    "save_to_output": "Not established: output-entry SDK snapshot unavailable; safely rejected.",
+    "recovery": "Single host Undo restores compound creation/deletion and prior manual edit; automatic failure rollback not established."
+  },
+  "receipt_absent_observed": true,
+  "note": "All checks passing validates observations, including limitations; does not close product gates."
+}

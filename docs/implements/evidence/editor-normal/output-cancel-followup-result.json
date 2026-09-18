@@ -1,0 +1,58 @@
+[
+  {
+    "fixture": "output-cancel-observed",
+    "expected_frames": 18000,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "index": 0,
+          "codec_name": "rawvideo",
+          "duration": "300.000000",
+          "nb_read_frames": "18000"
+        },
+        {
+          "index": 1,
+          "codec_name": "pcm_s16le",
+          "nb_read_frames": "18000"
+        }
+      ]
+    },
+    "bytes": 3164286832,
+    "sha256": "03332f60dd8014a893e60c180d59847ce9349804c6296cefa960d4c269a7df33",
+    "size_and_mtime_unchanged_during_analysis": true,
+    "decode_returncode": 0,
+    "decode_stderr": "",
+    "object_sections_unchanged": true,
+    "dialog_progress_frames": 12601
+  },
+  {
+    "fixture": "output-cancel-real",
+    "expected_frames": 18000,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "index": 0,
+          "codec_name": "rawvideo",
+          "duration": "129.250000",
+          "nb_read_frames": "7755"
+        },
+        {
+          "index": 1,
+          "codec_name": "pcm_s16le",
+          "nb_read_frames": "7755"
+        }
+      ]
+    },
+    "bytes": 1363240044,
+    "sha256": "0787abae6866cb3c47be67c58a3b9c38797aba1c2bee183604fa527436135b83",
+    "size_and_mtime_unchanged_during_analysis": true,
+    "decode_returncode": 0,
+    "decode_stderr": "",
+    "object_sections_unchanged": true,
+    "dialog_progress_frames": 3757
+  }
+]

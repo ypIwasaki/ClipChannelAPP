@@ -1,0 +1,20 @@
+{
+  "checks": {
+    "four_objects_preserved": true,
+    "scene_media_settings_preserved": true,
+    "new_media_references_retained": true,
+    "source_media_unchanged": true,
+    "copy_media_unchanged": true
+  },
+  "observed": [
+    "Opened relocated Japanese-path project in AviUtl2 2.1.9 with existing L-SMASH plugin",
+    "Video and highlight caption at 1.66 seconds",
+    "Video and original caption at 5.30 seconds",
+    "Saved relocated project"
+  ],
+  "limits": [
+    "Same process and same PC; no fresh-process reopen yet",
+    "Original media remains available; missing-media resolution not tested",
+    "Only two videos and two standard captions; no auxiliary/external-plugin state tested"
+  ]
+}
