@@ -1,6 +1,8 @@
 """Small standalone browser for saved data; no media dependencies required."""
 
 import os
+import shutil
+import subprocess
 import tkinter as tk
 import threading
 from pathlib import Path
@@ -9,6 +11,7 @@ from tkinter import font
 
 from .download import DownloadSession, DownloadError
 from .media import MediaError, prepare_media
+from .people import PersonError, list_people, register_person, select_target, target_for_video, SPLITS
 from .storage import DataFolder, RESULT_KINDS, SHARED_KINDS, StorageError
 
 
@@ -24,7 +27,7 @@ def configure_japanese_fonts(window):
 
 
 def build_app():
-    if Path("/mnt/c/Windows/Fonts").is_dir() and "FONTCONFIG_FILE" not in os.environ:
+    if os.name != "nt" and Path("/mnt/c/Windows/Fonts").is_dir() and "FONTCONFIG_FILE" not in os.environ:
         os.environ["FONTCONFIG_FILE"] = str(Path(__file__).with_name("fonts.conf"))
     data = DataFolder()
     window = tk.Tk()
@@ -47,11 +50,17 @@ def build_app():
     media_panel = ttk.Frame(panes, padding=8)
     panes.add(saved_panel, weight=1)
     panes.add(media_panel, weight=1)
-    ttk.Label(saved_panel, text="保存済み情報").pack(anchor="w")
-    listing = tk.Listbox(saved_panel, height=10)
+    saved_tabs = ttk.Notebook(saved_panel)
+    saved_tabs.pack(fill="both", expand=True)
+    results_tab = ttk.Frame(saved_tabs, padding=4)
+    people_tab = ttk.Frame(saved_tabs, padding=4)
+    saved_tabs.add(results_tab, text="保存済み情報")
+    saved_tabs.add(people_tab, text="人物・参照音声")
+    ttk.Label(results_tab, text="保存済み情報").pack(anchor="w")
+    listing = tk.Listbox(results_tab, height=10)
     listing.pack(fill="both", expand=True)
-    ttk.Label(saved_panel, text="選択したCSVの内容").pack(anchor="w", pady=(8, 0))
-    detail = tk.Text(saved_panel, height=12, state="disabled")
+    ttk.Label(results_tab, text="選択したCSVの内容").pack(anchor="w", pady=(8, 0))
+    detail = tk.Text(results_tab, height=12, state="disabled")
     detail.pack(fill="both", expand=True)
     ttk.Label(media_panel, text="取得・媒体操作").pack(anchor="w")
     url = tk.StringVar()
@@ -80,6 +89,149 @@ def build_app():
     downloads.pack(fill="both", expand=True, pady=(8, 0))
     videos = tk.Listbox(media_panel, height=5)
     videos.pack(fill="both", expand=True, pady=(8, 0))
+    people_panel = ttk.LabelFrame(people_tab, text="人物と参照音声", padding=6)
+    people_panel.pack(fill="both", expand=True, pady=(8, 0))
+    people_list = tk.Listbox(people_panel, height=5)
+    people_list.pack(fill="both", expand=True)
+    selected_person = tk.StringVar(value="対象話者: 未選択")
+    ttk.Label(people_panel, textvariable=selected_person).pack(anchor="w")
+    target_video = tk.StringVar()
+    ttk.Label(people_panel, text="対象動画（別動画にも同じ人物を指定できます）").pack(anchor="w")
+    target_video_box = ttk.Combobox(people_panel, textvariable=target_video, state="readonly")
+    target_video_box.pack(fill="x")
+    person_name = tk.StringVar()
+    audio_path = tk.StringVar()
+    model_path = tk.StringVar()
+    start_time = tk.StringVar()
+    end_time = tk.StringVar()
+    threshold = tk.StringVar()
+    split = tk.StringVar(value="whole-reference")
+    for field in (person_name, audio_path, model_path, start_time, end_time, threshold, split):
+        field.trace_add("write", mark_unsaved)
+    ttk.Label(people_panel, text="名前").pack(anchor="w")
+    ttk.Entry(people_panel, textvariable=person_name).pack(fill="x")
+    ttk.Label(people_panel, text="参照音声ファイル（動画を使う場合は空欄）").pack(anchor="w")
+    ttk.Entry(people_panel, textvariable=audio_path).pack(fill="x")
+    ttk.Button(people_panel, text="音声ファイルを選択", command=lambda: audio_path.set(
+        filedialog.askopenfilename(title="参照音声を選択") or audio_path.get())).pack(anchor="w")
+    ttk.Label(people_panel, text="動画を使う場合: 右側の登録済み動画を選び、開始・終了秒を指定").pack(anchor="w")
+    times = ttk.Frame(people_panel)
+    times.pack(fill="x")
+    ttk.Entry(times, textvariable=start_time, width=9).pack(side="left")
+    ttk.Label(times, text=" 〜 ").pack(side="left")
+    ttk.Entry(times, textvariable=end_time, width=9).pack(side="left")
+    ttk.Label(people_panel, text="ローカル ECAPA モデルフォルダ").pack(anchor="w")
+    ttk.Entry(people_panel, textvariable=model_path).pack(fill="x")
+    ttk.Button(people_panel, text="モデルを選択", command=lambda: model_path.set(
+        filedialog.askdirectory(title="ローカル ECAPA モデル") or model_path.get())).pack(anchor="w")
+    ttk.Label(people_panel, text="照合閾値（-1〜1、品質は別動画で確認）").pack(anchor="w")
+    ttk.Entry(people_panel, textvariable=threshold).pack(fill="x")
+    ttk.Combobox(people_panel, textvariable=split, values=sorted(SPLITS), state="readonly").pack(fill="x")
+    current_people = [()]
+    player = [None]
+
+    def refresh_people():
+        current_people[0] = tuple(list_people(data))
+        people_list.delete(0, tk.END)
+        for person in current_people[0]:
+            people_list.insert(tk.END, f"{person.name} | {person.person_id[:8]} | {person.split}")
+
+    def select_person(_event=None):
+        if people_list.curselection():
+            person = current_people[0][people_list.curselection()[0]]
+            selected_person.set(f"選択中の人物: {person.name} ({person.person_id}) / 閾値 {person.threshold} / {person.split}")
+
+    def preview_person():
+        if not people_list.curselection():
+            messagebox.showerror("試聴できません", "人物を選んでください")
+            return
+        person = current_people[0][people_list.curselection()[0]]
+        if not person.reference_audio.is_file():
+            messagebox.showerror("試聴できません", "参照音声ファイルが見つかりません")
+            return
+        ffplay = shutil.which("ffplay")
+        if not ffplay:
+            messagebox.showerror("試聴できません", "試聴に ffplay が必要です")
+            return
+        if player[0] and player[0].poll() is None:
+            player[0].terminate()
+        try:
+            player[0] = subprocess.Popen([ffplay, "-nodisp", "-autoexit", "-loglevel", "error",
+                                          str(person.reference_audio)], stdout=subprocess.DEVNULL,
+                                         stderr=subprocess.DEVNULL)
+        except OSError as error:
+            messagebox.showerror("試聴できません", str(error))
+
+    def assign_target():
+        if pending[0] or data.running:
+            messagebox.showerror("対象話者を選べません", "処理完了を待ってください")
+            return
+        if not target_video.get() or not people_list.curselection():
+            messagebox.showerror("対象話者を選べません", "動画と人物を選んでください")
+            return
+        person = current_people[0][people_list.curselection()[0]]
+        try:
+            selected = select_target(data, next(path for path in data.list_videos()
+                                                 if path.name == target_video.get()), person.person_id)
+        except (OSError, StorageError, StopIteration) as error:
+            messagebox.showerror("対象話者を選べません", str(error))
+            return
+        selected_person.set(f"{target_video.get()} の対象話者: {selected.name} ({selected.person_id})")
+        status.set(f"対象話者を保存しました: {selected.name}")
+
+    def show_target(_event=None):
+        if not target_video.get():
+            return
+        try:
+            selected = target_for_video(data, next(path for path in data.list_videos()
+                                                   if path.name == target_video.get()))
+        except (OSError, StorageError, StopIteration) as error:
+            messagebox.showerror("対象話者を読めません", str(error))
+            return
+        selected_person.set(f"{target_video.get()} の対象話者: " +
+                            (f"{selected.name} ({selected.person_id})" if selected else "未選択"))
+
+    def enroll_person():
+        if pending[0] or data.running:
+            messagebox.showerror("登録できません", "処理完了を待ってください")
+            return
+        use_video = not audio_path.get().strip()
+        if use_video and not videos.curselection():
+            messagebox.showerror("登録できません", "音声ファイルか登録済み動画を選んでください")
+            return
+        video = data.list_videos()[videos.curselection()[0]] if use_video else None
+        args = (person_name.get(), audio_path.get(), model_path.get(), threshold.get(), split.get())
+        start, end = start_time.get(), end_time.get()
+        pending[0] = data.running = True
+        status.set("人物特徴を生成しています")
+
+        def worker():
+            try:
+                person = register_person(data, *args, video=video, start=start, end=end)
+                def finish():
+                    refresh_people()
+                    index = next(i for i, item in enumerate(current_people[0]) if item.person_id == person.person_id)
+                    people_list.selection_set(index)
+                    select_person()
+                    unsaved.set(False)
+                    status.set(f"人物を登録しました: {person.name}")
+                window.after(0, finish)
+            except Exception as error:
+                reason = str(error)
+                window.after(0, lambda: messagebox.showerror("登録できません", reason))
+            finally:
+                data.running = False
+                window.after(0, lambda: pending.__setitem__(0, False))
+
+        threading.Thread(target=worker, daemon=True).start()
+
+    person_actions = ttk.Frame(people_panel)
+    person_actions.pack(fill="x", pady=4)
+    ttk.Button(person_actions, text="人物を登録", command=enroll_person).pack(side="left")
+    ttk.Button(person_actions, text="参照音声を試聴", command=preview_person).pack(side="left", padx=6)
+    ttk.Button(person_actions, text="動画の対象話者に設定", command=assign_target).pack(side="left")
+    people_list.bind("<<ListboxSelect>>", select_person)
+    target_video_box.bind("<<ComboboxSelected>>", show_target)
 
     def refresh_downloads():
         downloads.delete(0, tk.END)
@@ -176,11 +328,18 @@ def build_app():
             listing.insert(tk.END, path)
         status.set(f"保存済み結果: {len(paths)} 件")
         refresh_videos()
+        refresh_people()
 
     def refresh_videos():
         videos.delete(0, tk.END)
-        for path in data.list_videos():
+        registered = data.list_videos()
+        for path in registered:
             videos.insert(tk.END, path.name)
+        target_video_box.configure(values=[path.name for path in registered])
+        if target_video.get() not in {path.name for path in registered}:
+            target_video.set(registered[0].name if registered else "")
+        if registered:
+            show_target()
 
     def register():
         if data.path is None:
@@ -273,6 +432,8 @@ def build_app():
             status.set("停止完了を待っています")
             window.after(200, close)
         else:
+            if player[0] and player[0].poll() is None:
+                player[0].terminate()
             window.destroy()
 
     window.protocol("WM_DELETE_WINDOW", close)

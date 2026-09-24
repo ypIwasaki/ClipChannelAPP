@@ -31,12 +31,13 @@ SCHEMAS = {
     "segments": ("schema_version", "start_ms", "end_ms", "kind", "selected"),
     "word-counts": ("schema_version", "word", "occurrences", "utterances"),
     "people": ("schema_version", "person_id", "name", "reference_audio", "feature_file"),
+    "targets": ("schema_version", "video_name", "person_id"),
     "registered-words": ("schema_version", "word"),
     "excluded-words": ("schema_version", "word"),
 }
 RESULT_KINDS = ("transcripts", "segments", "word-counts")
 VIDEO_EXTENSIONS = {".mp4", ".mkv", ".mov", ".avi", ".webm", ".m4v", ".ts", ".mts", ".m2ts"}
-SHARED_KINDS = ("people", "registered-words", "excluded-words")
+SHARED_KINDS = ("people", "targets", "registered-words", "excluded-words")
 SAFE_NAME = re.compile(r"^[^<>:\"/\\|?*\x00-\x1f.][^<>:\"/\\|?*\x00-\x1f]*$")
 
 
