@@ -6,6 +6,7 @@ import shutil
 import subprocess
 import tempfile
 import uuid
+from bisect import bisect_left
 from fractions import Fraction
 from pathlib import Path
 
@@ -56,25 +57,48 @@ def is_variable_fps(source):
     return any(abs(interval - reference) > max(0.001, reference * 0.02) for interval in intervals)
 
 
-def nearest_frame(source, requested_ms):
-    """Return an actual decoded frame timestamp and its signed offset in ms."""
+def _nearby_frames(source, requested_ms):
     probe = shutil.which("ffprobe")
     if not probe or not math.isfinite(requested_ms) or requested_ms < 0:
         raise SegmentError("時刻または ffprobe が不正です")
-    start = max(0, requested_ms / 1000 - 2)
     result = subprocess.run([probe, "-v", "error", "-select_streams", "v:0",
-                             "-read_intervals", f"{start}%+4", "-show_entries",
+                             "-show_entries",
                              "frame=best_effort_timestamp_time", "-of", "csv=p=0", str(source)],
                             capture_output=True, text=True)
     if result.returncode:
         raise SegmentError("フレーム境界を読み取れません")
     try:
-        stamps = [round(float(line.strip().rstrip(",")) * 1000) for line in result.stdout.splitlines()
-                  if line.strip().rstrip(",")]
-        closest = min(stamps, key=lambda value: abs(value - requested_ms))
+        stamps = sorted({round(float(line.strip().rstrip(",")) * 1000)
+                         for line in result.stdout.splitlines() if line.strip().rstrip(",")})
+        if not stamps:
+            raise ValueError("フレームがありません")
     except ValueError as error:
         raise SegmentError("フレーム境界を読み取れません") from error
+    return stamps
+
+
+def nearest_frame(source, requested_ms):
+    """Return an actual decoded frame timestamp and its signed offset in ms."""
+    closest = _closest(_nearby_frames(source, requested_ms), requested_ms)
     return closest, closest - requested_ms
+
+
+def _closest(frames, requested_ms):
+    position = bisect_left(frames, requested_ms)
+    candidates = frames[max(0, position - 1):position + 1]
+    return min(candidates, key=lambda value: abs(value - requested_ms))
+
+
+def adjacent_frame(source, current_ms, direction):
+    """Move to the preceding or following actual presentation timestamp."""
+    if direction not in (-1, 1):
+        raise SegmentError("フレームの移動方向が不正です")
+    frames = _nearby_frames(source, current_ms)
+    nearest = _closest(frames, current_ms)
+    position = bisect_left(frames, nearest) + direction
+    if not 0 <= position < len(frames):
+        raise SegmentError("隣のフレームがありません")
+    return frames[position]
 
 
 def compose_video(data, source, segments, order, duration_ms, *, fps=None):
@@ -90,6 +114,8 @@ def compose_video(data, source, segments, order, duration_ms, *, fps=None):
     ffmpeg = shutil.which("ffmpeg")
     if not ffmpeg:
         raise SegmentError("ffmpeg が必要です")
+    if fps is None and is_variable_fps(source):
+        raise SegmentError("可変fpsの動画です。固定fpsを指定してください")
     _, _, width, height = probe_frames(source)
     # Even dimensions are required by yuv420p and keep the source size where possible.
     width -= width % 2
@@ -105,13 +131,14 @@ def compose_video(data, source, segments, order, duration_ms, *, fps=None):
     streams = json.loads(probe.stdout)["streams"]
     video_stream = next(stream for stream in streams if stream["codec_type"] == "video")
     audio_stream = next((stream for stream in streams if stream["codec_type"] == "audio"), None)
+    source_frames = _nearby_frames(source, 0)
     with tempfile.TemporaryDirectory(dir=data.path / "work", prefix="compose-") as temporary:
         output = Path(temporary) / "editing.mp4"
         filters = []
         for position, index in enumerate(order):
             row = segments[index]
-            start_ms, _ = nearest_frame(source, row.start_ms)
-            end_ms, _ = nearest_frame(source, row.end_ms)
+            start_ms = _closest(source_frames, row.start_ms)
+            end_ms = _closest(source_frames, row.end_ms)
             if end_ms <= start_ms:
                 raise SegmentError("フレーム境界に合わせると区間の長さが0になります")
             start, end = start_ms / 1000, end_ms / 1000

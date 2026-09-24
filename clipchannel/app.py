@@ -21,7 +21,7 @@ from .segments import (Segment, SegmentError, candidates_from_transcript,
                        load_segments, merge_segments, save_segments, split_segment,
                        validate_segments)
 from .media import _probe
-from .compose import compose_video, is_variable_fps, nearest_frame, probe_frames
+from .compose import adjacent_frame, compose_video, is_variable_fps, nearest_frame
 
 
 def configure_japanese_fonts(window):
@@ -650,9 +650,9 @@ def build_app():
         if video is None:
             return
         try:
-            _, rate, _, _ = probe_frames(video)
-            requested = round(float(value.get()) * 1000 + direction * 1000 / float(rate))
-            closest, difference = nearest_frame(video, requested)
+            requested = round(float(value.get()) * 1000)
+            closest = adjacent_frame(video, requested, direction)
+            difference = closest - requested
             value.set(f"{closest / 1000:.3f}")
             frame_status.set(f"{label} {closest / 1000:.3f}秒 (差 {difference:+d}ms)。境界を修正で保存")
         except (ValueError, StorageError) as error:
