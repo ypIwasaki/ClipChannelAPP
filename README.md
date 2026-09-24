@@ -9,7 +9,7 @@ python -m pip install -r requirements.txt
 python -m clipchannel.app
 ```
 
-動画取得とMP4変換には、別途 `ffmpeg` を実行パス上に用意してください。取得した元ファイルは `media/downloaded/` に保持し、登録したMP4は `media/originals/` に置きます。音声のみの結果は `media/audio/` に保存します。
+媒体の確認と編集互換変換には、別途 `ffprobe` と `ffmpeg` を実行パス上に用意してください。取得した元ファイルは `media/downloaded/` に保持し、登録した動画は `media/originals/` に置きます。変換が必要な場合のMP4は `media/prepared/<元ファイル名>/editing-<識別子>.mp4` に保存し、同名のJSONに映像・音声の開始時刻と元動画との対応を記録します。変換に失敗した場合も元動画を保持し、動画を選択して「媒体確認・変換（再試行）」を実行できます。音声のみの結果は `media/audio/` に保存します。
 
 - [別PCでの作業再開](docs/development-handoff.md)：読む順序、現在地、Git外のデータと実行環境
 - [初版の編集受渡し方針](docs/implements/editor-handoff-scope.md)：動画一本化、字幕、保存・出力の簡易判定
