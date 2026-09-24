@@ -21,6 +21,7 @@ from .segments import (Segment, SegmentError, candidates_from_transcript,
                        load_segments, merge_segments, save_segments, split_segment,
                        validate_segments)
 from .media import _probe
+from .compose import compose_video, nearest_frame, probe_frames
 
 
 def configure_japanese_fonts(window):
@@ -397,6 +398,7 @@ def build_app():
     segment_end = tk.StringVar()
     segment_selected = tk.BooleanVar(value=True)
     segment_list = tk.Listbox(segments_tab, selectmode=tk.EXTENDED, exportselection=False)
+    compose_order = []
     ttk.Label(segments_tab, text="対象動画は人物タブで選択。文字起こし版と前後余白（秒）").pack(anchor="w")
     segment_settings = ttk.Frame(segments_tab)
     segment_settings.pack(fill="x")
@@ -417,6 +419,8 @@ def build_app():
 
     def display_segments():
         segment_list.delete(0, tk.END)
+        compose_order.clear()
+        compose_list.delete(0, tk.END)
         for row in segment_rows[0]:
             segment_list.insert(tk.END, f"{'✓' if row.selected else '—'} {row.start_ms / 1000:.3f}–{row.end_ms / 1000:.3f}  {row.kind}")
 
@@ -594,6 +598,110 @@ def build_app():
         ttk.Label(segment_edit, text=caption).pack(side="left")
         ttk.Entry(segment_edit, textvariable=variable, width=10).pack(side="left")
     ttk.Checkbutton(segment_edit, text="採用", variable=segment_selected).pack(side="left")
+
+    compose_list = tk.Listbox(segments_tab, height=5, exportselection=False)
+    ttk.Label(segments_tab, text="編集用動画の順番（同じ区間を複数回追加できます）").pack(anchor="w")
+    compose_list.pack(fill="x")
+    compose_fps = tk.StringVar()
+    frame_status = tk.StringVar()
+    composed_path = [None]
+
+    def refresh_compose_order():
+        compose_list.delete(0, tk.END)
+        for index in compose_order:
+            if index < len(segment_rows[0]):
+                row = segment_rows[0][index]
+                compose_list.insert(tk.END, f"{index + 1}: {row.start_ms / 1000:.3f}–{row.end_ms / 1000:.3f}")
+
+    def add_compose_segment():
+        compose_order.extend(segment_list.curselection())
+        refresh_compose_order()
+
+    def move_compose_segment(direction):
+        selected = compose_list.curselection()
+        if selected and 0 <= selected[0] + direction < len(compose_order):
+            index = selected[0]
+            compose_order[index], compose_order[index + direction] = compose_order[index + direction], compose_order[index]
+            refresh_compose_order()
+            compose_list.selection_set(index + direction)
+
+    def remove_compose_segment():
+        for index in reversed(compose_list.curselection()):
+            del compose_order[index]
+        refresh_compose_order()
+
+    def inspect_frame():
+        video = segment_video()
+        if video is None:
+            return
+        try:
+            reports = []
+            for label, value in (("開始", segment_start), ("終了", segment_end)):
+                requested = round(float(value.get()) * 1000)
+                closest, difference = nearest_frame(video, requested)
+                reports.append(f"{label} {closest / 1000:.3f}秒 (差 {difference:+d}ms)")
+                value.set(f"{closest / 1000:.3f}")
+            frame_status.set(" / ".join(reports))
+        except (ValueError, StorageError) as error:
+            messagebox.showerror("フレームを確認できません", str(error))
+
+    def step_frame(value, label, direction):
+        video = segment_video()
+        if video is None:
+            return
+        try:
+            _, rate, _, _ = probe_frames(video)
+            requested = round(float(value.get()) * 1000 + direction * 1000 / float(rate))
+            closest, difference = nearest_frame(video, requested)
+            value.set(f"{closest / 1000:.3f}")
+            frame_status.set(f"{label} {closest / 1000:.3f}秒 (差 {difference:+d}ms)。境界を修正で保存")
+        except (ValueError, StorageError) as error:
+            messagebox.showerror("フレームを調整できません", str(error))
+
+    def play_composed():
+        if composed_path[0] is None or not composed_path[0].is_file():
+            return
+        ffplay = shutil.which("ffplay")
+        if not ffplay:
+            messagebox.showerror("再生できません", "ffplay が必要です")
+            return
+        subprocess.Popen([ffplay, "-autoexit", str(composed_path[0])],
+                         stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+    def render_compose():
+        video = segment_video()
+        if video is None or segment_source[0] != video or segment_dirty[0] or pending[0] or data.running:
+            messagebox.showerror("編集用動画を作れません", "対象動画と保存済み区間を選んでください")
+            return
+        order = list(compose_order) or [i for i, row in enumerate(segment_rows[0]) if row.selected]
+        try:
+            average, nominal, _, _ = probe_frames(video)
+            if average != nominal and not compose_fps.get().strip():
+                raise SegmentError("可変fpsの動画です。固定fpsを指定してください")
+            fps = float(compose_fps.get()) if compose_fps.get().strip() else None
+            path = compose_video(data, video, segment_rows[0], order, segment_duration[0], fps=fps)
+        except (OSError, ValueError, StorageError) as error:
+            messagebox.showerror("編集用動画を作れません", str(error))
+            return
+        status.set(f"編集用動画を保存しました: {path}")
+        composed_path[0] = path
+        messagebox.showinfo("編集用動画", f"保存しました: {path}\n映像・音声の継ぎ目を再生して確認してください")
+
+    compose_actions = ttk.Frame(segments_tab)
+    compose_actions.pack(fill="x")
+    for caption, action in (("区間を追加", add_compose_segment), ("上へ", lambda: move_compose_segment(-1)),
+                            ("下へ", lambda: move_compose_segment(1)), ("外す", remove_compose_segment),
+                            ("フレーム境界へ合わせる", inspect_frame),
+                            ("開始-1F", lambda: step_frame(segment_start, "開始", -1)),
+                            ("開始+1F", lambda: step_frame(segment_start, "開始", 1)),
+                            ("終了-1F", lambda: step_frame(segment_end, "終了", -1)),
+                            ("終了+1F", lambda: step_frame(segment_end, "終了", 1)),
+                            ("編集用MP4を作成", render_compose),
+                            ("完成動画を再生", play_composed)):
+        ttk.Button(compose_actions, text=caption, command=action).pack(side="left")
+    ttk.Label(segments_tab, text="固定fps（可変fpsでは必須。空欄なら元動画優先）").pack(anchor="w")
+    ttk.Entry(segments_tab, textvariable=compose_fps, width=10).pack(anchor="w")
+    ttk.Label(segments_tab, textvariable=frame_status).pack(anchor="w")
 
     def refresh_people():
         current_people[0] = tuple(list_people(data))
