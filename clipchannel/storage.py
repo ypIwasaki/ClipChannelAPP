@@ -119,7 +119,8 @@ class DataFolder:
 
     def list_saved(self):
         root = self._root()
-        return sorted(str(path.relative_to(root)) for path in root.glob("catalog/*/*/*_v*.csv"))
+        return sorted(path.relative_to(root).as_posix() for path in root.glob("catalog/*/*/*_v*.csv")
+                      if re.fullmatch(re.escape(path.parent.parent.name) + r"_v[1-9][0-9]*\.csv", path.name))
 
     def save_result(self, source_name, kind, rows):
         if kind not in RESULT_KINDS:
