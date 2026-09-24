@@ -1,0 +1,64 @@
+{
+  "source": "User replies on 2026-09-24 to eight saved 5-second listening examples",
+  "video_id": "8Xyb7UB3OlM",
+  "source_audio_sha256": "2c0c196f6c79e0579afbc97b33f3c83ef669dda1321b346e51172124fd42a4bd",
+  "category_note": "Overlapping voices does not establish whether the target speaker is present.",
+  "examples": [
+    {
+      "source_start": 1382.5,
+      "source_end": 1387.5,
+      "cosine": 0.02481444552540779,
+      "user_label": "overlapping_voices",
+      "target_presence": null
+    },
+    {
+      "source_start": 2287.5,
+      "source_end": 2292.5,
+      "cosine": 0.11228285729885101,
+      "user_label": "overlapping_voices",
+      "target_presence": null
+    },
+    {
+      "source_start": 1762.5,
+      "source_end": 1767.5,
+      "cosine": 0.2286214381456375,
+      "user_label": "other_only",
+      "target_presence": false
+    },
+    {
+      "source_start": 2092.5,
+      "source_end": 2097.5,
+      "cosine": 0.4292392134666443,
+      "user_label": "overlapping_voices",
+      "target_presence": null
+    },
+    {
+      "source_start": 2227.5,
+      "source_end": 2232.5,
+      "cosine": 0.626746416091919,
+      "user_label": "overlapping_voices",
+      "target_presence": null
+    },
+    {
+      "source_start": 2165.0,
+      "source_end": 2170.0,
+      "cosine": 0.7415435314178467,
+      "user_label": "overlapping_voices",
+      "target_presence": null
+    },
+    {
+      "source_start": 2115.0,
+      "source_end": 2120.0,
+      "cosine": 0.6678050756454468,
+      "user_label": "overlapping_voices",
+      "target_presence": null
+    },
+    {
+      "source_start": 2385.0,
+      "source_end": 2390.0,
+      "cosine": -0.0320439487695694,
+      "user_label": "other_only",
+      "target_presence": false
+    }
+  ]
+}

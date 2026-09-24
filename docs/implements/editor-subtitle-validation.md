@@ -17,7 +17,7 @@
 
 [保存ファイル](evidence/editor-normal/subtitle-roundtrip.aup2)は1,461 bytes、SHA256 `9FFC5DB9F7C89858FB81A3DCF8B65A5BF86BC7AAFD4AE3758546E9C9EA528EB8`。検証用の絶対パスを含むため、別環境のパス解決は今回の検証対象外。
 
-元のnormal-operations.aup2のSHA256は `01B1A5C8905FECF05F88D9D02D50D0827E2CD8A559910BF676D89E18451EB7B0` のまま。元仕様spec.mdも既存のSHA256から不変。
+元のnormal-operations.aup2のSHA256は `01B1A5C8905FECF05F88D9D02D50D0827E2CD8A559910BF676D89E18451EB7B0` のまま。元仕様spec-legacy-v0.1.mdも既存のSHA256から不変。
 
 ## 判定と残件
 
