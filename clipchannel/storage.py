@@ -139,8 +139,11 @@ class DataFolder:
 
     def list_saved(self):
         root = self._root()
-        return sorted(path.relative_to(root).as_posix() for path in root.glob("catalog/*/*/*_v*.csv")
-                      if re.fullmatch(re.escape(path.parent.parent.name) + r"_v[1-9][0-9]*\.csv", path.name))
+        results = [path.relative_to(root).as_posix() for path in root.glob("catalog/*/*/*_v*.csv")
+                   if re.fullmatch(re.escape(path.parent.parent.name) + r"_v[1-9][0-9]*\.csv", path.name)]
+        shared = [path.relative_to(root).as_posix() for kind in SHARED_KINDS
+                  if (path := root / "people" / f"{kind}.csv").is_file()]
+        return sorted(results + shared)
 
     def list_videos(self):
         return sorted((path for path in (self._root() / "media" / "originals").glob("*")
@@ -184,9 +187,26 @@ class DataFolder:
     def save_result(self, source_name, kind, rows):
         if kind not in RESULT_KINDS:
             raise StorageError("不明な結果の種類です")
-        stem = _name(Path(source_name).stem)
+        source = self.register_video(source_name)
+        stem = _name(source.stem)
+        _name(source.name)
+        identity = self._root() / "catalog" / stem / "source.sha256"
+        digest = hashlib.sha256()
+        with source.open("rb") as stream:
+            for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+                digest.update(chunk)
+        fingerprint = f"{source.name}\n{digest.hexdigest()}\n"
+        if identity.exists() and identity.read_text(encoding="utf-8") != fingerprint:
+            raise VideoNameConflict("同じ保存名の別動画があります。元動画の名前を変更してください")
+        if not identity.exists() and any((self._root() / "catalog" / stem).glob("*/*_v*.csv")):
+            raise VideoNameConflict("元動画を識別できない既存結果があります。保存を中止しました")
         directory = self._root() / "catalog" / stem / kind
         directory.mkdir(parents=True, exist_ok=True)
+        if not identity.exists():
+            with identity.open("x", encoding="utf-8") as stream:
+                stream.write(fingerprint)
+                stream.flush()
+                os.fsync(stream.fileno())
         versions = [int(match.group(1)) for path in directory.glob(f"{stem}_v*.csv")
                     if (match := re.fullmatch(re.escape(stem) + r"_v([1-9][0-9]*)\.csv", path.name))]
         version = max(versions, default=0) + 1

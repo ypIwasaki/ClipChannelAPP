@@ -1,8 +1,10 @@
 # データ用フォルダと CSV v1
 
-`python -m clipchannel.app` で保存済み結果の閲覧画面を開く。フォルダ選択時に `catalog/`、`media/edits/`、`people/`、`projects/`、`exports/`、`archives/`、`work/`、`recovery/`、`logs/` を作る。既存フォルダを選ぶと、そのフォルダの解析結果を一覧に表示する。処理中または未保存入力がある場合、理由を表示して切り替えを拒む。画面のチェック欄は後続機能が状態を連携するまでの確認用である。
+`python -m clipchannel.app` で保存済み情報の閲覧画面を開く。フォルダ選択時に `catalog/`、`media/edits/`、`people/`、`projects/`、`exports/`、`archives/`、`work/`、`recovery/`、`logs/` を作る。既存フォルダを選ぶと、そのフォルダの解析結果と共通設定を一覧に表示する。処理中または取得設定に未保存入力がある場合、理由を表示して切り替えを拒む。
 
 保存 API は `clipchannel.DataFolder`。解析結果は `save_result(source_name, kind, rows)`、再読込みは `load_result(source_name, kind, version)`。`kind` は `transcripts`、`segments`、`word-counts`。共通設定は `save_shared(kind, rows)` と `load_shared(kind)` で、`kind` は `people`、`registered-words`、`excluded-words`。人物の参照音声・特徴ファイルは CSV の `reference_audio` と `feature_file` に相対パスを記録し、実体は別ファイルに置く。現段階では実体の作成・存在確認は行わず、CSV の閲覧を妨げない。
+
+`save_result` には実在する元動画ファイルを渡す。保存前に動画を登録・照合し、未登録なら `media/originals/` にコピーする。最初の保存時に登録済みファイル名と SHA-256 を `catalog/<元動画名>/source.sha256` に記録し、次版保存時に照合する。同じ保存名の別動画なら保存を止め、名前変更を求める。保存済み CSV の閲覧時には元動画や解析依存物を要求しない。
 
 CSV は UTF-8（BOM なし）、ヘッダーあり、カンマ区切り、LF 改行。フィールド内の引用符は二重引用符でエスケープし、改行は引用符で囲んで保持する。全ファイルの先頭列 `schema_version` は `1`。時刻列 `start_ms`、`end_ms` は元動画の先頭を 0 とする整数ミリ秒で、終了は開始より後。CSV の値は文字列として API に渡し、読込み時も文字列で返す。未知の列構成・版は拒む。
 
