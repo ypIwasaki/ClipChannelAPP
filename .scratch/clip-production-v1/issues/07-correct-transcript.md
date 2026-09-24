@@ -8,7 +8,7 @@
 
 **Blocked by:** 06: 対象話者の発言を文字起こしする
 
-**Status:** ready-for-agent
+**Status:** completed
 
 ## 完了条件
 
