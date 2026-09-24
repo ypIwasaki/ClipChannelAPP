@@ -23,25 +23,37 @@ def configure_japanese_fonts(window):
     return None
 
 
-def main():
+def build_app():
     if Path("/mnt/c/Windows/Fonts").is_dir() and "FONTCONFIG_FILE" not in os.environ:
         os.environ["FONTCONFIG_FILE"] = str(Path(__file__).with_name("fonts.conf"))
     data = DataFolder()
     window = tk.Tk()
     configure_japanese_fonts(window)
     window.title("ClipChannelAPP — 保存済みデータ")
+    window.geometry("1180x720")
+    window.minsize(960, 600)
     location = tk.StringVar(value="データ用フォルダを選択してください")
     status = tk.StringVar()
     unsaved = tk.BooleanVar()
     def mark_unsaved(*_args):
         unsaved.set(True)
-    tk.Label(window, textvariable=location).pack(anchor="w", padx=12, pady=8)
-    listing = tk.Listbox(window, width=85, height=15)
-    listing.pack(fill="both", expand=True, padx=12)
-    videos = tk.Listbox(window, width=85, height=6)
-    videos.pack(fill="both", padx=12)
-    detail = tk.Text(window, width=85, height=12, state="disabled")
-    detail.pack(fill="both", expand=True, padx=12, pady=8)
+    header = ttk.Frame(window, padding=10)
+    header.pack(fill="x")
+    tk.Button(header, text="フォルダを選択・切り替え", command=lambda: choose()).pack(side="left", padx=(0, 12))
+    ttk.Label(header, textvariable=location).pack(side="left", fill="x", expand=True)
+    panes = ttk.Panedwindow(window, orient="horizontal")
+    panes.pack(fill="both", expand=True, padx=10, pady=5)
+    saved_panel = ttk.Frame(panes, padding=8)
+    media_panel = ttk.Frame(panes, padding=8)
+    panes.add(saved_panel, weight=1)
+    panes.add(media_panel, weight=1)
+    ttk.Label(saved_panel, text="保存済み情報").pack(anchor="w")
+    listing = tk.Listbox(saved_panel, height=10)
+    listing.pack(fill="both", expand=True)
+    ttk.Label(saved_panel, text="選択したCSVの内容").pack(anchor="w", pady=(8, 0))
+    detail = tk.Text(saved_panel, height=12, state="disabled")
+    detail.pack(fill="both", expand=True)
+    ttk.Label(media_panel, text="取得・媒体操作").pack(anchor="w")
     url = tk.StringVar()
     media_format = tk.StringVar(value="bestvideo*+bestaudio/best")
     retries = tk.StringVar(value="3")
@@ -54,18 +66,20 @@ def main():
     pending = [False]
     preparing = [False]
     prepare_stop = [False]
-    tk.Label(window, text="認証不要のURL").pack(anchor="w", padx=12)
-    tk.Entry(window, textvariable=url, width=85).pack(fill="x", padx=12)
-    tk.Label(window, text="形式・品質 (yt-dlp format)").pack(anchor="w", padx=12)
-    tk.Entry(window, textvariable=media_format, width=85).pack(fill="x", padx=12)
-    tk.Label(window, text="取得の再試行回数").pack(anchor="w", padx=12)
-    tk.Entry(window, textvariable=retries, width=10).pack(anchor="w", padx=12)
-    ttk.Checkbutton(window, text="音声のみ（音声成果物）", variable=audio_only).pack(anchor="w", padx=12)
-    ttk.Checkbutton(window, text="情報のみ", variable=info_only).pack(anchor="w", padx=12)
-    tk.Label(window, text="追加引数（-f, --retries, --fragment-retries, --sub-langs）").pack(anchor="w", padx=12)
-    tk.Entry(window, textvariable=extra, width=85).pack(fill="x", padx=12)
-    downloads = tk.Listbox(window, width=85, height=7)
-    downloads.pack(fill="both", padx=12)
+    ttk.Label(media_panel, text="認証不要のURL").pack(anchor="w")
+    tk.Entry(media_panel, textvariable=url).pack(fill="x")
+    ttk.Label(media_panel, text="形式・品質 (yt-dlp format)").pack(anchor="w")
+    tk.Entry(media_panel, textvariable=media_format).pack(fill="x")
+    ttk.Label(media_panel, text="取得の再試行回数").pack(anchor="w")
+    tk.Entry(media_panel, textvariable=retries, width=10).pack(anchor="w")
+    ttk.Checkbutton(media_panel, text="音声のみ（音声成果物）", variable=audio_only).pack(anchor="w")
+    ttk.Checkbutton(media_panel, text="情報のみ", variable=info_only).pack(anchor="w")
+    ttk.Label(media_panel, text="追加引数（-f, --retries, --fragment-retries, --sub-langs）").pack(anchor="w")
+    tk.Entry(media_panel, textvariable=extra).pack(fill="x")
+    downloads = tk.Listbox(media_panel, height=5)
+    downloads.pack(fill="both", expand=True, pady=(8, 0))
+    videos = tk.Listbox(media_panel, height=5)
+    videos.pack(fill="both", expand=True, pady=(8, 0))
 
     def refresh_downloads():
         downloads.delete(0, tk.END)
@@ -124,8 +138,10 @@ def main():
 
         threading.Thread(target=worker, daemon=True).start()
 
-    tk.Button(window, text="取得・情報表示", command=run_download).pack(pady=3)
-    tk.Button(window, text="失敗項目を再試行", command=lambda: run_download(True)).pack(pady=3)
+    download_actions = ttk.Frame(media_panel)
+    download_actions.pack(fill="x", pady=5)
+    tk.Button(download_actions, text="取得・情報表示", command=run_download).pack(side="left", padx=(0, 4))
+    tk.Button(download_actions, text="失敗項目を再試行", command=lambda: run_download(True)).pack(side="left", padx=4)
     def stop_download():
         if preparing[0]:
             prepare_stop[0] = True
@@ -135,11 +151,11 @@ def main():
             session[0].stop()
             status.set("停止待ち")
 
-    tk.Button(window, text="通常中止", command=stop_download).pack(pady=3)
-    tk.Button(window, text="機能案内", command=lambda: messagebox.showinfo(
+    tk.Button(download_actions, text="通常中止", command=stop_download).pack(side="left", padx=4)
+    tk.Button(download_actions, text="機能案内", command=lambda: messagebox.showinfo(
         "取得機能", "yt-dlp が必要です。動画は media/originals、音声のみは media/audio に保存します。"
         "追加引数は表示された形式・再試行等の指定に対応します。保存先・上書き・認証・外部コマンド・プラグイン指定は保護条件のため実行前に停止します。"
-        "情報のみはファイルを保存しません。" )).pack(pady=3)
+        "情報のみはファイルを保存しません。" )).pack(side="left", padx=4)
 
     def choose():
         if pending[0]:
@@ -247,9 +263,10 @@ def main():
             detail.insert(tk.END, f"{row}\n")
         detail.configure(state="disabled")
 
-    tk.Button(window, text="フォルダを選択・切り替え", command=choose).pack(pady=6)
-    tk.Button(window, text="ローカル動画を登録", command=register).pack(pady=6)
-    tk.Button(window, text="選択した動画を媒体確認・変換（再試行）", command=prepare_selected).pack(pady=6)
+    media_actions = ttk.Frame(media_panel)
+    media_actions.pack(fill="x", pady=5)
+    tk.Button(media_actions, text="ローカル動画を登録", command=register).pack(side="left", padx=(0, 4))
+    tk.Button(media_actions, text="選択した動画を媒体確認・変換（再試行）", command=prepare_selected).pack(side="left", padx=4)
     def close():
         if pending[0] or data.running:
             stop_download()
@@ -261,7 +278,12 @@ def main():
     window.protocol("WM_DELETE_WINDOW", close)
     listing.bind("<<ListboxSelect>>", show)
     videos.bind("<<ListboxSelect>>", select_video)
-    tk.Label(window, textvariable=status).pack(anchor="w", padx=12, pady=6)
+    ttk.Label(window, textvariable=status, padding=(12, 5)).pack(fill="x")
+    return window
+
+
+def main():
+    window = build_app()
     window.mainloop()
 
 
