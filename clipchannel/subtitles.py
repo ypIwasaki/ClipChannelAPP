@@ -63,6 +63,23 @@ def prepare_subtitle_import(data, source, edit_video, transcript_version):
         raise StorageError("編集用動画の区間情報を読み取れません") from error
     subtitles = map_subtitles(load_intervals(data, source, transcript_version), spans, fps,
                               frame_counts)
+    return write_subtitle_import(data, edit_video, subtitles, sum(frame_counts))
+
+
+def write_subtitle_import(data, edit_video, subtitles, total_frames):
+    """Save edited captions as a separate import without changing the transcript."""
+    root = data._root()
+    edit_video = Path(edit_video).resolve()
+    if not edit_video.is_file() or not edit_video.is_relative_to(root / "media" / "edits"):
+        raise StorageError("データ用フォルダ内の編集用動画を選んでください")
+    if not isinstance(total_frames, int) or total_frames < 1:
+        raise StorageError("編集用動画のフレーム数が不正です")
+    for item in subtitles:
+        if (not isinstance(item, Subtitle) or not isinstance(item.start_frame, int) or
+                not isinstance(item.end_frame, int) or item.start_frame < 0 or
+                item.end_frame < item.start_frame or item.end_frame >= total_frames or
+                not isinstance(item.text, str)):
+            raise StorageError("字幕の時刻または本文が不正です")
     project_dir = root / "projects" / edit_video.parent.name
     project_dir.mkdir(parents=True, exist_ok=True)
     number = 1

@@ -8,7 +8,7 @@ from pathlib import Path
 from clipchannel.storage import DataFolder
 from clipchannel.compose import compose_video
 from clipchannel.segments import Segment
-from clipchannel.subtitles import Subtitle, map_subtitles, prepare_subtitle_import
+from clipchannel.subtitles import Subtitle, map_subtitles, prepare_subtitle_import, write_subtitle_import
 from clipchannel.transcribe import Interval
 
 
@@ -47,6 +47,12 @@ class SubtitleImportTest(unittest.TestCase):
             self.assertEqual(transcript.read_bytes(), original)
             self.assertEqual(subtitles, [Subtitle(1, 8, "字幕\n二行")])
             self.assertIn("e5ad97e5b9950ae4ba8ce8a18c", first.read_text(encoding="ascii"))
+            edited, rows = write_subtitle_import(data, edit, [Subtitle(2, 7, "変更後")], 10)
+            self.assertEqual(rows, [Subtitle(2, 7, "変更後")])
+            self.assertEqual(transcript.read_bytes(), original)
+            self.assertEqual(first.read_text(encoding="ascii").splitlines()[-1],
+                             "1\t8\te5ad97e5b9950ae4ba8ce8a18c")
+            self.assertIn("変更後".encode().hex(), edited.read_text(encoding="ascii"))
 
     @unittest.skipUnless(shutil.which("ffmpeg") and shutil.which("ffprobe"), "ffmpeg required")
     def test_composed_video_and_repeated_subtitles_share_frame_timeline(self):

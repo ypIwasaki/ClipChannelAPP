@@ -1,6 +1,7 @@
 """Small standalone browser for saved data; no media dependencies required."""
 
 import os
+import json
 import math
 import shutil
 import subprocess
@@ -21,8 +22,9 @@ from .segments import (Segment, SegmentError, candidates_from_transcript,
                        load_segments, merge_segments, save_segments, split_segment,
                        validate_segments)
 from .media import _probe
-from .compose import adjacent_frame, compose_video, is_variable_fps, nearest_frame
-from .subtitles import prepare_subtitle_import
+from .compose import adjacent_frame, compose_video, is_variable_fps, nearest_frame, probe_frames
+from .subtitles import Subtitle, prepare_subtitle_import, write_subtitle_import
+from .layout import Layout, save_layout
 
 
 def configure_japanese_fonts(window):
@@ -606,6 +608,61 @@ def build_app():
     compose_fps = tk.StringVar()
     frame_status = tk.StringVar()
     composed_path = [None]
+    screen = {name: tk.StringVar(value=str(value)) for name, value in Layout(1920, 1080).__dict__.items()}
+    screen_kind = tk.StringVar(value="横")
+    layout_path = [None]
+    subtitle_rows = [[]]
+    subtitle_first = tk.StringVar()
+    subtitle_last = tk.StringVar()
+
+    def current_layout():
+        integer_fields = {"width", "height", "crop_left", "crop_top", "crop_right",
+                          "crop_bottom", "subtitle_size", "preview_frame"}
+        values = {name: int(variable.get()) if name in integer_fields else float(variable.get())
+                  for name, variable in screen.items()}
+        return Layout(**values)
+
+    def video_dimensions():
+        if composed_path[0] is None or not composed_path[0].is_file():
+            raise StorageError("編集用動画を作成してください")
+        return probe_frames(composed_path[0])[2:4]
+
+    def choose_screen(kind):
+        try:
+            width, height = video_dimensions()
+        except (OSError, StorageError) as error:
+            messagebox.showerror("画面を選べません", str(error))
+            return
+        screen_kind.set(kind)
+        # Change only the canvas. Existing video and subtitle positions stay intact.
+        screen["width"].set(str(height if kind == "ショート" else width))
+        screen["height"].set(str(width if kind == "ショート" else height))
+
+    def prepare_layout():
+        try:
+            width, height = video_dimensions()
+            path = save_layout(data, composed_path[0], current_layout(), width, height)
+        except (OSError, ValueError, StorageError) as error:
+            messagebox.showerror("画面設定を保存できません", str(error))
+            return
+        layout_path[0] = path
+        status.set(f"画面設定を保存しました: {path.name}")
+        messagebox.showinfo("画面設定", f"AviUtl2の「ClipChannel\\画面設定を適用」から選んでください。\n{path}")
+
+    def show_layout_preview():
+        if layout_path[0] is None:
+            messagebox.showerror("プレビューを開けません", "先に画面設定を渡してください")
+            return
+        preview = layout_path[0].with_suffix(".ppm")
+        if not preview.is_file():
+            messagebox.showerror("プレビューを開けません", "AviUtl2で画面設定を適用してから開いてください")
+            return
+        popup = tk.Toplevel(window)
+        popup.title("AviUtl2プレビュー")
+        picture = tk.PhotoImage(file=str(preview))
+        label = ttk.Label(popup, image=picture)
+        label.image = picture
+        label.pack()
 
     def refresh_compose_order():
         compose_list.delete(0, tk.END)
@@ -685,6 +742,13 @@ def build_app():
             return
         status.set(f"編集用動画を保存しました: {path}")
         composed_path[0] = path
+        width, height = video_dimensions()
+        for name, value in Layout(width, height).__dict__.items():
+            screen[name].set(str(value))
+        layout_path[0] = None
+        subtitle_rows[0] = []
+        refresh_subtitle_list()
+        choose_screen("ショート" if messagebox.askyesno("画面を選択", "ショート画面で編集しますか？\n「いいえ」は横画面です") else "横")
         messagebox.showinfo("編集用動画", f"保存しました: {path}\n映像・音声の継ぎ目を再生して確認してください")
 
     def export_subtitles():
@@ -703,7 +767,46 @@ def build_app():
             messagebox.showerror("字幕を取り込めません", str(error))
             return
         status.set(f"字幕 {len(rows)} 件を準備しました: {path.name}")
+        subtitle_rows[0] = rows
+        refresh_subtitle_list()
         messagebox.showinfo("字幕の取込み", f"{len(rows)} 件の字幕を準備しました。\nAviUtl2の「ClipChannel\\字幕を追加」から次のファイルを選んでください。\n{path}")
+
+    def refresh_subtitle_list():
+        subtitle_list.delete(0, tk.END)
+        for row in subtitle_rows[0]:
+            subtitle_list.insert(tk.END, f"{row.start_frame}–{row.end_frame}: {row.text[:32]}")
+
+    def select_subtitle(_event=None):
+        selected = subtitle_list.curselection()
+        if len(selected) != 1:
+            return
+        row = subtitle_rows[0][selected[0]]
+        subtitle_first.set(str(row.start_frame))
+        subtitle_last.set(str(row.end_frame))
+        subtitle_text.delete("1.0", tk.END)
+        subtitle_text.insert("1.0", row.text)
+
+    def save_subtitle_edit():
+        selected = subtitle_list.curselection()
+        if composed_path[0] is None or len(selected) != 1:
+            messagebox.showerror("字幕を変更できません", "編集用動画と字幕を選んでください")
+            return
+        try:
+            index = selected[0]
+            rows = list(subtitle_rows[0])
+            rows[index] = Subtitle(int(subtitle_first.get()), int(subtitle_last.get()),
+                                   subtitle_text.get("1.0", "end-1c"))
+            metadata = json.loads(composed_path[0].with_suffix(".json").read_text(encoding="utf-8"))
+            path, _ = write_subtitle_import(data, composed_path[0], rows,
+                                            sum(metadata["frame_counts"]))
+        except (OSError, ValueError, KeyError, TypeError, StorageError) as error:
+            messagebox.showerror("字幕を変更できません", str(error))
+            return
+        subtitle_rows[0] = rows
+        refresh_subtitle_list()
+        subtitle_list.selection_set(index)
+        status.set(f"編集用字幕を別版保存しました: {path.name}")
+        messagebox.showinfo("字幕の変更", f"AviUtl2の「ClipChannel\\字幕を追加」から取り込んでください。\n{path}")
 
     compose_actions = ttk.Frame(segments_tab)
     compose_actions.pack(fill="x")
@@ -721,6 +824,39 @@ def build_app():
     ttk.Label(segments_tab, text="固定fps（可変fpsでは必須。空欄なら元動画優先）").pack(anchor="w")
     ttk.Entry(segments_tab, textvariable=compose_fps, width=10).pack(anchor="w")
     ttk.Label(segments_tab, textvariable=frame_status).pack(anchor="w")
+
+    layout_tab = ttk.Frame(saved_tabs, padding=4)
+    saved_tabs.add(layout_tab, text="画面・字幕")
+    ttk.Label(layout_tab, text="編集用動画の画面設定（切替時に配置は保持）").pack(anchor="w")
+    layout_buttons = ttk.Frame(layout_tab)
+    layout_buttons.pack(anchor="w")
+    for kind in ("横", "ショート"):
+        ttk.Button(layout_buttons, text=kind, command=lambda selected=kind: choose_screen(selected)).pack(side="left")
+    ttk.Label(layout_buttons, textvariable=screen_kind).pack(side="left", padx=10)
+    for caption, name in (("画面幅", "width"), ("画面高さ", "height"),
+                          ("動画拡大率 %", "scale"), ("動画 X", "x"), ("動画 Y", "y"),
+                          ("左切り取り px", "crop_left"), ("上切り取り px", "crop_top"),
+                          ("右切り取り px", "crop_right"), ("下切り取り px", "crop_bottom"),
+                          ("字幕 X", "subtitle_x"), ("字幕 Y", "subtitle_y"),
+                          ("字幕サイズ", "subtitle_size"), ("プレビューフレーム", "preview_frame")):
+        line = ttk.Frame(layout_tab)
+        line.pack(anchor="w")
+        ttk.Label(line, text=caption, width=18).pack(side="left")
+        ttk.Entry(line, textvariable=screen[name], width=12).pack(side="left")
+    ttk.Button(layout_tab, text="画面設定をAviUtl2へ渡す", command=prepare_layout).pack(anchor="w", pady=8)
+    ttk.Button(layout_tab, text="AviUtl2結果のプレビューを開く", command=show_layout_preview).pack(anchor="w")
+    ttk.Label(layout_tab, text="編集用字幕（変更時は別版を追加）").pack(anchor="w")
+    subtitle_list = tk.Listbox(layout_tab, height=5, exportselection=False)
+    subtitle_list.pack(fill="x")
+    subtitle_list.bind("<<ListboxSelect>>", select_subtitle)
+    subtitle_line = ttk.Frame(layout_tab)
+    subtitle_line.pack(anchor="w")
+    for caption, variable in (("開始F", subtitle_first), ("終了F", subtitle_last)):
+        ttk.Label(subtitle_line, text=caption).pack(side="left")
+        ttk.Entry(subtitle_line, textvariable=variable, width=7).pack(side="left")
+    subtitle_text = tk.Text(layout_tab, height=3, width=32)
+    subtitle_text.pack(fill="x")
+    ttk.Button(layout_tab, text="選択字幕を別版保存", command=save_subtitle_edit).pack(anchor="w")
 
     def refresh_people():
         current_people[0] = tuple(list_people(data))
