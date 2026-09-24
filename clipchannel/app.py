@@ -34,6 +34,8 @@ def main():
     tk.Label(window, textvariable=location).pack(anchor="w", padx=12, pady=8)
     listing = tk.Listbox(window, width=85, height=15)
     listing.pack(fill="both", expand=True, padx=12)
+    videos = tk.Listbox(window, width=85, height=6)
+    videos.pack(fill="both", padx=12)
     detail = tk.Text(window, width=85, height=12, state="disabled")
     detail.pack(fill="both", expand=True, padx=12, pady=8)
 
@@ -52,6 +54,31 @@ def main():
         for path in paths:
             listing.insert(tk.END, path)
         status.set(f"保存済み結果: {len(paths)} 件")
+        refresh_videos()
+
+    def refresh_videos():
+        videos.delete(0, tk.END)
+        for path in data.list_videos():
+            videos.insert(tk.END, path.name)
+
+    def register():
+        if data.path is None:
+            messagebox.showerror("登録できません", "データ用フォルダを選んでください")
+            return
+        selected = filedialog.askopenfilename(title="ローカル動画を選択")
+        if not selected:
+            return
+        try:
+            path = data.register_video(selected)
+        except (OSError, StorageError) as error:
+            messagebox.showerror("登録できません", str(error))
+            return
+        refresh_videos()
+        status.set(f"登録済み動画: {path.name}")
+
+    def select_video(_event=None):
+        if videos.curselection():
+            status.set(f"選択中の動画: {videos.get(videos.curselection()[0])}")
 
     def show(_event=None):
         if not listing.curselection():
@@ -80,9 +107,11 @@ def main():
         detail.configure(state="disabled")
 
     tk.Button(window, text="フォルダを選択・切り替え", command=choose).pack(pady=6)
+    tk.Button(window, text="ローカル動画を登録", command=register).pack(pady=6)
     ttk.Checkbutton(window, text="処理中", variable=running).pack(anchor="w", padx=12)
     ttk.Checkbutton(window, text="未保存入力あり", variable=unsaved).pack(anchor="w", padx=12)
     listing.bind("<<ListboxSelect>>", show)
+    videos.bind("<<ListboxSelect>>", select_video)
     tk.Label(window, textvariable=status).pack(anchor="w", padx=12, pady=6)
     window.mainloop()
 

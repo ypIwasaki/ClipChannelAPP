@@ -8,6 +8,7 @@ import csv
 import hashlib
 import os
 import re
+import shutil
 import tempfile
 from pathlib import Path
 
@@ -34,6 +35,7 @@ SCHEMAS = {
     "excluded-words": ("schema_version", "word"),
 }
 RESULT_KINDS = ("transcripts", "segments", "word-counts")
+VIDEO_EXTENSIONS = {".mp4", ".mkv", ".mov", ".avi", ".webm", ".m4v", ".ts", ".mts", ".m2ts"}
 SHARED_KINDS = ("people", "registered-words", "excluded-words")
 SAFE_NAME = re.compile(r"^[^<>:\"/\\|?*\x00-\x1f.][^<>:\"/\\|?*\x00-\x1f]*$")
 
@@ -42,6 +44,19 @@ def _name(value):
     if not value or value in (".", "..") or value.endswith((" ", ".")) or not SAFE_NAME.fullmatch(value):
         raise StorageError(f"利用できない名前です: {value!r}")
     return value
+
+
+def _same_file_contents(left, right):
+    if left.stat().st_size != right.stat().st_size:
+        return False
+
+    def digest(path):
+        checksum = hashlib.sha256()
+        with path.open("rb") as stream:
+            for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+                checksum.update(chunk)
+        return checksum.digest()
+    return digest(left) == digest(right)
 
 
 def _write_csv(path, kind, rows):
@@ -129,6 +144,45 @@ class DataFolder:
         shared = [path.relative_to(root).as_posix() for kind in SHARED_KINDS
                   if (path := root / "people" / f"{kind}.csv").is_file()]
         return sorted(results + shared)
+
+    def list_videos(self):
+        return sorted((path for path in (self._root() / "media" / "originals").glob("*")
+                       if path.is_file() and path.suffix.lower() in VIDEO_EXTENSIONS), key=lambda path: path.name)
+
+    def register_video(self, source):
+        source = Path(source).expanduser().resolve()
+        if not source.is_file():
+            raise StorageError("動画ファイルを選んでください")
+        if source.suffix.lower() not in VIDEO_EXTENSIONS:
+            raise StorageError("対応する動画ファイルを選んでください")
+        stem = _name(source.stem)
+        _name(source.name)
+        originals = self._root() / "media" / "originals"
+        originals.mkdir(parents=True, exist_ok=True)
+        existing = [path for path in originals.iterdir() if path.is_file() and path.stem.casefold() == stem.casefold()]
+        if existing:
+            registered = existing[0]
+            if _same_file_contents(source, registered):
+                return registered
+            raise VideoNameConflict("同じ保存名の別動画があります。元動画の名前を変更してください")
+        if any(path.name.casefold() == stem.casefold() for path in (self._root() / "catalog").iterdir()):
+            raise VideoNameConflict("同じ結果保存名が既にあります。元動画の名前を変更してください")
+        target = originals / source.name
+        created = False
+        try:
+            with target.open("xb") as output:
+                created = True
+                with source.open("rb") as input_file:
+                    shutil.copyfileobj(input_file, output)
+                output.flush()
+                os.fsync(output.fileno())
+            if not _same_file_contents(source, target):
+                raise StorageError("コピー中に動画の内容が変わりました。登録をやり直してください")
+        except Exception:
+            if created:
+                target.unlink(missing_ok=True)
+            raise
+        return target
 
     def save_result(self, source_name, kind, rows):
         if kind not in RESULT_KINDS:
