@@ -62,7 +62,7 @@ static bool read_captions(const wchar_t* path) {
     return true;
 }
 
-static std::string alias_for(const std::string& text) {
+static std::string alias_for(const std::string& text, int length) {
     std::string escaped;
     for (size_t i = 0; i < text.size(); ++i) {
         if (text[i] == '\r') {
@@ -71,7 +71,8 @@ static std::string alias_for(const std::string& text) {
         } else if (text[i] == '\n') escaped += "\\n";
         else escaped += text[i];
     }
-    return "[Object]\r\nframe=0,0\r\n[Object.0]\r\neffect.name=テキスト\r\n"
+    return "[Object]\r\nframe=0," + std::to_string(length - 1) +
+           "\r\n[Object.0]\r\neffect.name=テキスト\r\n"
            "サイズ=40.00\r\n字間=0.00\r\n行間=0.00\r\n表示速度=0.00\r\n"
            "フォント=Yu Gothic UI\r\n文字色=ffffff\r\n影・縁色=000000\r\n"
            "文字装飾=標準文字\r\n文字揃え=中央揃え[下]\r\nB=0\r\nI=0\r\n"
@@ -107,7 +108,7 @@ static void create_objects(EDIT_SECTION* edit) {
             if (free) break;
         }
         if (layer == 512) { ++rejected; continue; }
-        auto alias = alias_for(row.text);
+        auto alias = alias_for(row.text, row.last - row.first + 1);
         if (edit->create_object_from_alias(alias.c_str(), layer, row.first, row.last - row.first + 1))
             ++imported;
         else ++rejected;
@@ -118,6 +119,7 @@ static void import_menu(void*) {
     wchar_t filename[32768] = L"";
     OPENFILENAMEW dialog{};
     dialog.lStructSize = sizeof(dialog);
+    dialog.hwndOwner = GetActiveWindow();
     dialog.lpstrFilter = L"ClipChannel subtitles (*.ccsub)\0*.ccsub\0\0";
     dialog.lpstrFile = filename;
     dialog.nMaxFile = 32768;
