@@ -13,7 +13,7 @@ python -m clipchannel.app
 
 編集用字幕を追加するには、区間タブで編集用MP4を作成し、同じ元動画の保存済み文字起こしCSVを一覧で選んで「字幕をAviUtl2へ追加」を押します。`projects/<編集フォルダ>/` に取込みファイルを別版保存します。対応する編集用動画を置いたAviUtl2プロジェクトを同じフォルダに保存し、[字幕取込みプラグイン](editor-plugin/)の「ClipChannel → 字幕を追加」でファイルを選びます。再取込みは既存字幕を変更せず、別オブジェクトを追加します。元の文字起こしCSVも変更しません。
 
-プラグインのビルドにはAviUtl2 SDKとWindows C++ビルド環境が必要です。`AVIUTL2_SDK` に `plugin2.h` のあるフォルダ、`WIN_SDK_PACKAGES` に Windows SDK NuGet パッケージの親フォルダを設定して `editor-plugin/build.cmd` を実行します。生成した `clipchannel_subtitles.aux2` をAviUtl2の共通プラグインフォルダへ配置します。プラグインのAviUtl2実機での字幕取込みは現在未検証です。
+プラグインのビルドにはAviUtl2 SDKとWindows C++ビルド環境が必要です。Visual Studio の x64 Developer Command Prompt で、`AVIUTL2_SDK` に `plugin2.h` のあるフォルダ、`WIN_SDK_PACKAGES` に Windows SDK NuGet パッケージの親フォルダ、`WIN_SDK_VERSION` に SDK の版を設定して `editor-plugin/build.cmd` を実行します。生成した `clipchannel_subtitles.aux2` をAviUtl2の共通プラグインフォルダへ配置します。プラグインのAviUtl2実機での字幕取込みは現在未検証です。
 
 - [別PCでの作業再開](docs/development-handoff.md)：読む順序、現在地、Git外のデータと実行環境
 - [初版の編集受渡し方針](docs/implements/editor-handoff-scope.md)：動画一本化、字幕、保存・出力の簡易判定

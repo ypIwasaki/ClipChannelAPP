@@ -16,6 +16,7 @@ static std::vector<Caption> captions;
 static int imported, rejected;
 static std::filesystem::path selected_file;
 static bool matching_project;
+static std::string video_path;
 
 static bool decode_hex(const std::string& value, std::string& output) {
     if (value.size() % 2) return false;
@@ -37,7 +38,8 @@ static bool read_captions(const wchar_t* path) {
     std::ifstream file(std::filesystem::path(path), std::ios::binary);
     std::string line;
     if (!std::getline(file, line) || line != "ClipChannel-Subtitles-1") return false;
-    if (!std::getline(file, line) || line.rfind("video\t", 0) != 0) return false;
+    if (!std::getline(file, line) || line.rfind("video\t", 0) != 0 ||
+        !decode_hex(line.substr(6), video_path)) return false;
     if (!std::getline(file, line) || line.rfind("count\t", 0) != 0) return false;
     int count;
     try { count = std::stoi(line.substr(6)); } catch (...) { return false; }
@@ -85,6 +87,15 @@ static void create_objects(EDIT_SECTION* edit) {
     auto project = edit->get_project_file(edit_handle);
     auto path = project ? project->get_project_file_path() : nullptr;
     matching_project = path && std::filesystem::path(path).parent_path() == selected_file.parent_path();
+    std::replace(video_path.begin(), video_path.end(), '\\', '/');
+    bool video_found = false;
+    for (int layer = 0; matching_project && layer < 32 && !video_found; ++layer) {
+        auto object = edit->find_object(layer, 0);
+        auto alias = object ? edit->get_object_alias(object) : nullptr;
+        if (alias && std::string(alias).find("ファイル=" + video_path + "\r\n") != std::string::npos)
+            video_found = true;
+    }
+    matching_project = matching_project && video_found;
     if (!matching_project) return;
     for (const auto& row : captions) {
         int layer = 2;
@@ -122,7 +133,7 @@ static void import_menu(void*) {
         return;
     }
     if (!matching_project) {
-        MessageBoxW(nullptr, L"対応する編集フォルダのプロジェクトを保存してから追加してください", L"ClipChannel", MB_ICONERROR);
+        MessageBoxW(nullptr, L"対応する編集フォルダへプロジェクトを保存し、編集用動画を先頭に配置してから追加してください", L"ClipChannel", MB_ICONERROR);
         return;
     }
     auto message = std::to_wstring(imported) + L" 件を追加しました。";

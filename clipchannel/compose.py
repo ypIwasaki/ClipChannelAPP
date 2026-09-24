@@ -133,6 +133,8 @@ def compose_video(data, source, segments, order, duration_ms, *, fps=None):
     audio_stream = next((stream for stream in streams if stream["codec_type"] == "audio"), None)
     source_frames = _nearby_frames(source, 0)
     spans = []
+    frame_counts = []
+    rate = Fraction(str(fps)) if fps is not None else average_fps
     with tempfile.TemporaryDirectory(dir=data.path / "work", prefix="compose-") as temporary:
         output = Path(temporary) / "editing.mp4"
         filters = []
@@ -143,13 +145,20 @@ def compose_video(data, source, segments, order, duration_ms, *, fps=None):
             if end_ms <= start_ms:
                 raise SegmentError("フレーム境界に合わせると区間の長さが0になります")
             spans.append((start_ms, end_ms))
+            frames = round(Fraction(end_ms - start_ms, 1000) * rate)
+            if frames < 1:
+                raise SegmentError("区間が1フレーム未満です")
+            frame_counts.append(frames)
+            duration = float(Fraction(frames, 1) / rate)
             start, end = start_ms / 1000, end_ms / 1000
             video_filter = f"[0:v]trim=start={start}:end={end},setpts=PTS-STARTPTS,scale={width}:{height},format=yuv420p"
-            if fps is not None:
-                video_filter += f",fps={fps}"
+            video_filter += (f",fps={rate.numerator}/{rate.denominator},"
+                             f"tpad=stop_mode=clone:stop_duration={duration},"
+                             f"trim=end_frame={frames},setpts=PTS-STARTPTS")
             filters.append(video_filter + f"[v{position}]")
             if info.audio:
-                filters.append(f"[0:a]atrim=start={start}:end={end},asetpts=PTS-STARTPTS,aresample=async=1:first_pts=0[a{position}]")
+                filters.append(f"[0:a]atrim=start={start}:end={end},asetpts=PTS-STARTPTS,"
+                               f"aresample=async=1:first_pts=0,apad,atrim=duration={duration}[a{position}]")
         if info.audio:
             inputs = "".join(f"[v{i}][a{i}]" for i in range(len(order)))
             filters.append(f"{inputs}concat=n={len(order)}:v=1:a=1[v][a]")
@@ -184,7 +193,8 @@ def compose_video(data, source, segments, order, duration_ms, *, fps=None):
                 raise
     try:
         destination.with_suffix(".json").write_text(json.dumps({
-            "source": str(source), "spans_ms": spans, "fps": str(fps or average_fps)
+            "source": str(source), "spans_ms": spans, "fps": str(rate),
+            "frame_counts": frame_counts
         }, ensure_ascii=False), encoding="utf-8")
     except Exception:
         destination.unlink(missing_ok=True)

@@ -50,6 +50,7 @@ class ComposeTest(unittest.TestCase):
             timestamps = [float(line.strip().rstrip(",")) for line in frames.stdout.splitlines()
                           if line.strip().rstrip(",")]
             self.assertEqual(len(timestamps), 15)
+            self.assertEqual(json.loads(first.with_suffix(".json").read_text(encoding="utf-8"))["frame_counts"], [5, 5, 5])
             for seam in (5, 10):
                 self.assertAlmostEqual(timestamps[seam] - timestamps[seam - 1], 0.1, delta=0.002)
             frame, difference = nearest_frame(source, 1020)
@@ -89,6 +90,12 @@ class ComposeTest(unittest.TestCase):
             output = compose_video(SimpleNamespace(path=root), source,
                                    [Segment(0, 1500, "manual")], [0], 2000, fps=10)
             self.assertFalse(is_variable_fps(output))
+            rendered = subprocess.run(["ffprobe", "-v", "error", "-select_streams", "v:0",
+                                       "-count_frames", "-show_entries", "stream=nb_read_frames",
+                                       "-of", "default=noprint_wrappers=1:nokey=1", str(output)],
+                                      capture_output=True, text=True, check=True)
+            self.assertEqual(int(rendered.stdout.strip()), sum(json.loads(
+                output.with_suffix(".json").read_text(encoding="utf-8"))["frame_counts"]))
 
     def test_nearest_frame_with_long_keyframe_interval(self):
         with tempfile.TemporaryDirectory() as root:
