@@ -116,7 +116,7 @@ def compose_video(data, source, segments, order, duration_ms, *, fps=None):
         raise SegmentError("ffmpeg が必要です")
     if fps is None and is_variable_fps(source):
         raise SegmentError("可変fpsの動画です。固定fpsを指定してください")
-    _, _, width, height = probe_frames(source)
+    average_fps, _, width, height = probe_frames(source)
     # Even dimensions are required by yuv420p and keep the source size where possible.
     width -= width % 2
     height -= height % 2
@@ -132,6 +132,7 @@ def compose_video(data, source, segments, order, duration_ms, *, fps=None):
     video_stream = next(stream for stream in streams if stream["codec_type"] == "video")
     audio_stream = next((stream for stream in streams if stream["codec_type"] == "audio"), None)
     source_frames = _nearby_frames(source, 0)
+    spans = []
     with tempfile.TemporaryDirectory(dir=data.path / "work", prefix="compose-") as temporary:
         output = Path(temporary) / "editing.mp4"
         filters = []
@@ -141,6 +142,7 @@ def compose_video(data, source, segments, order, duration_ms, *, fps=None):
             end_ms = _closest(source_frames, row.end_ms)
             if end_ms <= start_ms:
                 raise SegmentError("フレーム境界に合わせると区間の長さが0になります")
+            spans.append((start_ms, end_ms))
             start, end = start_ms / 1000, end_ms / 1000
             video_filter = f"[0:v]trim=start={start}:end={end},setpts=PTS-STARTPTS,scale={width}:{height},format=yuv420p"
             if fps is not None:
@@ -180,4 +182,11 @@ def compose_video(data, source, segments, order, duration_ms, *, fps=None):
             except Exception:
                 destination.unlink(missing_ok=True)
                 raise
+    try:
+        destination.with_suffix(".json").write_text(json.dumps({
+            "source": str(source), "spans_ms": spans, "fps": str(fps or average_fps)
+        }, ensure_ascii=False), encoding="utf-8")
+    except Exception:
+        destination.unlink(missing_ok=True)
+        raise
     return destination

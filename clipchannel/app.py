@@ -22,6 +22,7 @@ from .segments import (Segment, SegmentError, candidates_from_transcript,
                        validate_segments)
 from .media import _probe
 from .compose import adjacent_frame, compose_video, is_variable_fps, nearest_frame
+from .subtitles import prepare_subtitle_import
 
 
 def configure_japanese_fonts(window):
@@ -686,6 +687,24 @@ def build_app():
         composed_path[0] = path
         messagebox.showinfo("編集用動画", f"保存しました: {path}\n映像・音声の継ぎ目を再生して確認してください")
 
+    def export_subtitles():
+        video = segment_video()
+        if video is None or composed_path[0] is None or not listing.curselection() or review_dirty[0]:
+            messagebox.showerror("字幕を取り込めません", "編集用動画と保存済み文字起こしCSVを選んでください")
+            return
+        relative = listing.get(listing.curselection()[0])
+        if relative.split("/")[:3] != ["catalog", video.stem, "transcripts"]:
+            messagebox.showerror("字幕を取り込めません", "同じ元動画の文字起こしCSVを選んでください")
+            return
+        try:
+            version = int(relative.rsplit("_v", 1)[1].removesuffix(".csv"))
+            path, rows = prepare_subtitle_import(data, video, composed_path[0], version)
+        except (OSError, ValueError, StorageError) as error:
+            messagebox.showerror("字幕を取り込めません", str(error))
+            return
+        status.set(f"字幕 {len(rows)} 件を準備しました: {path.name}")
+        messagebox.showinfo("字幕の取込み", f"{len(rows)} 件の字幕を準備しました。\nAviUtl2の「ClipChannel\\字幕を追加」から次のファイルを選んでください。\n{path}")
+
     compose_actions = ttk.Frame(segments_tab)
     compose_actions.pack(fill="x")
     for caption, action in (("区間を追加", add_compose_segment), ("上へ", lambda: move_compose_segment(-1)),
@@ -696,6 +715,7 @@ def build_app():
                             ("終了-1F", lambda: step_frame(segment_end, "終了", -1)),
                             ("終了+1F", lambda: step_frame(segment_end, "終了", 1)),
                             ("編集用MP4を作成", render_compose),
+                            ("字幕をAviUtl2へ追加", export_subtitles),
                             ("完成動画を再生", play_composed)):
         ttk.Button(compose_actions, text=caption, command=action).pack(side="left")
     ttk.Label(segments_tab, text="固定fps（可変fpsでは必須。空欄なら元動画優先）").pack(anchor="w")
