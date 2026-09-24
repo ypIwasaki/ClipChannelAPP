@@ -29,7 +29,7 @@ ROOT_DIRS = ("catalog", "media", "people", "projects", "exports", "archives", "w
 SCHEMAS = {
     "transcripts": ("schema_version", "start_ms", "end_ms", "text", "speaker_id"),
     "segments": ("schema_version", "start_ms", "end_ms", "kind", "selected"),
-    "word-counts": ("schema_version", "word", "occurrences", "utterances"),
+    "word-counts": ("schema_version", "word", "occurrences", "utterances", "start_ms", "end_ms", "text", "transcript_version", "include_verbs", "include_adjectives"),
     "people": ("schema_version", "person_id", "name", "reference_audio", "feature_file"),
     "targets": ("schema_version", "video_name", "person_id"),
     "registered-words": ("schema_version", "word"),

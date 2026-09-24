@@ -16,6 +16,7 @@ from .people import PersonError, list_people, register_person, select_target, ta
 from .storage import DataFolder, RESULT_KINDS, SHARED_KINDS, StorageError
 from .transcribe import (Interval, load_intervals, propose_intervals,
                          save_intervals, transcribe_confirmed, validate_intervals)
+from .word_counts import count_words
 
 
 def configure_japanese_fonts(window):
@@ -59,6 +60,8 @@ def build_app():
     people_tab = ttk.Frame(saved_tabs, padding=4)
     saved_tabs.add(results_tab, text="保存済み情報")
     saved_tabs.add(people_tab, text="人物・参照音声")
+    words_tab = ttk.Frame(saved_tabs, padding=4)
+    saved_tabs.add(words_tab, text="頻出語")
     ttk.Label(results_tab, text="保存済み情報").pack(anchor="w")
     listing = tk.Listbox(results_tab, height=10)
     listing.pack(fill="both", expand=True)
@@ -479,6 +482,121 @@ def build_app():
     ttk.Button(person_actions, text="動画の対象話者に設定", command=assign_target).pack(side="left")
     people_list.bind("<<ListboxSelect>>", select_person)
     target_video_box.bind("<<ComboboxSelected>>", show_target)
+
+    word_version = tk.StringVar(value="1")
+    include_verbs = tk.BooleanVar()
+    include_adjectives = tk.BooleanVar()
+    word_entries = tk.Listbox(words_tab, height=9, exportselection=False)
+    word_hits = tk.Listbox(words_tab, height=9, exportselection=False)
+    word_rows = [[]]
+    word_source = [None]
+    word_choice = tk.StringVar()
+    ttk.Label(words_tab, text="対象動画は人物タブで選択。修正済み文字起こしの版番号").pack(anchor="w")
+    ttk.Entry(words_tab, textvariable=word_version, width=8).pack(anchor="w")
+    ttk.Checkbutton(words_tab, text="動詞を含める", variable=include_verbs).pack(anchor="w")
+    ttk.Checkbutton(words_tab, text="形容詞を含める", variable=include_adjectives).pack(anchor="w")
+
+    def update_words(kind, remove=False):
+        if data.path is None:
+            return
+        value = word_choice.get().strip()
+        if not value:
+            return
+        try:
+            existing = {row["word"] for row in data.load_shared(kind)}
+            if remove:
+                existing.discard(value)
+            else:
+                existing.add(value)
+            data.save_shared(kind, [{"word": item} for item in sorted(existing)])
+            relative = f"people/{kind}.csv"
+            if relative not in listing.get(0, tk.END):
+                listing.insert(tk.END, relative)
+            status.set(f"保存しました: {value}")
+        except (OSError, StorageError) as error:
+            messagebox.showerror("登録できません", str(error))
+
+    ttk.Entry(words_tab, textvariable=word_choice).pack(fill="x")
+    word_actions = ttk.Frame(words_tab)
+    word_actions.pack(fill="x")
+    ttk.Button(word_actions, text="登録語に追加", command=lambda: update_words("registered-words")).pack(side="left")
+    ttk.Button(word_actions, text="除外語に追加", command=lambda: update_words("excluded-words")).pack(side="left")
+    ttk.Button(word_actions, text="登録語から削除", command=lambda: update_words("registered-words", True)).pack(side="left")
+    ttk.Button(word_actions, text="除外語から削除", command=lambda: update_words("excluded-words", True)).pack(side="left")
+
+    def show_word_rows(rows, video):
+        word_rows[0], word_source[0] = rows, video
+        word_entries.delete(0, tk.END)
+        word_hits.delete(0, tk.END)
+        seen = set()
+        for row in rows:
+            if row["word"] not in seen:
+                seen.add(row["word"])
+                word_entries.insert(tk.END, f'{row["word"]}  出現 {row["occurrences"]} / 発言 {row["utterances"]}')
+
+    def recount_words():
+        video = next((path for path in data.list_videos() if path.name == target_video.get()), None) if data.path else None
+        if video is None or pending[0] or data.running or review_dirty[0]:
+            messagebox.showerror("再集計できません", "対象動画を選び、文字起こしの保存を完了してください")
+            return
+        try:
+            version = int(word_version.get())
+            path = count_words(data, video, version, include_verbs=include_verbs.get(),
+                               include_adjectives=include_adjectives.get())
+            listing.insert(tk.END, path.relative_to(data._root()).as_posix())
+            show_word_rows(data.load_result(video, "word-counts", int(path.stem.rsplit("_v", 1)[1])), video)
+            status.set(f"再集計を保存しました: {path.name}")
+        except (OSError, StorageError, ValueError) as error:
+            messagebox.showerror("再集計できません", str(error))
+
+    def reopen_words():
+        if not listing.curselection() or data.path is None:
+            return
+        relative = listing.get(listing.curselection()[0])
+        parts = relative.split("/")
+        if len(parts) != 4 or parts[2] != "word-counts":
+            messagebox.showerror("表示できません", "頻出語の保存版を選んでください")
+            return
+        try:
+            version = int(parts[3].rsplit("_v", 1)[1].removesuffix(".csv"))
+            video = next(path for path in data.list_videos() if path.stem == parts[1])
+            show_word_rows(data.load_result(video, "word-counts", version), video)
+        except (OSError, StorageError, ValueError, StopIteration) as error:
+            messagebox.showerror("表示できません", str(error))
+
+    ttk.Button(words_tab, text="再集計して別版保存", command=recount_words).pack(anchor="w")
+    ttk.Button(words_tab, text="選択した保存版を表示", command=reopen_words).pack(anchor="w")
+    word_entries.pack(fill="both", expand=True)
+    word_hits.pack(fill="both", expand=True)
+
+    def choose_word(_event=None):
+        if not word_entries.curselection():
+            return
+        words = list(dict.fromkeys(row["word"] for row in word_rows[0]))
+        word = words[word_entries.curselection()[0]]
+        word_hits.delete(0, tk.END)
+        for row in word_rows[0]:
+            if row["word"] == word:
+                word_hits.insert(tk.END, f'{int(row["start_ms"]) / 1000:.3f}秒  {row["text"]}')
+
+    def play_word(_event=None):
+        if not word_hits.curselection() or not word_entries.curselection() or word_source[0] is None:
+            return
+        word = list(dict.fromkeys(row["word"] for row in word_rows[0]))[word_entries.curselection()[0]]
+        row = [item for item in word_rows[0] if item["word"] == word][word_hits.curselection()[0]]
+        ffplay = shutil.which("ffplay")
+        if not ffplay:
+            messagebox.showerror("動画を確認できません", "ffplay が必要です")
+            return
+        if player[0] and player[0].poll() is None:
+            player[0].terminate()
+        player[0] = subprocess.Popen([ffplay, "-autoexit", "-loglevel", "error", "-ss",
+                                      str(int(row["start_ms"]) / 1000), "-t",
+                                      str((int(row["end_ms"]) - int(row["start_ms"])) / 1000),
+                                      str(word_source[0])], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+    word_entries.bind("<<ListboxSelect>>", choose_word)
+    word_hits.bind("<Double-Button-1>", play_word)
 
     def refresh_downloads():
         downloads.delete(0, tk.END)
