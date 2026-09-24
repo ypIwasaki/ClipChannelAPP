@@ -162,7 +162,6 @@ def build_app():
         row = review_rows[0][index]
         review_rows[0][index] = Interval(row.start_ms, row.end_ms, state, row.score,
                                          row.text if state == "target" and row.state == "target" else "")
-        unsaved.set(True)
         review_dirty[0] = True
         display_review()
         review_list.selection_set(index)
@@ -196,7 +195,6 @@ def build_app():
             messagebox.showerror("区間を変更できません", str(error))
             return
         review_rows[0] = candidate
-        unsaved.set(True)
         review_dirty[0] = True
         display_review()
         status.set("区間を変更しました。保存してください")
@@ -216,7 +214,6 @@ def build_app():
         review_rows[0][index:index + 1] = [
             Interval(row.start_ms, boundary, "unknown", row.score),
             Interval(boundary, row.end_ms, "unknown", row.score)]
-        unsaved.set(True)
         review_dirty[0] = True
         display_review()
         status.set("区間を分割しました。試聴して判定してください")
@@ -224,12 +221,15 @@ def build_app():
     def play_review():
         if not review_list.curselection() or not target_video.get():
             return
+        video = next((path for path in data.list_videos() if path.name == target_video.get()), None)
+        if video is None or video != review_source[0]:
+            messagebox.showerror("試聴できません", "試聴区間の元動画を選んでください")
+            return
         ffplay = shutil.which("ffplay")
         if not ffplay:
             messagebox.showerror("試聴できません", "ffplay が必要です")
             return
         row = review_rows[0][review_list.curselection()[0]]
-        video = next(path for path in data.list_videos() if path.name == target_video.get())
         if player[0] and player[0].poll() is None:
             player[0].terminate()
         player[0] = subprocess.Popen([ffplay, "-nodisp", "-autoexit", "-loglevel", "error",
@@ -258,7 +258,6 @@ def build_app():
                 review_rows[0] = completed
                 display_review()
                 listing.insert(tk.END, path.relative_to(data._root()).as_posix())
-                unsaved.set(False)
                 review_dirty[0] = False
                 status.set(f"保存しました: {path.name}")
             window.after(0, finish)
@@ -280,7 +279,6 @@ def build_app():
             review_rows[0] = load_intervals(data, video, version)
             review_source[0] = video
             display_review()
-            unsaved.set(False)
             review_dirty[0] = False
             status.set(f"再表示しました: {relative}")
         except (OSError, StorageError, ValueError) as error:
@@ -528,7 +526,7 @@ def build_app():
         selected = filedialog.askdirectory(mustexist=True)
         if not selected:
             return
-        data.unsaved = unsaved.get()
+        data.unsaved = unsaved.get() or review_dirty[0]
         try:
             paths = data.select(selected)
         except (OSError, StorageError) as error:
