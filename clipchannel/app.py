@@ -13,8 +13,8 @@ from .download import DownloadSession, DownloadError
 from .media import MediaError, prepare_media
 from .people import PersonError, list_people, register_person, select_target, target_for_video, SPLITS
 from .storage import DataFolder, RESULT_KINDS, SHARED_KINDS, StorageError
-from .transcribe import (Cancelled, Interval, TranscriptionError, load_intervals,
-                         propose_intervals, save_intervals, transcribe_confirmed)
+from .transcribe import (Interval, load_intervals, propose_intervals,
+                         save_intervals, transcribe_confirmed, validate_intervals)
 
 
 def configure_japanese_fonts(window):
@@ -102,10 +102,30 @@ def build_app():
     target_video_box = ttk.Combobox(people_panel, textvariable=target_video, state="readonly")
     target_video_box.pack(fill="x")
     review_rows = [[]]
+    review_source = [None]
     review_list = tk.Listbox(people_panel, height=6)
     review_list.pack(fill="both", expand=True, pady=(6, 0))
     asr_model_path = tk.StringVar()
     review_stop = [False]
+    review_dirty = [False]
+    edit_start = tk.StringVar()
+    edit_end = tk.StringVar()
+    edit_text = tk.StringVar()
+    edit_state = tk.StringVar(value="unknown")
+
+    def run_review_worker(work, title):
+        review_stop[0] = False
+        pending[0] = data.running = True
+        def worker():
+            try:
+                work()
+            except Exception as error:
+                reason = str(error) or type(error).__name__
+                window.after(0, lambda: (status.set(reason), messagebox.showerror(title, reason)))
+            finally:
+                data.running = False
+                window.after(0, lambda: pending.__setitem__(0, False))
+        threading.Thread(target=worker, daemon=True).start()
 
     def display_review():
         review_list.delete(0, tk.END)
@@ -117,37 +137,89 @@ def build_app():
         if not target_video.get() or pending[0] or data.running:
             messagebox.showerror("解析できません", "対象動画を選び、処理完了を待ってください")
             return
+        if review_dirty[0]:
+            messagebox.showerror("解析できません", "未保存の入力を保存してから解析してください")
+            return
         video = next((path for path in data.list_videos() if path.name == target_video.get()), None)
         if video is None:
             return
         ecapa_directory = model_path.get()
-        review_stop[0] = False
-        pending[0] = data.running = True
         def worker():
-            try:
-                rows = propose_intervals(data, video, ecapa_directory, stop=lambda: review_stop[0],
-                                         progress=lambda value: window.after(0, status.set, value))
-                def finish():
-                    review_rows[0] = rows
-                    display_review()
-                    status.set(f"試聴待ち: {len(rows)} 区間")
-                window.after(0, finish)
-            except (OSError, StorageError) as error:
-                reason = str(error)
-                window.after(0, lambda: messagebox.showerror("解析できません", reason))
-            finally:
-                data.running = False
-                window.after(0, lambda: pending.__setitem__(0, False))
-        threading.Thread(target=worker, daemon=True).start()
+            rows = propose_intervals(data, video, ecapa_directory, stop=lambda: review_stop[0],
+                                     progress=lambda value: window.after(0, status.set, value))
+            def finish():
+                review_rows[0] = rows
+                review_source[0] = video
+                display_review()
+                status.set(f"試聴待ち: {len(rows)} 区間")
+            window.after(0, finish)
+        run_review_worker(worker, "解析できません")
 
     def mark_review(state):
         if not review_list.curselection() or pending[0]:
             return
         index = review_list.curselection()[0]
         row = review_rows[0][index]
-        review_rows[0][index] = Interval(row.start_ms, row.end_ms, state)
+        review_rows[0][index] = Interval(row.start_ms, row.end_ms, state, row.score,
+                                         row.text if state == "target" and row.state == "target" else "")
+        unsaved.set(True)
+        review_dirty[0] = True
         display_review()
         review_list.selection_set(index)
+
+    def select_review(_event=None):
+        if not review_list.curselection():
+            return
+        row = review_rows[0][review_list.curselection()[0]]
+        edit_start.set(f"{row.start_ms / 1000:.3f}")
+        edit_end.set(f"{row.end_ms / 1000:.3f}")
+        edit_state.set(row.state)
+        edit_text.set(row.text)
+
+    def edit_review(add=False):
+        if pending[0] or (not add and not review_list.curselection()):
+            return
+        try:
+            start = round(float(edit_start.get()) * 1000)
+            end = round(float(edit_end.get()) * 1000)
+            row = Interval(start, end, edit_state.get(),
+                           text=edit_text.get() if edit_state.get() == "target" else "")
+            candidate = list(review_rows[0])
+            if add:
+                candidate.append(row)
+                candidate.sort(key=lambda item: item.start_ms)
+            else:
+                candidate[review_list.curselection()[0]] = row
+                candidate.sort(key=lambda item: item.start_ms)
+            validate_intervals(candidate)
+        except (ValueError, StorageError) as error:
+            messagebox.showerror("区間を変更できません", str(error))
+            return
+        review_rows[0] = candidate
+        unsaved.set(True)
+        review_dirty[0] = True
+        display_review()
+        status.set("区間を変更しました。保存してください")
+
+    def split_review():
+        if pending[0] or not review_list.curselection():
+            return
+        index = review_list.curselection()[0]
+        row = review_rows[0][index]
+        try:
+            boundary = round(float(edit_end.get()) * 1000)
+            if not row.start_ms < boundary < row.end_ms:
+                raise ValueError("分割時刻は選択区間の内側にしてください")
+        except ValueError as error:
+            messagebox.showerror("分割できません", str(error))
+            return
+        review_rows[0][index:index + 1] = [
+            Interval(row.start_ms, boundary, "unknown", row.score),
+            Interval(boundary, row.end_ms, "unknown", row.score)]
+        unsaved.set(True)
+        review_dirty[0] = True
+        display_review()
+        status.set("区間を分割しました。試聴して判定してください")
 
     def play_review():
         if not review_list.curselection() or not target_video.get():
@@ -169,35 +241,34 @@ def build_app():
         if not review_rows[0] or pending[0] or data.running:
             return
         video = next(path for path in data.list_videos() if path.name == target_video.get())
+        if video != review_source[0]:
+            messagebox.showerror("保存できません", "試聴区間の元動画を選んでください")
+            return
         rows = tuple(review_rows[0])
         whisper_directory = asr_model_path.get()
-        review_stop[0] = False
-        pending[0] = data.running = True
         def worker():
-            try:
-                if recognize:
-                    path, completed = transcribe_confirmed(
-                        data, video, rows, whisper_directory, stop=lambda: review_stop[0],
-                        progress=lambda value: window.after(0, status.set, value))
-                else:
-                    path = save_intervals(data, video, rows)
-                    completed = rows
-                def finish():
-                    review_rows[0] = completed
-                    display_review()
-                    listing.insert(tk.END, path.relative_to(data._root()).as_posix())
-                    status.set(f"保存しました: {path.name}")
-                window.after(0, finish)
-            except (OSError, StorageError) as error:
-                reason = str(error)
-                window.after(0, lambda: messagebox.showerror("保存できません", reason))
-            finally:
-                data.running = False
-                window.after(0, lambda: pending.__setitem__(0, False))
-        threading.Thread(target=worker, daemon=True).start()
+            if recognize:
+                path, completed = transcribe_confirmed(
+                    data, video, rows, whisper_directory, stop=lambda: review_stop[0],
+                    progress=lambda value: window.after(0, status.set, value))
+            else:
+                path = save_intervals(data, video, rows)
+                completed = rows
+            def finish():
+                review_rows[0] = completed
+                display_review()
+                listing.insert(tk.END, path.relative_to(data._root()).as_posix())
+                unsaved.set(False)
+                review_dirty[0] = False
+                status.set(f"保存しました: {path.name}")
+            window.after(0, finish)
+        run_review_worker(worker, "保存できません")
 
     def reopen_review():
         if not listing.curselection() or not target_video.get() or pending[0]:
+            return
+        if review_dirty[0]:
+            messagebox.showerror("再表示できません", "未保存の入力を保存してから再表示してください")
             return
         relative = listing.get(listing.curselection()[0])
         video = next((path for path in data.list_videos() if path.name == target_video.get()), None)
@@ -207,7 +278,10 @@ def build_app():
         try:
             version = int(relative.rsplit("_v", 1)[1].removesuffix(".csv"))
             review_rows[0] = load_intervals(data, video, version)
+            review_source[0] = video
             display_review()
+            unsaved.set(False)
+            review_dirty[0] = False
             status.set(f"再表示しました: {relative}")
         except (OSError, StorageError, ValueError) as error:
             messagebox.showerror("再表示できません", str(error))
@@ -216,7 +290,7 @@ def build_app():
     review_actions.pack(fill="x")
     for caption, action in (("試聴区間を作成", review_video), ("試聴", play_review),
                             ("対象発話", lambda: mark_review("target")),
-                            ("非発話", lambda: mark_review("non-target")),
+                            ("対象話者の非発話", lambda: mark_review("non-target")),
                             ("不明", lambda: mark_review("unknown")),
                             ("判定を保存", save_review), ("保存版を再表示", reopen_review)):
         ttk.Button(review_actions, text=caption, command=action).pack(side="left")
@@ -225,6 +299,18 @@ def build_app():
     ttk.Button(people_panel, text="対象発話を文字起こし・別版保存",
                command=lambda: save_review(True)).pack(anchor="w")
     ttk.Button(people_panel, text="解析を中止", command=lambda: review_stop.__setitem__(0, True)).pack(anchor="w")
+    edit_line = ttk.Frame(people_panel)
+    edit_line.pack(fill="x")
+    for caption, variable, width in (("開始秒", edit_start, 9), ("終了秒", edit_end, 9),
+                                      ("本文", edit_text, 30)):
+        ttk.Label(edit_line, text=caption).pack(side="left")
+        ttk.Entry(edit_line, textvariable=variable, width=width).pack(side="left")
+    ttk.Combobox(edit_line, textvariable=edit_state,
+                 values=("target", "non-target", "unknown"), state="readonly", width=12).pack(side="left")
+    ttk.Button(edit_line, text="選択行を修正", command=edit_review).pack(side="left")
+    ttk.Button(edit_line, text="終了秒で分割", command=split_review).pack(side="left")
+    ttk.Button(edit_line, text="発言を追加", command=lambda: edit_review(True)).pack(side="left")
+    review_list.bind("<<ListboxSelect>>", select_review)
     person_name = tk.StringVar()
     audio_path = tk.StringVar()
     model_path = tk.StringVar()

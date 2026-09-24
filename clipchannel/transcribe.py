@@ -41,7 +41,7 @@ def _check_stop(stop):
         raise Cancelled("文字起こしを中止しました")
 
 
-def _validate_intervals(intervals):
+def validate_intervals(intervals):
     previous = 0
     for row in intervals:
         if row.state not in {"target", "non-target", "unknown"}:
@@ -57,7 +57,7 @@ def save_intervals(data, video, intervals):
     """Persist a reviewed snapshot as a new CSV version, including unknowns."""
     if target_for_video(data, video) is None:
         raise TranscriptionError("この動画の対象話者を選んでください")
-    _validate_intervals(intervals)
+    validate_intervals(intervals)
     return data.save_result(video, "transcripts", [
         {"start_ms": str(row.start_ms), "end_ms": str(row.end_ms),
          "text": row.text, "speaker_id": row.state}
@@ -68,7 +68,7 @@ def load_intervals(data, video, version):
     rows = data.load_result(video, "transcripts", version)
     result = [Interval(int(row["start_ms"]), int(row["end_ms"]),
                        row["speaker_id"], text=row["text"]) for row in rows]
-    _validate_intervals(result)
+    validate_intervals(result)
     return result
 
 
@@ -172,7 +172,7 @@ def propose_intervals(data, video, model_dir, *, stop=None, progress=None):
 
 def transcribe_confirmed(data, video, intervals, model_dir, *, stop=None, progress=None):
     """ASR only on user-confirmed target ranges; save complete version on success."""
-    _validate_intervals(intervals)
+    validate_intervals(intervals)
     video = Path(video).resolve()
     if video not in data.list_videos() or target_for_video(data, video) is None:
         raise TranscriptionError("登録済み動画と対象話者を選んでください")

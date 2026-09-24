@@ -4,7 +4,8 @@ from pathlib import Path
 
 from clipchannel.people import select_target
 from clipchannel.storage import DataFolder
-from clipchannel.transcribe import Interval, TranscriptionError, load_intervals, save_intervals
+from clipchannel.transcribe import (Interval, TranscriptionError, load_intervals,
+                                    save_intervals, transcribe_confirmed, validate_intervals)
 
 
 class TranscriptStorageTest(unittest.TestCase):
@@ -30,6 +31,15 @@ class TranscriptStorageTest(unittest.TestCase):
             self.assertEqual(load_intervals(data, registered, 2)[0].text, "こんにちは")
             with self.assertRaises(TranscriptionError):
                 save_intervals(data, registered, [Interval(0, 1000, "non-target", text="他者")])
+            with self.assertRaises(TranscriptionError):
+                transcribe_confirmed(data, registered, [Interval(0, 1000, "target")],
+                                     root / "missing-model")
+            self.assertEqual(len(data.list_saved()), 4)  # two result versions, people, targets
+
+    def test_overlapping_review_ranges_are_rejected(self):
+        with self.assertRaises(TranscriptionError):
+            validate_intervals([Interval(0, 1000, "target"),
+                                Interval(900, 1200, "unknown")])
 
 
 if __name__ == "__main__":
