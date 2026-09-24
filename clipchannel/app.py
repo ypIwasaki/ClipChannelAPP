@@ -21,7 +21,7 @@ from .segments import (Segment, SegmentError, candidates_from_transcript,
                        load_segments, merge_segments, save_segments, split_segment,
                        validate_segments)
 from .media import _probe
-from .compose import compose_video, nearest_frame, probe_frames
+from .compose import compose_video, is_variable_fps, nearest_frame, probe_frames
 
 
 def configure_japanese_fonts(window):
@@ -675,8 +675,7 @@ def build_app():
             return
         order = list(compose_order) or [i for i, row in enumerate(segment_rows[0]) if row.selected]
         try:
-            average, nominal, _, _ = probe_frames(video)
-            if average != nominal and not compose_fps.get().strip():
+            if is_variable_fps(video) and not compose_fps.get().strip():
                 raise SegmentError("可変fpsの動画です。固定fpsを指定してください")
             fps = float(compose_fps.get()) if compose_fps.get().strip() else None
             path = compose_video(data, video, segment_rows[0], order, segment_duration[0], fps=fps)

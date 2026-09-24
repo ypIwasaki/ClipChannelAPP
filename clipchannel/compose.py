@@ -32,6 +32,30 @@ def probe_frames(source):
         raise SegmentError("フレーム情報が不正です") from error
 
 
+def is_variable_fps(source):
+    """Inspect actual presentation intervals; stream averages alone can hide VFR."""
+    probe = shutil.which("ffprobe")
+    if not probe:
+        raise SegmentError("ffprobe が必要です")
+    result = subprocess.run([probe, "-v", "error", "-select_streams", "v:0",
+                             "-show_entries", "frame=best_effort_timestamp_time", "-of", "csv=p=0",
+                             str(source)], capture_output=True, text=True)
+    if result.returncode:
+        raise SegmentError("フレーム時刻を読み取れません")
+    try:
+        stamps = [float(line.strip().rstrip(",")) for line in result.stdout.splitlines()
+                  if line.strip().rstrip(",")]
+    except ValueError as error:
+        raise SegmentError("フレーム時刻が不正です") from error
+    if len(stamps) < 3:
+        return False
+    intervals = [right - left for left, right in zip(stamps, stamps[1:])]
+    if any(interval <= 0 for interval in intervals):
+        raise SegmentError("フレーム時刻が不正です")
+    reference = sorted(intervals)[len(intervals) // 2]
+    return any(abs(interval - reference) > max(0.001, reference * 0.02) for interval in intervals)
+
+
 def nearest_frame(source, requested_ms):
     """Return an actual decoded frame timestamp and its signed offset in ms."""
     probe = shutil.which("ffprobe")
