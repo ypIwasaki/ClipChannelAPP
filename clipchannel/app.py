@@ -1,6 +1,7 @@
 """Small standalone browser for saved data; no media dependencies required."""
 
 import os
+import math
 import shutil
 import subprocess
 import tkinter as tk
@@ -133,6 +134,33 @@ def build_app():
             score = f" cosine {row.score:.3f}" if row.score is not None else ""
             review_list.insert(tk.END, f"{row.start_ms / 1000:.3f}–{row.end_ms / 1000:.3f}  {row.state}{score}  {row.text}")
 
+    def persist_review():
+        """Save the current user edit; retain the rows for an explicit retry on failure."""
+        review_dirty[0] = True
+        video = review_source[0]
+        if video is None or not review_rows[0] or pending[0] or data.running:
+            return
+        rows = tuple(review_rows[0])
+        pending[0] = data.running = True
+        def worker():
+            try:
+                path = save_intervals(data, video, rows)
+                def finish():
+                    listing.insert(tk.END, path.relative_to(data._root()).as_posix())
+                    review_dirty[0] = False
+                    status.set(f"自動保存しました: {path.name}")
+                window.after(0, finish)
+            except (OSError, StorageError) as error:
+                reason = str(error)
+                def failed():
+                    status.set(f"自動保存に失敗しました: {reason}。入力は保持しています")
+                    messagebox.showerror("自動保存できません", f"{reason}\n入力は保持しています。「保存を再試行」を押してください")
+                window.after(0, failed)
+            finally:
+                data.running = False
+                window.after(0, lambda: pending.__setitem__(0, False))
+        threading.Thread(target=worker, daemon=True).start()
+
     def review_video():
         if not target_video.get() or pending[0] or data.running:
             messagebox.showerror("解析できません", "対象動画を選び、処理完了を待ってください")
@@ -165,6 +193,7 @@ def build_app():
         review_dirty[0] = True
         display_review()
         review_list.selection_set(index)
+        persist_review()
 
     def select_review(_event=None):
         if not review_list.curselection():
@@ -179,8 +208,11 @@ def build_app():
         if pending[0] or (not add and not review_list.curselection()):
             return
         try:
-            start = round(float(edit_start.get()) * 1000)
-            end = round(float(edit_end.get()) * 1000)
+            start_seconds, end_seconds = float(edit_start.get()), float(edit_end.get())
+            if not math.isfinite(start_seconds) or not math.isfinite(end_seconds):
+                raise ValueError("時刻は有限の数値で指定してください")
+            start = round(start_seconds * 1000)
+            end = round(end_seconds * 1000)
             row = Interval(start, end, edit_state.get(),
                            text=edit_text.get() if edit_state.get() == "target" else "")
             candidate = list(review_rows[0])
@@ -195,9 +227,8 @@ def build_app():
             messagebox.showerror("区間を変更できません", str(error))
             return
         review_rows[0] = candidate
-        review_dirty[0] = True
         display_review()
-        status.set("区間を変更しました。保存してください")
+        persist_review()
 
     def split_review():
         if pending[0] or not review_list.curselection():
@@ -205,7 +236,10 @@ def build_app():
         index = review_list.curselection()[0]
         row = review_rows[0][index]
         try:
-            boundary = round(float(edit_end.get()) * 1000)
+            boundary_seconds = float(edit_end.get())
+            if not math.isfinite(boundary_seconds):
+                raise ValueError("分割時刻は有限の数値で指定してください")
+            boundary = round(boundary_seconds * 1000)
             if not row.start_ms < boundary < row.end_ms:
                 raise ValueError("分割時刻は選択区間の内側にしてください")
         except ValueError as error:
@@ -214,9 +248,8 @@ def build_app():
         review_rows[0][index:index + 1] = [
             Interval(row.start_ms, boundary, "unknown", row.score),
             Interval(boundary, row.end_ms, "unknown", row.score)]
-        review_dirty[0] = True
         display_review()
-        status.set("区間を分割しました。試聴して判定してください")
+        persist_review()
 
     def play_review():
         if not review_list.curselection() or not target_video.get():
@@ -263,6 +296,10 @@ def build_app():
             window.after(0, finish)
         run_review_worker(worker, "保存できません")
 
+    def retry_review():
+        if review_dirty[0] and not pending[0] and not data.running:
+            persist_review()
+
     def reopen_review():
         if not listing.curselection() or not target_video.get() or pending[0]:
             return
@@ -290,7 +327,7 @@ def build_app():
                             ("対象発話", lambda: mark_review("target")),
                             ("対象話者の非発話", lambda: mark_review("non-target")),
                             ("不明", lambda: mark_review("unknown")),
-                            ("判定を保存", save_review), ("保存版を再表示", reopen_review)):
+                            ("保存を再試行", retry_review), ("保存版を再表示", reopen_review)):
         ttk.Button(review_actions, text=caption, command=action).pack(side="left")
     ttk.Label(people_panel, text="ローカル Whisper モデル（対象発話の区間のみ認識）").pack(anchor="w")
     ttk.Entry(people_panel, textvariable=asr_model_path).pack(fill="x")
@@ -642,6 +679,9 @@ def build_app():
             status.set("停止完了を待っています")
             window.after(200, close)
         else:
+            if review_dirty[0]:
+                messagebox.showerror("終了できません", "保存されていない文字起こし修正があります。「保存を再試行」を押してください")
+                return
             if player[0] and player[0].poll() is None:
                 player[0].terminate()
             window.destroy()
