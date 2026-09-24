@@ -1,8 +1,6 @@
 """Unauthenticated media acquisition with per-item results and cooperative stop."""
 
 import shlex
-import shutil
-import subprocess
 import tempfile
 import time
 import uuid
@@ -11,6 +9,7 @@ from pathlib import Path
 from urllib.parse import urlsplit
 
 from .storage import StorageError, VIDEO_EXTENSIONS
+from .media import prepare_media
 
 
 class DownloadError(StorageError):
@@ -228,7 +227,7 @@ class DownloadSession:
         item.state, item.error = "取得中", ""
         try:
             if item.source_path and item.source_path.is_file():
-                item.path = self._register_mp4(item.source_path)
+                item.path = self._prepare_video(item.source_path)
                 item.state = "成功"
                 return
             with tempfile.TemporaryDirectory(dir=self.data.path / "work", prefix="download-") as temporary:
@@ -269,7 +268,7 @@ class DownloadSession:
                         if sidecar.is_file() and sidecar.suffix.lower() in (".srt", ".vtt", ".ass"):
                             sidecar.replace(source_dir / sidecar.name)
                     item.source_path = source
-                    target = self._register_mp4(source)
+                    target = self._prepare_video(source)
                 item.path = target
                 item.state = "成功"
         except DownloadStopped:
@@ -284,27 +283,10 @@ class DownloadSession:
         finally:
             item.seconds += time.monotonic() - started
 
-    def _register_mp4(self, source):
-        if source.suffix.lower() == ".mp4":
-            return self.data.register_video(source)
-        ffmpeg = shutil.which("ffmpeg")
-        if ffmpeg is None:
-            raise DownloadError("MP4変換に ffmpeg が必要です。取得済みファイルは保持しました")
-        with tempfile.TemporaryDirectory(dir=self.data.path / "work", prefix="convert-") as temporary:
-            self.state = "MP4変換中"
-            output = Path(temporary) / (source.stem + ".mp4")
-            command = [ffmpeg, "-nostdin", "-y", "-i", str(source), "-map", "0:v:0",
-                       "-map", "0:a:0?", "-c:v", "libx264", "-c:a", "aac", str(output)]
-            process = subprocess.Popen(command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-            while process.poll() is None:
-                if self.stopping:
-                    process.terminate()
-                    process.wait()
-                    raise DownloadStopped("通常中止しました")
-                time.sleep(0.2)
-            if process.returncode != 0 or not output.is_file() or output.stat().st_size == 0:
-                raise DownloadError("MP4変換に失敗しました。取得済みファイルは保持しました")
-            return self.data.register_video(output)
+    def _prepare_video(self, source):
+        registered = self.data.register_video(source)
+        self.state = "媒体確認・編集互換変換中"
+        return prepare_media(self.data, registered, stop_requested=lambda: self.stopping).editing
 
     @staticmethod
     def _details(info):

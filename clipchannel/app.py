@@ -8,6 +8,7 @@ from tkinter import filedialog, messagebox, ttk
 from tkinter import font
 
 from .download import DownloadSession, DownloadError
+from .media import MediaError, prepare_media
 from .storage import DataFolder, RESULT_KINDS, SHARED_KINDS, StorageError
 
 
@@ -51,6 +52,8 @@ def main():
         field.trace_add("write", mark_unsaved)
     session = [None]
     pending = [False]
+    preparing = [False]
+    prepare_stop = [False]
     tk.Label(window, text="認証不要のURL").pack(anchor="w", padx=12)
     tk.Entry(window, textvariable=url, width=85).pack(fill="x", padx=12)
     tk.Label(window, text="形式・品質 (yt-dlp format)").pack(anchor="w", padx=12)
@@ -124,6 +127,10 @@ def main():
     tk.Button(window, text="取得・情報表示", command=run_download).pack(pady=3)
     tk.Button(window, text="失敗項目を再試行", command=lambda: run_download(True)).pack(pady=3)
     def stop_download():
+        if preparing[0]:
+            prepare_stop[0] = True
+            status.set("媒体変換の停止待ち")
+            return
         if session[0] and (pending[0] or data.running):
             session[0].stop()
             status.set("停止待ち")
@@ -173,6 +180,42 @@ def main():
             return
         refresh_videos()
         status.set(f"登録済み動画: {path.name}")
+        prepare_video(path)
+
+    def prepare_video(path):
+        if pending[0] or data.running:
+            messagebox.showerror("媒体を準備できません", "処理完了を待ってください")
+            return
+        pending[0] = True
+        preparing[0] = True
+        prepare_stop[0] = False
+        data.running = True
+        status.set(f"媒体確認・編集互換変換中: {path.name}")
+
+        def worker():
+            try:
+                result = prepare_media(data, path, stop_requested=lambda: prepare_stop[0])
+                summary = (f"編集用: {result.editing}\n"
+                           f"元映像開始: {result.source_info.video.start}秒 / "
+                           f"元音声開始: {result.source_info.audio.start if result.source_info.audio else 'なし'}秒\n"
+                           f"時刻対応: {result.manifest}")
+                window.after(0, lambda: messagebox.showinfo("媒体を準備しました", summary))
+                window.after(0, lambda: status.set(f"媒体準備完了: {path.name}"))
+            except (OSError, MediaError) as error:
+                reason = str(error)
+                window.after(0, lambda: messagebox.showerror("媒体を準備できません", reason))
+            finally:
+                data.running = False
+                preparing[0] = False
+                window.after(0, lambda: pending.__setitem__(0, False))
+
+        threading.Thread(target=worker, daemon=True).start()
+
+    def prepare_selected():
+        if not videos.curselection():
+            messagebox.showerror("媒体を準備できません", "登録済み動画を選んでください")
+            return
+        prepare_video(data.list_videos()[videos.curselection()[0]])
 
     def select_video(_event=None):
         if videos.curselection():
@@ -206,6 +249,7 @@ def main():
 
     tk.Button(window, text="フォルダを選択・切り替え", command=choose).pack(pady=6)
     tk.Button(window, text="ローカル動画を登録", command=register).pack(pady=6)
+    tk.Button(window, text="選択した動画を媒体確認・変換（再試行）", command=prepare_selected).pack(pady=6)
     def close():
         if pending[0] or data.running:
             stop_download()

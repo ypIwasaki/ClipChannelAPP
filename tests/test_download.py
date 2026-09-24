@@ -35,7 +35,9 @@ class DownloadTests(unittest.TestCase):
             data = DataFolder()
             data.select(temporary)
             session = DownloadSession(data, "https://example.test/list")
-            with patch.dict(sys.modules, {"yt_dlp": types.SimpleNamespace(YoutubeDL=FakeYoutubeDL)}):
+            with patch.dict(sys.modules, {"yt_dlp": types.SimpleNamespace(YoutubeDL=FakeYoutubeDL)}), \
+                 patch("clipchannel.download.prepare_media") as prepare:
+                prepare.side_effect = lambda _data, source, **_kwargs: types.SimpleNamespace(editing=source)
                 items = session.run()
             self.assertEqual([item.state for item in items], ["成功", "失敗"])
             self.assertEqual(len(data.list_videos()), 1)
@@ -65,11 +67,11 @@ class DownloadTests(unittest.TestCase):
             data.select(temporary)
             session = DownloadSession(data, "https://example.test/a")
             with patch.dict(sys.modules, {"yt_dlp": types.SimpleNamespace(YoutubeDL=WebmYoutubeDL)}), \
-                 patch("clipchannel.download.shutil.which", return_value=None):
+                 patch("clipchannel.download.prepare_media", side_effect=DownloadError("変換失敗")):
                 item = session.run()[0]
             self.assertEqual(item.state, "失敗")
             self.assertTrue(item.source_path.is_file())
-            self.assertEqual(data.list_videos(), [])
+            self.assertEqual([path.name for path in data.list_videos()], ["a.webm"])
 
     def test_info_only_stop_confirms_stopped_item(self):
         with tempfile.TemporaryDirectory() as temporary:
