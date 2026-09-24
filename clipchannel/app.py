@@ -17,6 +17,10 @@ from .storage import DataFolder, RESULT_KINDS, SHARED_KINDS, StorageError
 from .transcribe import (Interval, load_intervals, propose_intervals,
                          save_intervals, transcribe_confirmed, validate_intervals)
 from .word_counts import count_words
+from .segments import (Segment, SegmentError, candidates_from_transcript,
+                       load_segments, merge_segments, save_segments, split_segment,
+                       validate_segments)
+from .media import _probe
 
 
 def configure_japanese_fonts(window):
@@ -62,6 +66,8 @@ def build_app():
     saved_tabs.add(people_tab, text="人物・参照音声")
     words_tab = ttk.Frame(saved_tabs, padding=4)
     saved_tabs.add(words_tab, text="頻出語")
+    segments_tab = ttk.Frame(saved_tabs, padding=4)
+    saved_tabs.add(segments_tab, text="切り出し区間")
     ttk.Label(results_tab, text="保存済み情報").pack(anchor="w")
     listing = tk.Listbox(results_tab, height=10)
     listing.pack(fill="both", expand=True)
@@ -380,6 +386,215 @@ def build_app():
     current_people = [()]
     player = [None]
 
+    segment_rows = [[]]
+    segment_source = [None]
+    segment_duration = [0]
+    segment_dirty = [False]
+    segment_version = tk.StringVar(value="1")
+    before_padding = tk.StringVar(value="5")
+    after_padding = tk.StringVar(value="5")
+    segment_start = tk.StringVar()
+    segment_end = tk.StringVar()
+    segment_selected = tk.BooleanVar(value=True)
+    segment_list = tk.Listbox(segments_tab, selectmode=tk.EXTENDED, exportselection=False)
+    ttk.Label(segments_tab, text="対象動画は人物タブで選択。文字起こし版と前後余白（秒）").pack(anchor="w")
+    segment_settings = ttk.Frame(segments_tab)
+    segment_settings.pack(fill="x")
+    for label, variable in (("文字起こし版", segment_version), ("前", before_padding), ("後", after_padding)):
+        ttk.Label(segment_settings, text=label).pack(side="left")
+        ttk.Entry(segment_settings, textvariable=variable, width=7).pack(side="left")
+
+    def segment_video():
+        return next((path for path in data.list_videos() if path.name == target_video.get()), None) if data.path else None
+
+    def segment_video_duration(video):
+        info = _probe(video)
+        if info.duration is None:
+            raise SegmentError("動画の長さを確認できません")
+        duration = round(float(info.duration) * 1000)
+        validate_segments([], duration)
+        return duration
+
+    def display_segments():
+        segment_list.delete(0, tk.END)
+        for row in segment_rows[0]:
+            segment_list.insert(tk.END, f"{'✓' if row.selected else '—'} {row.start_ms / 1000:.3f}–{row.end_ms / 1000:.3f}  {row.kind}")
+
+    def persist_segments():
+        if pending[0] or data.running or segment_source[0] is None:
+            segment_dirty[0] = True
+            return
+        try:
+            path = save_segments(data, segment_source[0], segment_rows[0], segment_duration[0])
+            listing.insert(tk.END, path.relative_to(data._root()).as_posix())
+            segment_dirty[0] = False
+            status.set(f"切り出し区間を自動保存しました: {path.name}")
+        except (OSError, StorageError) as error:
+            segment_dirty[0] = True
+            messagebox.showerror("切り出し区間を保存できません", f"{error}\n入力は保持しています。保存を再試行してください")
+
+    def generate_segments():
+        video = segment_video()
+        if video is None or segment_dirty[0] or pending[0] or data.running:
+            messagebox.showerror("候補を作れません", "対象動画を選び、未保存の区間を保存してください")
+            return
+        try:
+            before, after = float(before_padding.get()), float(after_padding.get())
+            if not all(math.isfinite(value) and value >= 0 for value in (before, after)):
+                raise ValueError("余白は0秒以上にしてください")
+            duration = segment_video_duration(video)
+            rows = candidates_from_transcript(data, video, int(segment_version.get()), duration,
+                                              round(before * 1000), round(after * 1000))
+            path = save_segments(data, video, rows, duration)
+        except (OSError, StorageError, ValueError) as error:
+            messagebox.showerror("候補を作れません", str(error))
+            return
+        segment_rows[0], segment_source[0], segment_duration[0] = rows, video, duration
+        display_segments()
+        listing.insert(tk.END, path.relative_to(data._root()).as_posix())
+        status.set(f"候補を別版で保存しました: {path.name}")
+
+    def start_manual_segments():
+        video = segment_video()
+        if video is None or segment_dirty[0]:
+            messagebox.showerror("区間を作れません", "対象動画を選び、未保存の区間を保存してください")
+            return
+        try:
+            duration = segment_video_duration(video)
+        except (OSError, StorageError, ValueError) as error:
+            messagebox.showerror("区間を作れません", str(error))
+            return
+        segment_rows[0], segment_source[0], segment_duration[0] = [], video, duration
+        display_segments()
+        status.set("手動追加する開始秒・終了秒を入力してください")
+
+    def reopen_segments():
+        if not listing.curselection() or segment_dirty[0]:
+            messagebox.showerror("区間を開けません", "保存版を選び、未保存の入力を保存してください")
+            return
+        relative = listing.get(listing.curselection()[0])
+        parts = relative.split("/")
+        video = segment_video()
+        if video is None or len(parts) != 4 or parts[:3] != ["catalog", video.stem, "segments"]:
+            messagebox.showerror("区間を開けません", "対象動画の区間CSVを選んでください")
+            return
+        try:
+            duration = segment_video_duration(video)
+            version = int(parts[3].rsplit("_v", 1)[1].removesuffix(".csv"))
+            rows = load_segments(data, video, version, duration)
+        except (OSError, StorageError, ValueError) as error:
+            messagebox.showerror("区間を開けません", str(error))
+            return
+        segment_rows[0], segment_source[0], segment_duration[0] = rows, video, duration
+        display_segments()
+        status.set(f"使用版を選びました: {relative}")
+
+    def selected_segment(_event=None):
+        indices = segment_list.curselection()
+        if len(indices) == 1:
+            row = segment_rows[0][indices[0]]
+            segment_start.set(f"{row.start_ms / 1000:.3f}")
+            segment_end.set(f"{row.end_ms / 1000:.3f}")
+            segment_selected.set(row.selected)
+
+    def change_segment(add=False):
+        indices = segment_list.curselection()
+        if segment_source[0] != segment_video() or pending[0] or data.running or (not add and len(indices) != 1):
+            return
+        try:
+            start, end = float(segment_start.get()), float(segment_end.get())
+            if not math.isfinite(start) or not math.isfinite(end):
+                raise ValueError("時刻は有限の数値にしてください")
+            row = Segment(round(start * 1000), round(end * 1000),
+                          "manual" if add else segment_rows[0][indices[0]].kind, segment_selected.get())
+            rows = list(segment_rows[0])
+            if add:
+                rows.append(row)
+                rows.sort(key=lambda item: item.start_ms)
+            else:
+                rows[indices[0]] = row
+            validate_segments(rows, segment_duration[0])
+        except (ValueError, StorageError) as error:
+            messagebox.showerror("区間を変更できません", str(error))
+            return
+        segment_rows[0] = rows
+        display_segments()
+        persist_segments()
+
+    def split_selected_segment():
+        indices = segment_list.curselection()
+        if len(indices) != 1 or segment_source[0] != segment_video():
+            return
+        try:
+            boundary = float(segment_end.get())
+            if not math.isfinite(boundary):
+                raise ValueError("分割時刻は有限の数値にしてください")
+            rows = split_segment(segment_rows[0], indices[0], round(boundary * 1000), segment_duration[0])
+        except (ValueError, StorageError) as error:
+            messagebox.showerror("分割できません", str(error))
+            return
+        segment_rows[0] = rows
+        display_segments()
+        persist_segments()
+
+    def set_segment_selection():
+        indices = segment_list.curselection()
+        if not indices or segment_source[0] != segment_video():
+            return
+        rows = list(segment_rows[0])
+        for index in indices:
+            row = rows[index]
+            rows[index] = Segment(row.start_ms, row.end_ms, row.kind, segment_selected.get())
+        segment_rows[0] = rows
+        display_segments()
+        persist_segments()
+
+    def merge_selected_segments():
+        if segment_source[0] != segment_video():
+            return
+        try:
+            rows = merge_segments(segment_rows[0], segment_list.curselection(), segment_duration[0])
+        except (IndexError, StorageError) as error:
+            messagebox.showerror("結合できません", str(error))
+            return
+        segment_rows[0] = rows
+        display_segments()
+        persist_segments()
+
+    def play_segment():
+        indices = segment_list.curselection()
+        if len(indices) != 1 or segment_source[0] != segment_video():
+            return
+        ffplay = shutil.which("ffplay")
+        if not ffplay:
+            messagebox.showerror("再生できません", "ffplay が必要です")
+            return
+        row = segment_rows[0][indices[0]]
+        if player[0] and player[0].poll() is None:
+            player[0].terminate()
+        player[0] = subprocess.Popen([ffplay, "-autoexit", "-loglevel", "error", "-ss",
+                                      str(row.start_ms / 1000), "-t", str((row.end_ms - row.start_ms) / 1000),
+                                      str(segment_source[0])], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+    ttk.Button(segments_tab, text="候補を生成して別版保存", command=generate_segments).pack(anchor="w")
+    ttk.Button(segments_tab, text="解析なしで区間を手動作成", command=start_manual_segments).pack(anchor="w")
+    ttk.Button(segments_tab, text="選択した保存版を使用", command=reopen_segments).pack(anchor="w")
+    segment_list.pack(fill="both", expand=True)
+    segment_list.bind("<<ListboxSelect>>", selected_segment)
+    segment_actions = ttk.Frame(segments_tab)
+    segment_actions.pack(fill="x")
+    for caption, action in (("映像を再生", play_segment), ("境界を修正", change_segment),
+                            ("終了秒で分割", split_selected_segment), ("区間結合", merge_selected_segments),
+                            ("手動追加", lambda: change_segment(True)), ("採否を適用", set_segment_selection),
+                            ("保存を再試行", persist_segments)):
+        ttk.Button(segment_actions, text=caption, command=action).pack(side="left")
+    segment_edit = ttk.Frame(segments_tab)
+    segment_edit.pack(fill="x")
+    for caption, variable in (("開始秒", segment_start), ("終了秒", segment_end)):
+        ttk.Label(segment_edit, text=caption).pack(side="left")
+        ttk.Entry(segment_edit, textvariable=variable, width=10).pack(side="left")
+    ttk.Checkbutton(segment_edit, text="採用", variable=segment_selected).pack(side="left")
+
     def refresh_people():
         current_people[0] = tuple(list_people(data))
         people_list.delete(0, tk.END)
@@ -681,7 +896,7 @@ def build_app():
         selected = filedialog.askdirectory(mustexist=True)
         if not selected:
             return
-        data.unsaved = unsaved.get() or review_dirty[0]
+        data.unsaved = unsaved.get() or review_dirty[0] or segment_dirty[0]
         try:
             paths = data.select(selected)
         except (OSError, StorageError) as error:
@@ -694,6 +909,8 @@ def build_app():
         status.set(f"保存済み結果: {len(paths)} 件")
         refresh_videos()
         refresh_people()
+        segment_rows[0], segment_source[0], segment_duration[0] = [], None, 0
+        display_segments()
 
     def refresh_videos():
         videos.delete(0, tk.END)
@@ -799,6 +1016,9 @@ def build_app():
         else:
             if review_dirty[0]:
                 messagebox.showerror("終了できません", "保存されていない文字起こし修正があります。「保存を再試行」を押してください")
+                return
+            if segment_dirty[0]:
+                messagebox.showerror("終了できません", "保存されていない切り出し区間があります。「保存を再試行」を押してください")
                 return
             if player[0] and player[0].poll() is None:
                 player[0].terminate()
