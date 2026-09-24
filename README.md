@@ -2,7 +2,14 @@
 
 アーカイブ動画の取得、対象話者の文字起こし、切り出し、編集、管理を一つのアプリから扱うプロジェクトです。
 
-現在は仕様再検討と技術検証の段階です。製品本体・起動用エントリポイントはまだありません。
+現在は機能を段階的に実装中です。保存済みデータの閲覧、ローカル動画登録、認証不要URLの取得を扱う簡易画面があります。
+
+```sh
+python -m pip install -r requirements.txt
+python -m clipchannel.app
+```
+
+動画取得とMP4変換には、別途 `ffmpeg` を実行パス上に用意してください。取得した元ファイルは `media/downloaded/` に保持し、登録したMP4は `media/originals/` に置きます。音声のみの結果は `media/audio/` に保存します。
 
 - [別PCでの作業再開](docs/development-handoff.md)：読む順序、現在地、Git外のデータと実行環境
 - [初版の編集受渡し方針](docs/implements/editor-handoff-scope.md)：動画一本化、字幕、保存・出力の簡易判定
