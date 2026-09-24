@@ -187,9 +187,7 @@ class DataFolder:
     def save_result(self, source_name, kind, rows):
         if kind not in RESULT_KINDS:
             raise StorageError("不明な結果の種類です")
-        source = Path(source_name).expanduser().resolve()
-        if not source.is_file():
-            raise StorageError("結果に対応する元動画ファイルを指定してください")
+        source = self.register_video(source_name)
         stem = _name(source.stem)
         _name(source.name)
         identity = self._root() / "catalog" / stem / "source.sha256"

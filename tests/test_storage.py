@@ -71,6 +71,27 @@ class DataFolderTests(unittest.TestCase):
                 data.save_result(second, "segments", rows)
             self.assertEqual(len([path for path in data.list_saved() if path.startswith("catalog/")]), 1)
 
+    def test_unregistered_collision_cannot_create_first_result(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            data = DataFolder()
+            data.select(root)
+            first = root / "first" / "sample.mp4"
+            second = root / "second" / "sample.mkv"
+            first.parent.mkdir()
+            second.parent.mkdir()
+            first.write_bytes(b"registered source")
+            second.write_bytes(b"different source")
+            data.register_video(first)
+            rows = [{"start_ms": "0", "end_ms": "10", "kind": "speech", "selected": "1"}]
+
+            with self.assertRaises(VideoNameConflict):
+                data.save_result(second, "segments", rows)
+            self.assertEqual(data.list_saved(), [])
+
+            saved = data.save_result(first, "segments", rows)
+            self.assertEqual(saved.name, "sample_v1.csv")
+
     def test_interrupted_save_keeps_previous_version_readable(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
