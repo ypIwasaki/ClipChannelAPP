@@ -5,6 +5,15 @@ import subprocess
 from pathlib import Path
 
 
+def windows_path(path):
+    """Return the absolute file path as seen by the Windows AviUtl2 host."""
+    path = Path(path).resolve()
+    if os.name == "nt":
+        return str(path)
+    return subprocess.run(["wslpath", "-w", str(path)], check=True,
+                          capture_output=True, text=True).stdout.strip()
+
+
 def _send_file(path, kind):
     """Return the plugin result after sending a file to an open AviUtl2."""
     key = {"subtitles": 0x43435331, "layout": 0x43434C31, "media": 0x43434D31, "control": 0x43434531}[kind]

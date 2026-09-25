@@ -1,0 +1,192 @@
+{
+  "root": "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-issue17-e5597c6f1365",
+  "host": "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-issue15-export-host\\aviutl2.exe",
+  "steps": [
+    {
+      "step": "composed-old",
+      "video": "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-issue17-e5597c6f1365\\data\\media\\edits\\source_2e016a0b5b3e\\S1_0_1800_S2_2000_3800_v1.mp4",
+      "project": "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-issue17-e5597c6f1365\\data\\projects\\source_2e016a0b5b3e\\S1_0_1800_S2_2000_3800_v1.aup2"
+    },
+    {
+      "step": "opened-directly",
+      "project": "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-issue17-e5597c6f1365\\data\\projects\\source_2e016a0b5b3e\\S1_0_1800_S2_2000_3800_v1.aup2",
+      "pid": 31148,
+      "state": {
+        "project": "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-issue17-e5597c6f1365\\data\\projects\\source_2e016a0b5b3e\\S1_0_1800_S2_2000_3800_v1.aup2",
+        "width": 320,
+        "height": 180,
+        "fps": "10",
+        "frames": 36,
+        "dirty": true,
+        "busy": false
+      }
+    },
+    {
+      "step": "save",
+      "result": {
+        "state": "confirmed",
+        "detail": "保存しました（簡易確認）",
+        "path": "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-issue17-e5597c6f1365\\data\\projects\\source_2e016a0b5b3e\\S1_0_1800_S2_2000_3800_v1.aup2"
+      }
+    },
+    {
+      "step": "export",
+      "result": {
+        "state": "confirmed",
+        "detail": "完成動画を書き出しました（簡易確認）",
+        "path": "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-issue17-e5597c6f1365\\old-edited.mp4"
+      }
+    },
+    {
+      "step": "render-observation",
+      "path": "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-issue17-e5597c6f1365\\old-edited.mp4",
+      "video_frames": "36",
+      "width": 320,
+      "height": 180,
+      "video_codec": "h264",
+      "audio_codec": "aac",
+      "audio_sample_rate": "48000",
+      "source_440_amplitude": 0.17505991877712207,
+      "bgm_880_amplitude": 0.08864810434461527,
+      "source_pixel": [
+        253,
+        24,
+        25
+      ],
+      "image_pixel": [
+        0,
+        126,
+        0
+      ],
+      "decoded_video_sha256": "9a482d0952a9986af9d92dc1697f384677892453c11f2407cc1e4b292e262270",
+      "decoded_audio_sha256": "75bc0bdf5c3db7cf6d7bbf57ec9342b5e02391cdc109e8b53a324d38cae73823"
+    },
+    {
+      "step": "old-artifacts-snapshotted",
+      "count": 17,
+      "hashes": {
+        "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-issue17-e5597c6f1365\\data\\media\\edits\\source_2e016a0b5b3e\\S1_0_1800_S2_2000_3800_v1.json": "470c7462e062270a117c15d24ce10b90b15b71e0f2cc07ac1bc5013733a1e2f3",
+        "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-issue17-e5597c6f1365\\data\\media\\edits\\source_2e016a0b5b3e\\S1_0_1800_S2_2000_3800_v1.mp4": "379da92fdb999e490d4e8b58f0ce946377a650d751d0cb942395af511bddf6eb",
+        "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-issue17-e5597c6f1365\\data\\projects\\source_2e016a0b5b3e\\499f4d0b2c024499abb6fb4337aaa38d_media_v1.ccmedia": "22bbf25a6a32b46f444faa9ecdc89e6a8d88cb2c3e815b53252ec764bb22bb94",
+        "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-issue17-e5597c6f1365\\data\\projects\\source_2e016a0b5b3e\\499f4d0b2c024499abb6fb4337aaa38d_media_v1.ppm": "7c14a91e4e4c9c59e19da48c7c37af68daf8bcd37d5f903fd992c6dd0381acf1",
+        "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-issue17-e5597c6f1365\\data\\projects\\source_2e016a0b5b3e\\499f4d0b2c024499abb6fb4337aaa38d_media_v1.wav": "0e5d77c72735b118102c48544877770b201cdb9b8fd841afb99ff3367a6d5082",
+        "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-issue17-e5597c6f1365\\data\\projects\\source_2e016a0b5b3e\\control-7d5858bab18748bcb08a972a111bbe2a.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-issue17-e5597c6f1365\\data\\projects\\source_2e016a0b5b3e\\ee7c7508da7c425c8994a8c3efaa1c87_media_v1.ccmedia": "392ea2089d85d28cf0bb4a790f56f2a4e11d3153b37e7aceea1176d56187fe32",
+        "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-issue17-e5597c6f1365\\data\\projects\\source_2e016a0b5b3e\\ee7c7508da7c425c8994a8c3efaa1c87_media_v1.ppm": "7c14a91e4e4c9c59e19da48c7c37af68daf8bcd37d5f903fd992c6dd0381acf1",
+        "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-issue17-e5597c6f1365\\data\\projects\\source_2e016a0b5b3e\\ee7c7508da7c425c8994a8c3efaa1c87_media_v1.wav": "e933b5bd95bcd647c67b29302015bd61bdbc5bcc29dda00399aa707284a0df26",
+        "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-issue17-e5597c6f1365\\data\\projects\\source_2e016a0b5b3e\\S1_0_1800_S2_2000_3800_v1.aup2": "dc03537cac7f0b2d6a92e569b8b2c989cb5e9a4f4f7f759b7d1a1d089d9a46fc",
+        "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-issue17-e5597c6f1365\\data\\projects\\source_2e016a0b5b3e\\S1_0_1800_S2_2000_3800_v1_layout_v1.cclayout": "fd2f4c2d2add33760c7163266b4ebe95a4dedbfac06649691684fe4049980300",
+        "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-issue17-e5597c6f1365\\data\\projects\\source_2e016a0b5b3e\\S1_0_1800_S2_2000_3800_v1_layout_v1.ppm": "b758af543dcc0cfe3cf1520374582e305c30efd7041916c05926ef6f4960e4f3",
+        "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-issue17-e5597c6f1365\\data\\projects\\source_2e016a0b5b3e\\S1_0_1800_S2_2000_3800_v1_layout_v2.cclayout": "fd2f4c2d2add33760c7163266b4ebe95a4dedbfac06649691684fe4049980300",
+        "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-issue17-e5597c6f1365\\data\\projects\\source_2e016a0b5b3e\\S1_0_1800_S2_2000_3800_v1_layout_v2.ppm": "b62eeba32f4cb42bab0d568d0bd46add9304a1f7b45bd8e55ddf7c1de19eb2e7",
+        "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-issue17-e5597c6f1365\\data\\projects\\source_2e016a0b5b3e\\S1_0_1800_S2_2000_3800_v1_subtitles_v1.ccsub": "7522588ecc7aa1802651c0d4b13651501e6df7b8bd0f0c2d91e966feef694c21",
+        "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-issue17-e5597c6f1365\\data\\media\\supporting\\source_2e016a0b5b3e\\499f4d0b2c024499abb6fb4337aaa38d\\bgm.wav": "6bc72b0adece2d712bb5ecdaf00eed0bf10b0c44c3115ff2be93074234a01709",
+        "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-issue17-e5597c6f1365\\data\\media\\supporting\\source_2e016a0b5b3e\\ee7c7508da7c425c8994a8c3efaa1c87\\green.png": "dc1043e19d204ff23ff03bd26453cc141991cc2693e4a4ebd0f3631e8c59c4f4"
+      }
+    },
+    {
+      "step": "new-edit-isolated",
+      "video": "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-issue17-e5597c6f1365\\data\\media\\edits\\source_7ae740e64460\\S2_2000_3800_S1_0_1800_v1.mp4",
+      "project": "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-issue17-e5597c6f1365\\data\\projects\\source_7ae740e64460\\S2_2000_3800_S1_0_1800_v1.aup2",
+      "old_hashes_unchanged": true,
+      "initial_project_files": [
+        "S2_2000_3800_S1_0_1800_v1.aup2"
+      ]
+    },
+    {
+      "step": "opened-directly",
+      "project": "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-issue17-e5597c6f1365\\data\\projects\\source_7ae740e64460\\S2_2000_3800_S1_0_1800_v1.aup2",
+      "pid": 32692,
+      "state": {
+        "project": "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-issue17-e5597c6f1365\\data\\projects\\source_7ae740e64460\\S2_2000_3800_S1_0_1800_v1.aup2",
+        "width": 320,
+        "height": 180,
+        "fps": "10",
+        "frames": 36,
+        "dirty": true,
+        "busy": false
+      }
+    },
+    {
+      "step": "save",
+      "result": {
+        "state": "confirmed",
+        "detail": "保存しました（簡易確認）",
+        "path": "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-issue17-e5597c6f1365\\data\\projects\\source_7ae740e64460\\S2_2000_3800_S1_0_1800_v1.aup2"
+      }
+    },
+    {
+      "step": "export",
+      "result": {
+        "state": "confirmed",
+        "detail": "完成動画を書き出しました（簡易確認）",
+        "path": "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-issue17-e5597c6f1365\\new-clean.mp4"
+      }
+    },
+    {
+      "step": "render-observation",
+      "path": "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-issue17-e5597c6f1365\\new-clean.mp4",
+      "video_frames": "36",
+      "width": 320,
+      "height": 180,
+      "video_codec": "h264",
+      "audio_codec": "aac",
+      "audio_sample_rate": "48000",
+      "source_440_amplitude": 0.17738772195960742,
+      "bgm_880_amplitude": 5.0899397631735835e-05,
+      "source_pixel": [
+        41,
+        34,
+        254
+      ],
+      "image_pixel": [
+        41,
+        34,
+        254
+      ],
+      "decoded_video_sha256": "551f858a9f8e5c5e6ea41c7a4cbbc014abd03263cf14ffa85f07e85bd9e963ea",
+      "decoded_audio_sha256": "4de42361ab64093f79f9b6f4a3fe93591abc5cad77baa9ef0c6fdf0a39c1c9ae"
+    },
+    {
+      "step": "opened-directly",
+      "project": "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-issue17-e5597c6f1365\\data\\projects\\source_2e016a0b5b3e\\S1_0_1800_S2_2000_3800_v1.aup2",
+      "pid": 25088,
+      "state": {
+        "project": "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-issue17-e5597c6f1365\\data\\projects\\source_2e016a0b5b3e\\S1_0_1800_S2_2000_3800_v1.aup2",
+        "width": 320,
+        "height": 180,
+        "fps": "10",
+        "frames": 36,
+        "dirty": true,
+        "busy": false
+      }
+    },
+    {
+      "step": "old-reopened-preview",
+      "state": {
+        "project": "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-issue17-e5597c6f1365\\data\\projects\\source_2e016a0b5b3e\\S1_0_1800_S2_2000_3800_v1.aup2",
+        "width": 320,
+        "height": 180,
+        "fps": "10",
+        "frames": 36,
+        "dirty": true,
+        "busy": false
+      },
+      "instruction": "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-issue17-e5597c6f1365\\data\\projects\\source_2e016a0b5b3e\\499f4d0b2c024499abb6fb4337aaa38d_media_v2.ccmedia",
+      "preview_video_equal": true,
+      "preview_audio_equal": true
+    },
+    {
+      "step": "old-direct-reopen-preserves-content",
+      "compared_artifacts": 17,
+      "video_preview_identical": true,
+      "audio_preview_identical": true,
+      "changed": []
+    },
+    {
+      "step": "complete",
+      "passed": true
+    }
+  ],
+  "passed": true
+}

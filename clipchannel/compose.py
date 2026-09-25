@@ -11,6 +11,7 @@ from fractions import Fraction
 from pathlib import Path
 
 from .segments import SegmentError, validate_segments
+from .edit_project import write_edit_project
 from .process_control import check_cancelled, run_process
 
 
@@ -102,7 +103,7 @@ def adjacent_frame(source, current_ms, direction, *, stop_requested=None):
     return frames[position]
 
 
-def compose_video(data, source, segments, order, duration_ms, *, fps=None, stop_requested=None, progress=None):
+def compose_video(data, source, segments, order, duration_ms, *, fps=None, short=False, stop_requested=None, progress=None):
     """Render requested indices in order; repeated indices are intentional."""
     check_cancelled(stop_requested)
     if progress:
@@ -128,6 +129,8 @@ def compose_video(data, source, segments, order, duration_ms, *, fps=None, stop_
     info = _probe(source, stop_requested=stop_requested)
     directory = data.path / "media" / "edits" / f"{source.stem}_{uuid.uuid4().hex[:12]}"
     directory.parent.mkdir(parents=True, exist_ok=True)
+    project_directory = data.path / "projects" / directory.name
+    project_directory.parent.mkdir(parents=True, exist_ok=True)
     name = "_".join(f"S{i + 1}_{segments[i].start_ms}_{segments[i].end_ms}" for i in order)
     # Preserve available source encoding targets rather than ffmpeg defaults.
     probe = run_process([shutil.which("ffprobe"), "-v", "error", "-show_streams", "-of", "json", str(source)],
@@ -194,7 +197,24 @@ def compose_video(data, source, segments, order, duration_ms, *, fps=None, stop_
             "source": str(source), "spans_ms": spans, "fps": str(rate),
             "frame_counts": frame_counts
         }, ensure_ascii=False), encoding="utf-8")
+        project = project_directory / output.with_suffix(".aup2").name
+        staged_projects = Path(temporary) / "project"
+        staged_projects.mkdir()
+        write_edit_project(staged_projects / project.name, directory / output.name, project,
+                           width=height if short else width, height=width if short else height,
+                           fps=rate, frames=sum(frame_counts),
+                           audio_rate=int(audio_stream["sample_rate"]) if audio_stream else 48000,
+                           has_audio=bool(audio_stream))
         check_cancelled(stop_requested)
-        # The directory rename publishes a complete video and metadata together.
-        os.replace(staged, directory)
+        # Reserve both new folders exclusively; never reuse even an empty old folder.
+        directory.mkdir()
+        try:
+            project_directory.mkdir()
+        except OSError:
+            directory.rmdir()
+            raise
+        # Each rename publishes complete files. No old edit is touched on failure.
+        for artifact in staged.iterdir():
+            os.rename(artifact, directory / artifact.name)
+        os.rename(staged_projects / project.name, project)
     return directory / output.name

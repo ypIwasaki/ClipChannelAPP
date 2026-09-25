@@ -752,8 +752,9 @@ def build_app():
         except ValueError:
             messagebox.showerror("編集用動画を作れません", "固定fpsを数値で指定してください")
             return
+        short = messagebox.askyesno("画面を選択", "ショート画面で新しい編集を作成しますか？\n「いいえ」は横画面です")
         def finish(path):
-            status.set(f"編集用動画を保存しました: {path}")
+            status.set(f"編集用動画と新しいAviUtl2プロジェクトを作成しました: {path}")
             composed_path[0] = path
             supporting_panel.set_video(path)
             width, height = video_dimensions()
@@ -764,14 +765,22 @@ def build_app():
             subtitle_dirty[0] = subtitle_pending[0] = False
             subtitle_selected[0] = None
             subtitle_applied_rows[0] = None
+            subtitle_first.set("")
+            subtitle_last.set("")
+            subtitle_text.delete("1.0", tk.END)
             refresh_subtitle_list()
-            choose_screen("ショート" if messagebox.askyesno("画面を選択", "ショート画面で編集しますか？\n「いいえ」は横画面です") else "横")
-            save_export_panel.set_video(path, short=screen_kind.get() == "ショート")
-            messagebox.showinfo("編集用動画", f"保存しました: {path}\n映像・音声の継ぎ目を再生して確認してください")
+            choose_screen("ショート" if short else "横")
+            layout_dirty[0] = False  # The new project already has these initial settings.
+            save_export_panel.set_video(path, short=short)
+            project = save_export_panel.project
+            messagebox.showinfo("新しい編集", f"編集用動画: {path}\nAviUtl2プロジェクト: {project}\n"
+                                "AviUtl2でこのプロジェクトを開いて編集してください。\n"
+                                "旧編集の動画・プロジェクト・字幕・補助素材配置は保持し、新編集へ移しません。\n"
+                                "過去の編集は projects 内の .aup2 をAviUtl2で直接開けます。")
 
         process_panel.start("編集用動画の作成", operation_tasks.compose,
                             (data, video, tuple(segment_rows[0]), order, segment_duration[0]),
-                            {"fps": fps}, on_result=finish)
+                            {"fps": fps, "short": short}, on_result=finish)
 
     def export_subtitles():
         if subtitle_dirty[0] or subtitle_pending[0]:
@@ -876,7 +885,7 @@ def build_app():
                             ("開始+1F", lambda: step_frame(segment_start, "開始", 1)),
                             ("終了-1F", lambda: step_frame(segment_end, "終了", -1)),
                             ("終了+1F", lambda: step_frame(segment_end, "終了", 1)),
-                            ("編集用MP4を作成", render_compose),
+                            ("新しい編集を作成", render_compose),
                             ("字幕をAviUtl2へ追加", export_subtitles),
                             ("編集用動画を再生", play_composed)):
         ttk.Button(compose_actions, text=caption, command=action).pack(side="left")

@@ -1,6 +1,8 @@
 """Explicit project save and verified movie export controls."""
 
 import json
+import os
+import subprocess
 import threading
 import time
 import tkinter as tk
@@ -8,6 +10,7 @@ from fractions import Fraction
 from pathlib import Path
 from tkinter import filedialog, messagebox, ttk
 
+from .editor_bridge import windows_path
 from .save_export import ExportSettings, export_video, inspect_project, save_project
 from .storage import StorageError
 
@@ -94,6 +97,9 @@ class SaveExportPanel(ttk.Frame):
         ttk.Label(self, textvariable=self.video_label, wraplength=520).pack(anchor="w")
         ttk.Label(self, textvariable=self.project_label, wraplength=520).pack(anchor="w", pady=6)
         ttk.Button(self, text="対応するAviUtl2プロジェクトを選ぶ", command=self.choose_project).pack(anchor="w")
+        ttk.Button(self, text="プロジェクトの保存フォルダを開く", command=self.open_project_folder).pack(anchor="w")
+        ttk.Label(self, text="過去の編集は projects 内の .aup2 をAviUtl2で直接開けます。\n"
+                  "字幕・補助素材配置は新しい編集へ自動移行しません。", wraplength=520).pack(anchor="w", pady=6)
         ttk.Label(self, text="AviUtl2で開いている同じ編集のプロジェクトを保存します。\n"
                   "未適用の画面・字幕・補助素材の入力は「保存」で先に適用します。",
                   wraplength=520).pack(anchor="w", pady=8)
@@ -141,8 +147,14 @@ class SaveExportPanel(ttk.Frame):
         self.project = None
         self.project_label.set("保存するAviUtl2プロジェクト: 未選択")
         if self.video is not None:
-            self.project_label.set("「保存」で、同じ編集用動画を開いているAviUtl2プロジェクトに名前を付けて保存します:\n" +
-                                   str(self.data._root() / "projects" / self.video.parent.name))
+            directory = self.data._root() / "projects" / self.video.parent.name
+            candidates = sorted(directory.glob("*.aup2"))
+            if len(candidates) == 1:
+                self.project = candidates[0]
+                self.project_label.set("AviUtl2で開いて編集するプロジェクト:\n" + str(self.project))
+            else:
+                self.project_label.set("対応するAviUtl2プロジェクトを選択、または「保存」で名前を付けて保存します:\n" +
+                                       str(directory))
         self.video_label.set(str(video) if video else "切り出し区間タブで編集用動画を作成してください")
         self.message.set("")
         self.kind.set("ショート" if short else "横")
@@ -171,6 +183,20 @@ class SaveExportPanel(ttk.Frame):
                                   audio_rate=int(self.fields["audio_rate"].get()))
         settings.validate()
         return settings
+
+    def open_project_folder(self):
+        if self.busy or self.data.running or self.video is None:
+            return
+        directory = self.data._root() / "projects" / self.video.parent.name
+        try:
+            directory.mkdir(parents=True, exist_ok=True)
+            if os.name == "nt":
+                os.startfile(directory)
+            else:
+                subprocess.Popen(["explorer.exe", windows_path(directory)],
+                                 stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        except (OSError, subprocess.SubprocessError) as error:
+            messagebox.showerror("保存フォルダを開けません", f"{error}\n{directory}")
 
     def choose_project(self):
         if self.busy or self.data.running or self.video is None:

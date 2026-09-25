@@ -14,7 +14,7 @@ from fractions import Fraction
 from pathlib import Path
 from typing import Callable
 
-from .editor_bridge import send_control
+from .editor_bridge import send_control, windows_path
 from .managed_process import ManagedOperation
 from .process_control import check_cancelled, run_process
 from .storage import StorageError
@@ -90,21 +90,13 @@ class FileState:
             return None
 
 
-def _windows_path(path):
-    path = Path(path).resolve()
-    if os.name == "nt":
-        return str(path)
-    return subprocess.run(["wslpath", "-w", str(path)], check=True,
-                          capture_output=True, text=True).stdout.strip()
-
-
 def _encoder_path():
     """The encoder runs in the Windows host, including when the app runs in WSL."""
     configured = os.environ.get("CLIPCHANNEL_FFMPEG")
     if configured:
         if os.name != "nt" and (configured.startswith("\\\\") or len(configured) > 2 and configured[1] == ":"):
             return configured
-        return _windows_path(configured)
+        return windows_path(configured)
     if os.name == "nt":
         executable = shutil.which("ffmpeg")
         if executable:
@@ -112,7 +104,7 @@ def _encoder_path():
     else:
         executable = shutil.which("ffmpeg.exe")
         if executable:
-            return _windows_path(executable)
+            return windows_path(executable)
         try:
             found = subprocess.run(["powershell.exe", "-NoProfile", "-Command",
                                     "(Get-Command ffmpeg.exe -ErrorAction Stop).Source"],
@@ -130,8 +122,8 @@ def _instruction(project, video, action, **fields):
             (action == "export" and not project.is_file())):
         raise StorageError("対応する編集用動画と、AviUtl2で開いている保存先プロジェクトを選んでください")
     path = project.parent / f"control-{uuid.uuid4().hex}.cccontrol"
-    values = {"action": action, "video": _windows_path(video).encode("utf-8").hex(),
-              "project": _windows_path(project).encode("utf-8").hex(), **fields}
+    values = {"action": action, "video": windows_path(video).encode("utf-8").hex(),
+              "project": windows_path(project).encode("utf-8").hex(), **fields}
     path.write_text("ClipChannel-Control-1\n" + "".join(f"{key}\t{value}\n" for key, value in values.items()),
                     encoding="ascii", newline="\n")
     return path
@@ -309,7 +301,7 @@ def save_project(project, video):
             return OperationResult("failed", _failure_detail(response), project)
         if response.get("state") not in ("requested", "saved"):
             return OperationResult("unconfirmed", "保存を確認できませんでした。編集内容を保持しています", project)
-        expected_video = _windows_path(video)
+        expected_video = windows_path(video)
         confirmed, detail = _confirm_file(project, before, lambda path: _read_project(path, expected_video))
         if not confirmed and _response(instruction).get("state") == "failed":
             detail = _failure_detail(_response(instruction))
@@ -410,7 +402,7 @@ def export_video(project, video, destination, settings, *, cancel: threading.Eve
     if cancel.is_set():
         return OperationResult("cancelled", "書き出しを中止しました", destination)
     destination.parent.mkdir(parents=True, exist_ok=True)
-    instruction = _instruction(project, video, "export", output=_windows_path(destination).encode("utf-8").hex(),
+    instruction = _instruction(project, video, "export", output=windows_path(destination).encode("utf-8").hex(),
                                ffmpeg=ffmpeg.encode("utf-8").hex(), width=settings.width,
                                height=settings.height, rate=settings.fps.numerator, scale=settings.fps.denominator,
                                bitrate=round(settings.bitrate_mbps * 1000000), audio_rate=settings.audio_rate)

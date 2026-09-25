@@ -56,9 +56,9 @@ def save_review(control, data, video, rows, *, source_version=None):
     return save_intervals(data, video, rows, stop=control.cancelled, source_version=source_version), rows
 
 
-def compose(control, data, source, segments, order, duration_ms, fps=None):
+def compose(control, data, source, segments, order, duration_ms, fps=None, short=False):
     data.running = False
-    return compose_video(data, source, segments, order, duration_ms, fps=fps,
+    return compose_video(data, source, segments, order, duration_ms, fps=fps, short=short,
                          stop_requested=control.cancelled, progress=control.report)
 
 
