@@ -525,6 +525,27 @@
       "seek_ms": "10000",
       "frame": "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-issue18-c613be1bcce644439d5ebd6bae063b0d\\word-seek.png",
       "frame_sha256": "f6e030af8b4d765d1f24cb14ee6f27eb74fd6e155240b6e2eb201bfbb10ac093"
+    },
+    {
+      "name": "frequent-word-ui",
+      "saved_version": "catalog/u5Bwx8Vl0U8-55-90-video/word-counts/u5Bwx8Vl0U8-55-90-video_v1.csv",
+      "selected_word": "こと  出現 2 / 発言 2",
+      "utterance_rows": [
+        "10.000秒  引き続き、日米で緊密に連携していくことで一致しました。",
+        "20.000秒  所長らを制裁対象としていること について会談に同席した尾崎"
+      ],
+      "play_command": [
+        "C:\\Users\\raimu\\AppData\\Local\\ClipChannelAPP-validation\\a106\\ffmpeg-mirror\\ffmpeg-9.0.1-essentials_build\\bin\\ffplay.EXE",
+        "-autoexit",
+        "-loglevel",
+        "error",
+        "-ss",
+        "10.0",
+        "-t",
+        "3.7",
+        "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-issue18-c613be1bcce644439d5ebd6bae063b0d\\data\\media\\originals\\u5Bwx8Vl0U8-55-90-video.mp4"
+      ],
+      "player_exit_code": 0
     }
   ],
   "video": "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-issue18-c613be1bcce644439d5ebd6bae063b0d\\data\\media\\originals\\u5Bwx8Vl0U8-55-90-video.mp4"
