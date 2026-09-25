@@ -13,7 +13,7 @@
    ```powershell
    $Python = 'C:\Users\raimu\AppData\Local\Temp\clipchannel-a105-speaker\venv\Scripts\python.exe'
    if (-not (Test-Path -LiteralPath $Python -PathType Leaf)) { throw "Python が見つかりません: $Python" }
-   $FfmpegBin = 'C:\Users\raimu\AppData\Local\ClipChannelAPP-validation\a106\ffmpeg-mirror\ffmpeg-9.0.1-essentials_build\bin'
+   $FfmpegBin = 'C:\Users\raimu\ClipChannelTools\ffmpeg'
    $env:PATH = "$FfmpegBin;$env:PATH"
    $env:CLIPCHANNEL_FFMPEG = "$FfmpegBin\ffmpeg.exe"
    Set-Location '\\wsl.localhost\Ubuntu\home\raimu\workspace\ClipChannelAPP\ClipChannelAPP'
