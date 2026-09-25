@@ -6,6 +6,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 from clipchannel.download import DownloadError, DownloadSession
+from clipchannel.operation_tasks import download as run_download_task
 from clipchannel.storage import DataFolder
 
 
@@ -30,6 +31,22 @@ class FakeYoutubeDL:
 
 
 class DownloadTests(unittest.TestCase):
+    def test_managed_download_preserves_missing_dependency_message(self):
+        class Control:
+            def cancelled(self):
+                return False
+
+            def report(self, _snapshot):
+                pass
+
+        with tempfile.TemporaryDirectory() as temporary:
+            data = DataFolder()
+            data.select(temporary)
+            session = DownloadSession(data, "https://example.test/video")
+            with patch.dict(sys.modules, {"yt_dlp": None}):
+                with self.assertRaisesRegex(DownloadError, "yt-dlp が必要です"):
+                    run_download_task(Control(), session)
+
     def test_success_remains_registered_when_another_entry_fails(self):
         with tempfile.TemporaryDirectory() as temporary:
             data = DataFolder()

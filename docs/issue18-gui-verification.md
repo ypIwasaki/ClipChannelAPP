@@ -8,7 +8,7 @@
 
 1. Windows から直接使える内蔵・外付けドライブに、今回専用の**空のデータ用フォルダ**を作ります。例: `C:\Users\raimu\AppData\Local\ClipChannelAPP-validation\issue18-gui`。既存の検証データを守るため、[先行検証の Temp フォルダ](../.scratch/clip-production-v1/evidence/18-full-flow.md)は作業先にしません。
 2. 元動画、対象話者の参照音声、ローカル ECAPA モデル、ローカル Whisper モデル、AviUtl2 2.1.9 と専用プラグインを用意します。同じ素材を再確認する場合、元動画は `C:\Users\raimu\AppData\Local\ClipChannelAPP-validation\issue06-announcerA\u5Bwx8Vl0U8-55-90-video.mp4`、参照音声は同じフォルダの `u5Bwx8Vl0U8-55-90.wav` です。これらが見つからなければ、本人の声を確認できる別の動画と参照音声を使い、そのパスを記録します。
-3. **一つの Python 環境**でアプリを起動します。Windows Python と WSL Python のどちらでも構いません。その環境に Torch・SpeechBrain・faster-whisper・SudachiPy・SudachiDict-core が必要です。モデルと依存物の準備情報は[開発環境の引き継ぎ資料](development-handoff.md)を参照してください。`ffmpeg`・`ffprobe`・`ffplay` を実行でき、完成動画の出力には Windows 版 `ffmpeg.exe` を `CLIPCHANNEL_FFMPEG` へ指定します。AviUtl2 では専用プラグインを読み込んでおきます。Windows PowerShell から起動する場合、次の `$Python` はこのPCに実在する Python 3.12 のパスです。**起動確認用**であり、この環境は現時点で faster-whisper・SudachiPy・SudachiDict-core が不足します。全工程には同じ Windows Python 環境にそれらも準備してください。
+3. **一つの Python 環境**でアプリを起動します。Windows Python と WSL Python のどちらでも構いません。その環境に yt-dlp・Torch・SpeechBrain・faster-whisper・SudachiPy・SudachiDict-core が必要です。モデルと依存物の準備情報は[開発環境の引き継ぎ資料](development-handoff.md)を参照してください。`ffmpeg`・`ffprobe`・`ffplay` を実行でき、完成動画の出力には Windows 版 `ffmpeg.exe` を `CLIPCHANNEL_FFMPEG` へ指定します。AviUtl2 では専用プラグインを読み込んでおきます。Windows PowerShell から起動する場合、次の `$Python` はこのPCに実在する Python 3.12 のパスです。2026-09-25時点で yt-dlp は導入済みですが、faster-whisper・SudachiPy・SudachiDict-core は不足しています。全工程には同じ Windows Python 環境にそれらも準備してください。
 
    ```powershell
    $Python = 'C:\Users\raimu\AppData\Local\Temp\clipchannel-a105-speaker\venv\Scripts\python.exe'

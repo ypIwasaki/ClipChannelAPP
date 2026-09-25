@@ -22,6 +22,9 @@ def download(control, session, selected=None):
             session.run(report, stop_requested=control.cancelled)
         else:
             session.retry_failed(selected, report, stop_requested=control.cancelled)
+    except DownloadError:
+        # DownloadSession already provides a user-safe reason for these failures.
+        raise
     except Exception as error:
         # Extractor exceptions can contain secret query values and source URLs.
         raise DownloadError("取得処理を完了できませんでした。取得済みの成果物は保持しています") from error
