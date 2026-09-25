@@ -20,7 +20,7 @@
    & $Python -m clipchannel.app
    ```
 
-   取得時に `You have requested merging of multiple formats but ffmpeg is not installed` が出る場合は、アプリを完全に終了し、同じ PowerShell で `Test-Path -LiteralPath $env:CLIPCHANNEL_FFMPEG` が `True`、`Get-Command ffmpeg.exe` が上記の実行ファイルを指すことを確認してから起動し直します。取得画面の「形式・品質 (yt-dlp format)」を `best` にすると、映像と音声が一体の形式を選ぶため、結合を必要としない素材では取得を続けられます。選べる画質が下がる可能性があるので、この設定を確認結果に記録してください。
+   取得時に `You have requested merging of multiple formats but ffmpeg is not installed` が出る場合は、アプリを完全に終了し、同じ PowerShell で `Test-Path -LiteralPath $env:CLIPCHANNEL_FFMPEG` が `True`、`Get-Command ffmpeg.exe` が上記の実行ファイルを指すことを確認してから起動し直します。取得画面の「形式・品質 (yt-dlp format)」を `best` にすると、映像と音声が一体の形式を選ぶため、結合を必要としない素材では取得を続けられます。更新前から起動中のアプリでは再試行ボタンが前の形式を使い続けるため、設定変更後は「取得・情報表示」から新しく取得します。アプリを更新後に再起動すれば、再試行にも画面の形式が反映されます。選べる画質が下がる可能性があるので、この設定を確認結果に記録してください。
 
    必要なモデルの既存候補は ECAPA が `C:\Users\raimu\AppData\Local\Temp\clipchannel-a105-speaker\model`、Whisper が `C:\Users\raimu\AppData\Local\ClipChannelAPP-validation\asr-probe\model` です。Temp 内のファイルは残っているか事前に確認してください。
 

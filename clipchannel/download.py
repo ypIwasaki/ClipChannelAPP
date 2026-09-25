@@ -122,6 +122,11 @@ class DownloadSession:
         self.stopping = True
         self.state = "停止待ち"
 
+    def configure_retry(self, *, format, retries, extra):
+        updated = DownloadSession(self.data, self.url, format=format, retries=retries,
+                                  audio_only=self.audio_only, info_only=self.info_only, extra=extra)
+        self.options = updated.options
+
     def _is_stopping(self, stop_requested):
         if stop_requested and stop_requested():
             self.stop()

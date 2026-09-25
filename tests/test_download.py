@@ -32,6 +32,18 @@ class FakeYoutubeDL:
 
 
 class DownloadTests(unittest.TestCase):
+    def test_retry_can_use_updated_format_without_losing_items(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            data = DataFolder()
+            data.select(temporary)
+            session = DownloadSession(data, "https://example.test/list")
+            item = object()
+            session.items.append(item)
+            session.configure_retry(format="best", retries=2, extra="")
+            self.assertEqual(session.options["format"], "best")
+            self.assertEqual(session.options["retries"], 2)
+            self.assertIs(session.items[0], item)
+
     def test_configured_ffmpeg_is_passed_to_yt_dlp(self):
         seen = []
 

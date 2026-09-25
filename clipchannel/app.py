@@ -1229,6 +1229,9 @@ def build_app():
                                              audio_only=audio_only.get(), info_only=info_only.get(), extra=extra.get())
             elif session[0] is None or not downloads.curselection():
                 raise DownloadError("失敗項目を選択してください")
+            else:
+                session[0].configure_retry(format=media_format.get(), retries=int(retries.get()),
+                                           extra=extra.get())
         except (DownloadError, ValueError) as error:
             messagebox.showerror("取得できません", str(error))
             return
