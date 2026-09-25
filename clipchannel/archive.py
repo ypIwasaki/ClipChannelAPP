@@ -112,7 +112,7 @@ def archive_video(data: DataFolder, source, *, stop_requested: Callable[[], bool
         with source.open("rb") as original:
             if _copy_stream(original, stop_requested=stop_requested) != (size, digest):
                 raise StorageError("保管中に元動画が変わりました。再試行してください")
-        with staged.open("rb") as stream:
+        with staged.open("r+b") as stream:
             os.fsync(stream.fileno())
         check_cancelled(stop_requested)
         archive_size = staged.stat().st_size

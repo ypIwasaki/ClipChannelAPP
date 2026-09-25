@@ -1,0 +1,30 @@
+test_broken_zip_is_reported_as_a_storage_error_and_retained (tests.test_archive.ArchiveTests.test_broken_zip_is_reported_as_a_storage_error_and_retained) ... ok
+test_japanese_video_round_trip_preserves_source_archive_and_bytes (tests.test_archive.ArchiveTests.test_japanese_video_round_trip_preserves_source_archive_and_bytes) ... ok
+test_long_japanese_video_name_can_be_archived_and_restored (tests.test_archive.ArchiveTests.test_long_japanese_video_name_can_be_archived_and_restored) ... ok
+test_malformed_archive_is_rejected_without_extracting_untrusted_entries (tests.test_archive.ArchiveTests.test_malformed_archive_is_rejected_without_extracting_untrusted_entries) ... ok
+test_normal_cancellation_keeps_completed_files_and_discards_partial_outputs (tests.test_archive.ArchiveTests.test_normal_cancellation_keeps_completed_files_and_discards_partial_outputs) ... ok
+test_repeated_archiving_and_restoration_create_separate_files (tests.test_archive.ArchiveTests.test_repeated_archiving_and_restoration_create_separate_files) ... ok
+test_result_shows_sizes_and_whether_capacity_was_reduced (tests.test_archive.ArchiveTests.test_result_shows_sizes_and_whether_capacity_was_reduced) ... ok
+test_unknown_archive_version_is_rejected_without_publishing_video (tests.test_archive.ArchiveTests.test_unknown_archive_version_is_rejected_without_publishing_video) ... ok
+test_expired_link_inside_logs_is_preserved_without_following_it (tests.test_operation_logs.OperationLogTests.test_expired_link_inside_logs_is_preserved_without_following_it) ... skipped 'Symbolic links are unavailable'
+test_export_log_cleanup_never_follows_project_or_state_links (tests.test_operation_logs.OperationLogTests.test_export_log_cleanup_never_follows_project_or_state_links) ... skipped 'Symbolic links are unavailable'
+test_finished_export_logs_expire_but_pending_and_unrelated_files_remain (tests.test_operation_logs.OperationLogTests.test_finished_export_logs_expire_but_pending_and_unrelated_files_remain) ... ok
+test_finished_operation_records_only_its_summary (tests.test_operation_logs.OperationLogTests.test_finished_operation_records_only_its_summary) ... ok
+test_log_directory_link_never_writes_or_removes_external_files (tests.test_operation_logs.OperationLogTests.test_log_directory_link_never_writes_or_removes_external_files) ... skipped 'Symbolic links are unavailable'
+test_only_normal_logs_at_least_thirty_days_old_are_removed (tests.test_operation_logs.OperationLogTests.test_only_normal_logs_at_least_thirty_days_old_are_removed) ... ok
+test_recovery_and_uncertain_export_requests_keep_old_logs (tests.test_operation_logs.OperationLogTests.test_recovery_and_uncertain_export_requests_keep_old_logs) ... ok
+test_recovery_information_protects_old_logs_until_cleared (tests.test_operation_logs.OperationLogTests.test_recovery_information_protects_old_logs_until_cleared) ... ok
+test_retention_uses_elapsed_utc_days_across_daylight_saving (tests.test_operation_logs.OperationLogTests.test_retention_uses_elapsed_utc_days_across_daylight_saving) ... ok
+test_busy_switch_does_not_change_folder (tests.test_storage.DataFolderTests.test_busy_switch_does_not_change_folder) ... ok
+test_different_video_with_same_stem_cannot_take_next_version (tests.test_storage.DataFolderTests.test_different_video_with_same_stem_cannot_take_next_version) ... ok
+test_interrupted_save_keeps_previous_version_readable (tests.test_storage.DataFolderTests.test_interrupted_save_keeps_previous_version_readable) ... ok
+test_shared_data_and_unknown_schema (tests.test_storage.DataFolderTests.test_shared_data_and_unknown_schema) ... ok
+test_switch_and_read_versions_with_multiline_csv (tests.test_storage.DataFolderTests.test_switch_and_read_versions_with_multiline_csv) ... ok
+test_unregistered_collision_cannot_create_first_result (tests.test_storage.DataFolderTests.test_unregistered_collision_cannot_create_first_result) ... ok
+test_copy_reselect_and_reject_different_video_with_same_result_name (tests.test_video_registration.VideoRegistrationTests.test_copy_reselect_and_reject_different_video_with_same_result_name) ... ok
+test_non_video_is_rejected_and_directories_are_not_listed (tests.test_video_registration.VideoRegistrationTests.test_non_video_is_rejected_and_directories_are_not_listed) ... ok
+
+----------------------------------------------------------------------
+Ran 25 tests in 0.425s
+
+OK (skipped=3)
