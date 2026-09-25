@@ -118,10 +118,14 @@ def _encode(audio, model_dir, cache, split):
     return [float(value) for value in mean]
 
 
-def list_people(data):
+def list_people(data, *, include_hidden=False):
     root = data._root()
     people = []
+    from .registrations import RegistrationManager
+    manager = RegistrationManager(data)
     for row in data.load_shared("people"):
+        if not include_hidden and manager.is_hidden("people", row["person_id"]):
+            continue
         audio = _inside(root, row["reference_audio"])
         feature = _inside(root, row["feature_file"])
         metadata = json.loads(feature.read_text(encoding="utf-8")) if feature.is_file() else {}
@@ -134,13 +138,13 @@ def list_people(data):
 def target_for_video(data, video):
     """Return the saved person for a registered source, if one was chosen."""
     source = Path(video).expanduser().resolve()
-    if source not in data.list_videos():
+    if source not in data.list_videos(include_hidden=True):
         raise PersonError("登録済み動画を選んでください")
     identity = source.name.casefold()
     rows = [row for row in data.load_shared("targets") if row["video_name"].casefold() == identity]
     if not rows:
         return None
-    return next((person for person in list_people(data) if person.person_id == rows[0]["person_id"]), None)
+    return next((person for person in list_people(data, include_hidden=True) if person.person_id == rows[0]["person_id"]), None)
 
 
 def select_target(data, video, person_id):

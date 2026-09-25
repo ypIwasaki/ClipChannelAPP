@@ -1,0 +1,24 @@
+{
+  "command": ".venv/bin/pyright --pythonpath .venv/bin/python --outputjson clipchannel",
+  "before": {
+    "filesAnalyzed": 21,
+    "errorCount": 54,
+    "warningCount": 0,
+    "informationCount": 0,
+    "timeInSec": 2.141
+  },
+  "after": {
+    "filesAnalyzed": 25,
+    "errorCount": 54,
+    "warningCount": 0,
+    "informationCount": 0,
+    "timeInSec": 2.187
+  },
+  "new_diagnostics": [],
+  "existing_by_file": {
+    "app.py": 37,
+    "download.py": 3,
+    "people.py": 8,
+    "transcribe.py": 6
+  }
+}

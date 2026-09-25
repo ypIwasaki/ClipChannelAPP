@@ -1,6 +1,7 @@
 """Count words in a saved, corrected target-speaker transcript."""
 
 from collections import defaultdict
+from pathlib import Path
 
 from .storage import StorageError
 
@@ -67,4 +68,6 @@ def count_words(data, video, transcript_version, *, include_verbs=False, include
                          "transcript_version": str(transcript_version),
                          "include_verbs": str(int(include_verbs)),
                          "include_adjectives": str(int(include_adjectives))})
-    return data.save_result(video, "word-counts", rows)
+    stem = Path(video).stem
+    source_result = f"catalog/{stem}/transcripts/{stem}_v{transcript_version}.csv"
+    return data.save_result(video, "word-counts", rows, references=(("results", source_result),))

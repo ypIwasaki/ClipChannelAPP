@@ -27,6 +27,8 @@ from .editor_bridge import apply_layout, apply_subtitles
 from .supporting_media_ui import SupportingMediaPanel
 from .save_export_ui import SaveExportPanel, WidgetLock
 from .managed_process_ui import ProcessPanel
+from .management_ui import ManagementPanel
+from .operation_logs import record_operation, cleanup_logs
 from . import operation_tasks
 
 
@@ -1281,7 +1283,9 @@ def build_app():
         listing.delete(0, tk.END)
         for path in paths:
             listing.insert(tk.END, path)
-        status.set(f"保存済み結果: {len(paths)} 件")
+        status.set(f"保存済み結果: {len(paths)} 件" +
+                   (f" / ログ整理失敗: {data.log_cleanup_error}" if data.log_cleanup_error else ""))
+        management_panel.reset()
         refresh_videos()
         refresh_people()
         segment_rows[0], segment_source[0], segment_duration[0] = [], None, 0
@@ -1384,13 +1388,34 @@ def build_app():
         supporting_panel.stop_audio()
         window.destroy()
 
+    def refresh_managed_lists():
+        listing.delete(0, tk.END)
+        for path in data.list_saved():
+            listing.insert(tk.END, path)
+        refresh_videos()
+        refresh_people()
+
+    management_panel = ManagementPanel(
+        saved_tabs, data, status, refresh_lists=refresh_managed_lists,
+        start_operation=lambda *args, **kwargs: process_panel.start(*args, **kwargs),
+        has_drafts=lambda: pending[0] or unsaved.get() or review_dirty[0] or segment_dirty[0] or has_editor_drafts())
+    saved_tabs.add(management_panel, text="管理・保管")
+    saved_tabs.bind("<<NotebookTabChanged>>", lambda _event: management_panel.refresh())
+
     operation_lock = WidgetLock((header, saved_panel, media_panel))
 
     def lock_operation(locked):
         pending[0] = data.running = locked
         operation_lock.set_locked(locked)
 
-    process_panel = ProcessPanel(window, status, lock_operation)
+    def record_finished_operation(operation):
+        try:
+            record_operation(data, operation.label, operation.state, operation.elapsed)
+            cleanup_logs(data)
+        except (OSError, StorageError) as error:
+            messagebox.showerror("処理ログを保存・整理できません", str(error))
+
+    process_panel = ProcessPanel(window, status, lock_operation, on_finished=record_finished_operation)
     process_panel.pack(fill="x", padx=10, pady=4)
 
     window.protocol("WM_DELETE_WINDOW", close)

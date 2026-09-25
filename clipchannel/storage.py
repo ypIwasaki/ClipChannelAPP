@@ -27,6 +27,8 @@ class VideoNameConflict(StorageError):
 
 ROOT_DIRS = ("catalog", "media", "people", "projects", "exports", "archives", "work", "recovery", "logs")
 SCHEMAS = {
+    "result-references": ("schema_version", "kind", "key"),
+    "list-state": ("schema_version", "kind", "key", "state"),
     "transcripts": ("schema_version", "start_ms", "end_ms", "text", "speaker_id"),
     "segments": ("schema_version", "start_ms", "end_ms", "kind", "selected"),
     "word-counts": ("schema_version", "word", "occurrences", "utterances", "start_ms", "end_ms", "text", "transcript_version", "include_verbs", "include_adjectives"),
@@ -132,6 +134,7 @@ class DataFolder:
         self.path = None
         self.running = False
         self.unsaved = False
+        self.log_cleanup_error = ''
 
     def select(self, path):
         if self.running or self.unsaved:
@@ -152,6 +155,12 @@ class DataFolder:
             (target / name).mkdir(exist_ok=True)
         (target / "media" / "edits").mkdir(exist_ok=True)
         self.path = target
+        from .operation_logs import cleanup_logs
+        self.log_cleanup_error = ""
+        try:
+            cleanup_logs(self)
+        except (OSError, StorageError) as error:
+            self.log_cleanup_error = str(error)
         return self.list_saved()
 
     def _root(self):
@@ -159,17 +168,25 @@ class DataFolder:
             raise StorageError("データ用フォルダを選んでください")
         return self.path
 
-    def list_saved(self):
+    def list_saved(self, *, include_hidden=False):
         root = self._root()
         results = [path.relative_to(root).as_posix() for path in root.glob("catalog/*/*/*_v*.csv")
                    if re.fullmatch(re.escape(path.parent.parent.name) + r"_v[1-9][0-9]*\.csv", path.name)]
         shared = [path.relative_to(root).as_posix() for kind in SHARED_KINDS
                   if (path := root / "people" / f"{kind}.csv").is_file()]
+        if not include_hidden:
+            from .registrations import RegistrationManager
+            manager = RegistrationManager(self)
+            results = [relative for relative in results if not manager.is_hidden("results", relative)]
         return sorted(results + shared)
 
-    def list_videos(self):
+    def list_videos(self, *, include_hidden=False):
+        from .registrations import RegistrationManager
+        manager = RegistrationManager(self)
         return sorted((path for path in (self._root() / "media" / "originals").glob("*")
-                       if path.is_file() and path.suffix.lower() in VIDEO_EXTENSIONS), key=lambda path: path.name)
+                       if path.is_file() and path.suffix.lower() in VIDEO_EXTENSIONS
+                       and (include_hidden or not manager.is_hidden("videos", path.relative_to(self._root()).as_posix()))),
+                      key=lambda path: path.name)
 
     def register_video(self, source, *, stop_requested=None):
         _check_stop(stop_requested)
@@ -205,11 +222,14 @@ class DataFolder:
             _publish_new(staged, target)
         return target
 
-    def save_result(self, source_name, kind, rows, *, stop_requested=None):
+    def save_result(self, source_name, kind, rows, *, stop_requested=None, references=()):
         if kind not in RESULT_KINDS:
             raise StorageError("不明な結果の種類です")
         _check_stop(stop_requested)
+        rows = list(rows)
         source = self.register_video(source_name, stop_requested=stop_requested)
+        from .registrations import snapshot_references
+        references = snapshot_references(self, source, kind, rows, references)
         stem = _name(source.stem)
         _name(source.name)
         identity = self._root() / "catalog" / stem / "source.sha256"
@@ -235,14 +255,23 @@ class DataFolder:
                 _check_stop(stop_requested)
                 _publish_new(staged_identity, identity)
         versions = [int(match.group(1)) for path in directory.glob(f"{stem}_v*.csv")
-                    if (match := re.fullmatch(re.escape(stem) + r"_v([1-9][0-9]*)\.csv", path.name))]
+                    if (match := re.fullmatch(re.escape(stem) + r"_v([1-9][0-9]*)(?:\.refs)?\.csv", path.name))]
         version = max(versions, default=0) + 1
         target = directory / f"{stem}_v{version}.csv"
         with tempfile.TemporaryDirectory(dir=self._root() / "work", prefix="save-") as temporary:
             staged = Path(temporary) / target.name
             _write_csv(staged, kind, rows, stop_requested=stop_requested)
             _check_stop(stop_requested)
-            _publish_new(staged, target)
+            staged_references = Path(temporary) / "references.csv"
+            _write_csv(staged_references, "result-references", references, stop_requested=stop_requested)
+            reference_path = target.with_suffix(".refs.csv")
+            _publish_new(staged_references, reference_path)
+            try:
+                _check_stop(stop_requested)
+                _publish_new(staged, target)
+            except BaseException:
+                reference_path.unlink(missing_ok=True)
+                raise
         return target
 
     def load_result(self, source_name, kind, version):
@@ -254,6 +283,15 @@ class DataFolder:
     def save_shared(self, kind, rows):
         if kind not in SHARED_KINDS:
             raise StorageError("不明な共通設定です")
+        rows = list(rows)
+        from .registrations import RegistrationManager, SHARED_KEYS
+        if kind in SHARED_KEYS:
+            column = SHARED_KEYS[kind]
+            previous = {row[column] for row in self.load_shared(kind)}
+            current = {row[column] for row in rows}
+            manager = RegistrationManager(self)
+            for key in previous - current:
+                manager.ensure_deletable(kind, key)
         target = self._root() / "people" / f"{kind}.csv"
         _write_csv(target, kind, rows)
         return target

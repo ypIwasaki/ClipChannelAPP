@@ -2,6 +2,7 @@
 
 from copy import deepcopy
 
+from .archive import archive_video, restore_archive
 from .compose import adjacent_frame, compose_video, nearest_frame
 from .download import DownloadError
 from .media import prepare_media
@@ -68,3 +69,15 @@ def align_frames(control, source, requested_times):
 def step_frame(control, source, requested, direction):
     control.report("隣のフレームを確認中")
     return adjacent_frame(source, requested, direction, stop_requested=control.cancelled)
+
+
+def archive(control, data, source):
+    data.running = False
+    control.report("元動画を保持して圧縮・検証中")
+    return archive_video(data, source, stop_requested=control.cancelled)
+
+
+def restore(control, data, source):
+    data.running = False
+    control.report("保管物を保持して展開・検証中")
+    return restore_archive(data, source, stop_requested=control.cancelled)

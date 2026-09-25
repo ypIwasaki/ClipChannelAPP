@@ -7,10 +7,11 @@ from .managed_process import ManagedOperation
 
 
 class ProcessPanel(ttk.LabelFrame):
-    def __init__(self, parent, status, lock):
+    def __init__(self, parent, status, lock, *, on_finished=None):
         super().__init__(parent, text="管理対象の処理", padding=6)
         self.status = status
         self.lock = lock
+        self.on_finished = on_finished
         self.operation = None
         self.message = tk.StringVar(value="実行中の処理はありません")
         ttk.Label(self, textvariable=self.message, wraplength=900).pack(side="left", fill="x", expand=True)
@@ -58,6 +59,8 @@ class ProcessPanel(ttk.LabelFrame):
             self.cancel_button.configure(state="disabled")
             self.force_button.configure(state="disabled")
             self.lock(False)
+            if self.on_finished is not None:
+                self.on_finished(operation)
             if on_finished is not None:
                 on_finished(operation)
             if operation.state == "完了":

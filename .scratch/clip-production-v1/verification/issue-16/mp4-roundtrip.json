@@ -1,0 +1,25 @@
+{
+  "fixture": "FFmpeg testsrc2 320x180 30fps 2s + sine 440Hz 48kHz, H.264/AAC MP4",
+  "original_size": 81372,
+  "archive_size": 79647,
+  "original_sha256": "e28d4a2b3789f7ba1328ed2425b0ae981847f625e68cb2a0709133c1c969f37b",
+  "restored_sha256": "e28d4a2b3789f7ba1328ed2425b0ae981847f625e68cb2a0709133c1c969f37b",
+  "source_preserved": true,
+  "archive_preserved": true,
+  "restored_probe": {
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+      {
+        "codec_name": "h264"
+      },
+      {
+        "codec_name": "aac"
+      }
+    ],
+    "format": {
+      "duration": "2.000000"
+    }
+  },
+  "summary": "元動画: 81,372 バイト / 保管物: 79,647 バイト\n1,725 バイト削減しました。元動画と保管物は保持します。"
+}
