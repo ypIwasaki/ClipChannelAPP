@@ -8,15 +8,14 @@ import math
 import json
 import os
 import shutil
-import subprocess
 import tempfile
-import time
 import wave
 from dataclasses import dataclass
 from pathlib import Path
 
 from .people import _model_fingerprint, target_for_video
 from .storage import StorageError
+from .process_control import ProcessCancelled, run_process
 
 
 class TranscriptionError(StorageError):
@@ -53,15 +52,16 @@ def validate_intervals(intervals):
         previous = row.end_ms
 
 
-def save_intervals(data, video, intervals):
+def save_intervals(data, video, intervals, *, stop=None):
     """Persist a reviewed snapshot as a new CSV version, including unknowns."""
+    _check_stop(stop)
     if target_for_video(data, video) is None:
         raise TranscriptionError("この動画の対象話者を選んでください")
     validate_intervals(intervals)
     return data.save_result(video, "transcripts", [
         {"start_ms": str(row.start_ms), "end_ms": str(row.end_ms),
          "text": row.text, "speaker_id": row.state}
-        for row in intervals])
+        for row in intervals], stop_requested=stop)
 
 
 def load_intervals(data, video, version):
@@ -76,30 +76,19 @@ def _pcm(video, destination, stop):
     ffmpeg = shutil.which("ffmpeg")
     if not ffmpeg:
         raise TranscriptionError("音声解析に ffmpeg が必要です")
-    process = subprocess.Popen([ffmpeg, "-nostdin", "-v", "error", "-i", str(video),
-                                "-vn", "-ac", "1", "-ar", "16000", "-c:a", "pcm_s16le",
-                                str(destination)], stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
     try:
-        while process.poll() is None:
-            if stop and stop():
-                process.terminate()
-                try:
-                    process.wait(timeout=5)
-                except subprocess.TimeoutExpired:
-                    process.kill()
-                    process.wait()
-                raise Cancelled("音声解析を中止しました")
-            time.sleep(.1)
-        if process.returncode or not destination.is_file():
-            raise TranscriptionError("動画の音声を読み取れません。音声トラックを確認してください")
-    finally:
-        if process.poll() is None:
-            process.kill()
-            process.wait()
+        result = run_process([ffmpeg, "-v", "error", "-i", str(video),
+                              "-vn", "-ac", "1", "-ar", "16000", "-c:a", "pcm_s16le",
+                              str(destination)], stop=stop, ffmpeg=True)
+    except ProcessCancelled as error:
+        raise Cancelled("音声解析を中止しました") from error
+    if result.returncode or not destination.is_file():
+        raise TranscriptionError("動画の音声を読み取れません。音声トラックを確認してください")
 
 
 def propose_intervals(data, video, model_dir, *, stop=None, progress=None):
     """Return bounded review windows. Unverified identity remains unknown."""
+    _check_stop(stop)
     video = Path(video).resolve()
     if video not in data.list_videos():
         raise TranscriptionError("登録済み動画を選んでください")
@@ -108,6 +97,7 @@ def propose_intervals(data, video, model_dir, *, stop=None, progress=None):
         raise TranscriptionError("この動画の対象話者を選んでください")
     if not person.reference_audio.is_file() or not person.feature_file.is_file():
         raise TranscriptionError("参照音声または人物特徴が見つかりません")
+    _check_stop(stop)
     model_dir = Path(model_dir).expanduser().resolve()
     if _model_fingerprint(model_dir) != person.model_fingerprint:
         raise TranscriptionError("人物登録時と同じ ECAPA モデル一式を選んでください")
@@ -118,6 +108,7 @@ def propose_intervals(data, video, model_dir, *, stop=None, progress=None):
         from speechbrain.utils.fetching import FetchConfig, LocalStrategy
     except ImportError as error:
         raise TranscriptionError("話者照合に Torch・SpeechBrain・numpy が必要です") from error
+    _check_stop(stop)
     metadata = json.loads(person.feature_file.read_text(encoding="utf-8"))
     reference = torch.tensor(metadata["features"], dtype=torch.float32)
     if reference.shape != (192,) or not torch.isfinite(reference).all():
@@ -133,6 +124,7 @@ def propose_intervals(data, video, model_dir, *, stop=None, progress=None):
             duration = stream.getnframes() / 16000
         if progress:
             progress("試聴区間を作成中")
+        _check_stop(stop)
         previous_offline = os.environ.get("HF_HUB_OFFLINE")
         os.environ["HF_HUB_OFFLINE"] = "1"
         try:
@@ -146,6 +138,7 @@ def propose_intervals(data, video, model_dir, *, stop=None, progress=None):
                 os.environ.pop("HF_HUB_OFFLINE", None)
             else:
                 os.environ["HF_HUB_OFFLINE"] = previous_offline
+        _check_stop(stop)
         # A reference alone does not calibrate the non-target distribution.
         # Scores help choose what to listen to; all identity labels remain unknown.
         rows = []
@@ -162,20 +155,24 @@ def propose_intervals(data, video, model_dir, *, stop=None, progress=None):
                     with torch.inference_mode():
                         feature = model.encode_batch(torch.from_numpy(signal).unsqueeze(0),
                                                      normalize=False).reshape(-1)
+                    _check_stop(stop)
                     if feature.shape == (192,) and torch.isfinite(feature).all():
                         score = float(torch.nn.functional.cosine_similarity(reference, feature, dim=0))
                 rows.append(Interval(start, end, "unknown", score))
                 if progress:
                     progress(f"話者照合 {len(rows)}/{math.ceil(duration / 5)}")
+        _check_stop(stop)
         return rows
 
 
 def transcribe_confirmed(data, video, intervals, model_dir, *, stop=None, progress=None):
     """ASR only on user-confirmed target ranges; save complete version on success."""
     validate_intervals(intervals)
+    _check_stop(stop)
     video = Path(video).resolve()
     if video not in data.list_videos() or target_for_video(data, video) is None:
         raise TranscriptionError("登録済み動画と対象話者を選んでください")
+    _check_stop(stop)
     model_dir = Path(model_dir).expanduser().resolve()
     if not model_dir.is_dir() or not (model_dir / "config.json").is_file():
         raise TranscriptionError("ローカルの Whisper モデル一式を選んでください")
@@ -196,6 +193,7 @@ def transcribe_confirmed(data, video, intervals, model_dir, *, stop=None, progre
         if progress:
             progress("認識モデルを読み込み中")
         model = WhisperModel(str(model_dir), device="cpu", compute_type="int8", local_files_only=True)
+        _check_stop(stop)
         output = []
         with wave.open(str(audio), "rb") as stream:
             for index, row in enumerate(intervals):
@@ -214,6 +212,7 @@ def transcribe_confirmed(data, video, intervals, model_dir, *, stop=None, progre
                                                 condition_on_previous_text=False, vad_filter=False)
                 cursor = row.start_ms
                 for segment in segments:
+                    _check_stop(stop)
                     start = max(cursor, min(row.end_ms, row.start_ms + round(segment.start * 1000)))
                     end = max(start, min(row.end_ms, row.start_ms + round(segment.end * 1000)))
                     text = segment.text.strip()
@@ -226,4 +225,4 @@ def transcribe_confirmed(data, video, intervals, model_dir, *, stop=None, progre
                 if cursor < row.end_ms:
                     output.append(Interval(cursor, row.end_ms, "unknown", row.score))
         _check_stop(stop)
-        return save_intervals(data, video, output), output
+        return save_intervals(data, video, output, stop=stop), output

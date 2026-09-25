@@ -2,6 +2,7 @@
 
 import json
 import threading
+import time
 import tkinter as tk
 from fractions import Fraction
 from pathlib import Path
@@ -37,7 +38,8 @@ class WidgetLock:
         for root in self.roots:
             for widget in descendants(root):
                 if widget not in self.excluded and isinstance(widget, (
-                        ttk.Button, ttk.Entry, ttk.Combobox, ttk.Checkbutton, tk.Listbox, tk.Text)):
+                        ttk.Button, ttk.Entry, ttk.Combobox, ttk.Checkbutton, tk.Button, tk.Entry,
+                        tk.Checkbutton, tk.Listbox, tk.Text)):
                     self.previous.append((widget, widget.cget("state")))
                     widget.configure(state="disabled")
 
@@ -74,6 +76,13 @@ class SaveExportPanel(ttk.Frame):
         self.project = None
         self.busy = False
         self.cancel = threading.Event()
+        self.force = threading.Event()
+        self._started_at = None
+        self._finished_at = None
+        self._operation_state = "待機中"
+        self._can_force = False
+        self._force_scope = "host"
+        self._timer_id = None
         self._bitrate_default = "8"
         self.video_label = tk.StringVar(value="切り出し区間タブで編集用動画を作成してください")
         self.project_label = tk.StringVar(value="保存するAviUtl2プロジェクト: 未選択")
@@ -110,7 +119,11 @@ class SaveExportPanel(ttk.Frame):
         ttk.Button(actions, text="完成動画を書き出す", command=self.export).pack(side="left", padx=4)
         self.cancel_button = ttk.Button(actions, text="書き出しを中止", command=self.stop, state="disabled")
         self.cancel_button.pack(side="left", padx=4)
-        self.widget_lock = WidgetLock((self,), excluded=(self.cancel_button,))
+        self.force_button = ttk.Button(actions, text="強制停止…", command=self.force_stop, state="disabled")
+        self.force_button.pack(side="left", padx=4)
+        self.widget_lock = WidgetLock((self,), excluded=(self.cancel_button, self.force_button))
+        self.process_summary = tk.StringVar(value="待機中 / 処理時間 0.0秒")
+        ttk.Label(self, textvariable=self.process_summary).pack(anchor="w", pady=6)
         self.message = tk.StringVar()
         ttk.Label(self, textvariable=self.message, wraplength=520).pack(anchor="w", pady=10)
 
@@ -219,11 +232,27 @@ class SaveExportPanel(ttk.Frame):
             raise StorageError("AviUtl2の処理完了を待ってください")
         return state
 
+    def _refresh_time(self):
+        self._timer_id = None
+        elapsed = 0 if self._started_at is None else (self._finished_at or time.monotonic()) - self._started_at
+        self.process_summary.set(f"{self._operation_state} / 処理時間 {elapsed:.1f}秒")
+        if self.busy:
+            self._timer_id = self.after(250, self._refresh_time)
+
     def _set_busy(self, busy, *, exporting=False):
+        if not busy:
+            if self._timer_id is not None:
+                self.after_cancel(self._timer_id)
+                self._timer_id = None
+            self._finished_at = time.monotonic()
+            self._can_force = False
         self.busy = self.data.running = busy
         self.lock_editing(busy)
         self.widget_lock.set_locked(busy)
         self.cancel_button.configure(state="normal" if busy and exporting else "disabled")
+        self.force_button.configure(state="disabled")
+        if not busy:
+            self._refresh_time()
 
     def _report(self, result):
         self.message.set(result.detail)
@@ -242,14 +271,29 @@ class SaveExportPanel(ttk.Frame):
             return
         video = self.video
         self.cancel.clear()
+        self.force.clear()
+        self._can_force = False
+        self._force_scope = "host"
+        self._started_at = time.monotonic()
+        self._finished_at = None
+        self._operation_state = "保存中" if save_first else "書き出し中"
         self._set_busy(True, exporting=destination is not None)
+        self._refresh_time()
         self.message.set("保存を確認しています" if save_first else "完成動画を書き出しています")
         self.status.set("保存・出力中です。同じプロジェクトへの編集を待ってください")
-        def progress(value):
+        def show_progress(value):
+            if not self.busy:
+                return
+            self._force_scope = value.get("force_scope", "host")
+            self._can_force = bool(value.get("can_force")) and not self.force.is_set()
+            self.force_button.configure(state="normal" if self._can_force else "disabled")
+            self._operation_state = "強制停止待ち" if self.force.is_set() else "停止待ち" if self.cancel.is_set() else "出力確認中" if value.get("state") == "verifying" else "書き出し中"
             detail = value.get("detail")
-            if not detail:
+            if detail in ("audio", "video", "") or not detail:
                 detail = "中止を要求しました。停止完了まで編集を待ってください" if self.cancel.is_set() else "完成動画を書き出しています"
-            self.after(0, self.message.set, detail)
+            self.message.set(detail)
+        def progress(value):
+            self.after(0, show_progress, value)
         def worker():
             saved = False
             result = None
@@ -262,7 +306,7 @@ class SaveExportPanel(ttk.Frame):
                         self.after(0, lambda value=result: finish(value, False))
                         return
                 if destination is not None:
-                    result = export_video(project, video, destination, settings, cancel=self.cancel,
+                    result = export_video(project, video, destination, settings, cancel=self.cancel, force=self.force,
                                           on_progress=progress)
                 if result is None:
                     raise StorageError("保存または出力を選択してください")
@@ -271,6 +315,7 @@ class SaveExportPanel(ttk.Frame):
                 reason = str(error) or type(error).__name__
                 self.after(0, lambda: failed(reason, saved))
         def finish(result, saved):
+            self._operation_state = "完了" if result.confirmed else "中止" if result.state == "cancelled" else "未確認" if result.state == "unconfirmed" else "失敗"
             self._set_busy(False)
             if saved:
                 commit()
@@ -278,6 +323,7 @@ class SaveExportPanel(ttk.Frame):
             if after_save is not None and saved:
                 after_save()
         def failed(reason, saved):
+            self._operation_state = "失敗"
             self._set_busy(False)
             if saved:
                 commit()
@@ -326,9 +372,31 @@ class SaveExportPanel(ttk.Frame):
     def stop(self):
         if self.busy:
             self.cancel.set()
+            self._operation_state = "停止待ち"
             self.message.set("中止を要求しました。停止完了まで編集を待ってください")
             self.status.set(self.message.get())
             self.cancel_button.configure(state="disabled")
+
+    def force_stop(self):
+        if not self.busy or not self.cancel.is_set() or not self._can_force or self.force.is_set():
+            return
+        scope = self._force_scope
+        impact = ("完成動画の確認処理と、そのffprobeだけを強制終了します。AviUtl2内の編集は保持します。\n"
+                  if scope == "verification" else
+                  "この書き出しを受け付けたAviUtl2と、そのエンコーダーを強制終了します。\n"
+                  "AviUtl2内の未保存の編集は失われます。\n")
+        action = choose_action(self, "書き出しの強制停止", "通常の中止にまだ応答していません。\n" + impact +
+            "本アプリの入力と保存済みのファイルは保持します。\n"
+            "出力ファイルは完成確認済みとして扱いません。停止確認後に編集を再開できます。",
+            (("強制停止する", "force"), ("停止を待つ", None)))
+        if action == "force" and self.busy and self._can_force and self._force_scope == scope:
+            self.force.set()
+            self._can_force = False
+            self._operation_state = "強制停止待ち"
+            self.force_button.configure(state="disabled")
+            self.message.set("強制停止を要求しました。確認処理の終了を待っています" if scope == "verification" else
+                             "強制停止を要求しました。AviUtl2とエンコーダーの終了確認を待っています")
+            self.status.set(self.message.get())
 
     def request_close(self, close):
         if self.busy:

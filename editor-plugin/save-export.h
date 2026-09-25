@@ -5,12 +5,14 @@
 #include <iomanip>
 #include <map>
 #include <memory>
+#include <mutex>
 #include <thread>
 
 static constexpr UINT control_finished_message = WM_APP + 114;
 static std::atomic<bool> export_busy{false};
 static std::atomic<bool> export_cancel{false};
 static std::thread export_thread;
+static std::thread export_stop_thread;
 static std::filesystem::path control_project_path;
 static std::atomic<uint64_t> control_revision{0};
 static std::vector<HWND> disabled_host_windows;
@@ -29,6 +31,10 @@ struct ControlJob {
     ControlRequest request;
     ControlSnapshot snapshot;
     std::atomic<int> rendered{0};
+    std::atomic<bool> worker_done{false};
+    std::mutex encoder_mutex;
+    HANDLE encoder_job = nullptr;
+    ~ControlJob() { if (encoder_job) CloseHandle(encoder_job); }
     std::string terminal = "failed", detail;
 };
 static std::unique_ptr<ControlJob> active_export;
@@ -66,8 +72,12 @@ static bool control_response(const ControlRequest& request, const ControlSnapsho
     auto temporary = path;
     temporary += L".tmp";
     std::ofstream output(temporary, std::ios::binary | std::ios::trunc);
+    FILETIME created{}, exited{}, kernel{}, user{};
+    GetProcessTimes(GetCurrentProcess(), &created, &exited, &kernel, &user);
+    const uint64_t started = (static_cast<uint64_t>(created.dwHighDateTime) << 32) | created.dwLowDateTime;
     output << "{\"state\":" << control_json(state) << ",\"detail\":" << control_json(detail)
         << ",\"process_id\":" << GetCurrentProcessId() << ",\"dirty\":" << (info.dirty ? "true" : "false")
+        << ",\"process_started\":\"" << started << "\""
         << ",\"busy\":" << (export_busy ? "true" : "false")
         << ",\"fingerprint\":" << control_json(info.fingerprint)
         << ",\"width\":" << info.width << ",\"height\":" << info.height
@@ -252,6 +262,36 @@ static bool export_cancelled(const ControlJob& job) {
     std::error_code error;
     return export_cancel || std::filesystem::exists(control_sidecar(job.request.instruction, L".cancel"), error);
 }
+static void watch_export_stop(ControlJob& job) {
+    // This watcher belongs to one accepted request in this host. A stale sidecar
+    // from another export can never terminate an unrelated editor instance.
+    ULONGLONG cancelled_at = 0;
+    while (!job.worker_done) {
+        if (export_cancelled(job)) {
+            if (!cancelled_at) cancelled_at = GetTickCount64();
+            std::error_code error;
+            if (GetTickCount64() - cancelled_at >= 3000 &&
+                std::filesystem::exists(control_sidecar(job.request.instruction, L".force"), error)) {
+                std::lock_guard<std::mutex> guard(job.encoder_mutex);
+                if (job.worker_done) return;
+                // The user explicitly approved terminating this host, including
+                // unsaved edits. Stop and reap only its owned encoder job first.
+                if (TerminateJobObject(job.encoder_job, 1)) {
+                    JOBOBJECT_BASIC_ACCOUNTING_INFORMATION accounting{};
+                    while (QueryInformationJobObject(job.encoder_job, JobObjectBasicAccountingInformation,
+                                                     &accounting, sizeof(accounting), nullptr)) {
+                        if (!accounting.ActiveProcesses) {
+                            TerminateProcess(GetCurrentProcess(), 1);
+                            return;
+                        }
+                        Sleep(50);
+                    }
+                }
+            }
+        }
+        Sleep(100);
+    }
+}
 struct ExportVideoFrame {
     HANDLE pipe;
     int width, height;
@@ -312,9 +352,21 @@ static void run_export(ControlJob& job) {
             startup.cb = sizeof(startup); startup.dwFlags = STARTF_USESTDHANDLES;
             startup.hStdInput = read_pipe.value; startup.hStdOutput = log.value; startup.hStdError = log.value;
             PROCESS_INFORMATION child{};
-            if (!CreateProcessW(request.ffmpeg.c_str(), command.data(), nullptr, nullptr, TRUE, CREATE_NO_WINDOW, nullptr, nullptr, &startup, &child))
-                throw std::runtime_error("encoder-start-failed");
-            process.value = child.hProcess; CloseHandle(child.hThread); read_pipe.close();
+            {
+                std::lock_guard<std::mutex> guard(job.encoder_mutex);
+                if (!CreateProcessW(request.ffmpeg.c_str(), command.data(), nullptr, nullptr, TRUE,
+                                    CREATE_NO_WINDOW | CREATE_SUSPENDED, nullptr, nullptr, &startup, &child))
+                    throw std::runtime_error("encoder-start-failed");
+                process.value = child.hProcess;
+                if (!AssignProcessToJobObject(job.encoder_job, child.hProcess) || ResumeThread(child.hThread) == static_cast<DWORD>(-1)) {
+                    TerminateProcess(child.hProcess, 1);
+                    WaitForSingleObject(child.hProcess, INFINITE);
+                    CloseHandle(child.hThread);
+                    throw std::runtime_error("encoder-job-unavailable");
+                }
+                CloseHandle(child.hThread);
+            }
+            read_pipe.close();
             for (int frame = 0; frame < info.frames; ++frame) {
                 if (cancelled()) break;
                 ExportVideoFrame image{write_pipe.value, info.width, info.height};
@@ -345,6 +397,11 @@ static void run_export(ControlJob& job) {
 static bool finish_control_export() {
     if (!active_export) return false;
     if (export_thread.joinable()) export_thread.join();
+    if (active_export) {
+        std::lock_guard<std::mutex> guard(active_export->encoder_mutex);
+        active_export->worker_done = true;
+    }
+    if (export_stop_thread.joinable()) export_stop_thread.join();
     unlock_export_windows();
     export_busy = false;
     control_response(active_export->request, active_export->snapshot, active_export->terminal,
@@ -394,9 +451,19 @@ static int apply_control_file(const wchar_t* filename) {
     EnumWindows(lock_export_window, 0);
     active_export = std::make_unique<ControlJob>();
     active_export->request = request; active_export->snapshot = snapshot;
-    control_response(request, snapshot, "running", "audio");
-    try { export_thread = std::thread([] { run_export(*active_export); }); }
+    try {
+        active_export->encoder_job = CreateJobObjectW(nullptr, nullptr);
+        JOBOBJECT_EXTENDED_LIMIT_INFORMATION limits{};
+        limits.BasicLimitInformation.LimitFlags = JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE;
+        if (!active_export->encoder_job || !SetInformationJobObject(active_export->encoder_job,
+                JobObjectExtendedLimitInformation, &limits, sizeof(limits))) throw std::runtime_error("encoder-job-unavailable");
+        export_stop_thread = std::thread([] { watch_export_stop(*active_export); });
+        control_response(request, snapshot, "running", "audio");
+        export_thread = std::thread([] { run_export(*active_export); });
+    }
     catch (...) {
+        active_export->worker_done = true;
+        if (export_stop_thread.joinable()) export_stop_thread.join();
         unlock_export_windows(); export_busy = false; active_export.reset();
         control_response(request, snapshot, "failed", "export-worker-unavailable");
     }
@@ -458,5 +525,10 @@ static void poll_initial_save() {
 static void shutdown_control() {
     export_cancel = true;
     if (export_thread.joinable()) export_thread.join();
+    if (active_export) {
+        std::lock_guard<std::mutex> guard(active_export->encoder_mutex);
+        active_export->worker_done = true;
+    }
+    if (export_stop_thread.joinable()) export_stop_thread.join();
     unlock_export_windows();
 }

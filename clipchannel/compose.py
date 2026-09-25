@@ -2,8 +2,8 @@
 
 import json
 import math
+import os
 import shutil
-import subprocess
 import tempfile
 import uuid
 from bisect import bisect_left
@@ -11,15 +11,16 @@ from fractions import Fraction
 from pathlib import Path
 
 from .segments import SegmentError, validate_segments
+from .process_control import check_cancelled, run_process
 
 
-def probe_frames(source):
+def probe_frames(source, *, stop_requested=None):
     probe = shutil.which("ffprobe")
     if not probe:
         raise SegmentError("ffprobe が必要です")
-    result = subprocess.run([probe, "-v", "error", "-select_streams", "v:0",
+    result = run_process([probe, "-v", "error", "-select_streams", "v:0",
                              "-show_entries", "stream=avg_frame_rate,r_frame_rate,width,height",
-                             "-of", "json", str(source)], capture_output=True, text=True)
+                             "-of", "json", str(source)], stop=stop_requested)
     if result.returncode:
         raise SegmentError("フレーム情報を読み取れません")
     try:
@@ -33,14 +34,14 @@ def probe_frames(source):
         raise SegmentError("フレーム情報が不正です") from error
 
 
-def is_variable_fps(source):
+def is_variable_fps(source, *, stop_requested=None):
     """Inspect actual presentation intervals; stream averages alone can hide VFR."""
     probe = shutil.which("ffprobe")
     if not probe:
         raise SegmentError("ffprobe が必要です")
-    result = subprocess.run([probe, "-v", "error", "-select_streams", "v:0",
+    result = run_process([probe, "-v", "error", "-select_streams", "v:0",
                              "-show_entries", "frame=best_effort_timestamp_time", "-of", "csv=p=0",
-                             str(source)], capture_output=True, text=True)
+                             str(source)], stop=stop_requested)
     if result.returncode:
         raise SegmentError("フレーム時刻を読み取れません")
     try:
@@ -57,14 +58,14 @@ def is_variable_fps(source):
     return any(abs(interval - reference) > max(0.001, reference * 0.02) for interval in intervals)
 
 
-def _nearby_frames(source, requested_ms):
+def _nearby_frames(source, requested_ms, *, stop_requested=None):
     probe = shutil.which("ffprobe")
     if not probe or not math.isfinite(requested_ms) or requested_ms < 0:
         raise SegmentError("時刻または ffprobe が不正です")
-    result = subprocess.run([probe, "-v", "error", "-select_streams", "v:0",
+    result = run_process([probe, "-v", "error", "-select_streams", "v:0",
                              "-show_entries",
                              "frame=best_effort_timestamp_time", "-of", "csv=p=0", str(source)],
-                            capture_output=True, text=True)
+                            stop=stop_requested)
     if result.returncode:
         raise SegmentError("フレーム境界を読み取れません")
     try:
@@ -77,9 +78,9 @@ def _nearby_frames(source, requested_ms):
     return stamps
 
 
-def nearest_frame(source, requested_ms):
+def nearest_frame(source, requested_ms, *, stop_requested=None):
     """Return an actual decoded frame timestamp and its signed offset in ms."""
-    closest = _closest(_nearby_frames(source, requested_ms), requested_ms)
+    closest = _closest(_nearby_frames(source, requested_ms, stop_requested=stop_requested), requested_ms)
     return closest, closest - requested_ms
 
 
@@ -89,11 +90,11 @@ def _closest(frames, requested_ms):
     return min(candidates, key=lambda value: abs(value - requested_ms))
 
 
-def adjacent_frame(source, current_ms, direction):
+def adjacent_frame(source, current_ms, direction, *, stop_requested=None):
     """Move to the preceding or following actual presentation timestamp."""
     if direction not in (-1, 1):
         raise SegmentError("フレームの移動方向が不正です")
-    frames = _nearby_frames(source, current_ms)
+    frames = _nearby_frames(source, current_ms, stop_requested=stop_requested)
     nearest = _closest(frames, current_ms)
     position = bisect_left(frames, nearest) + direction
     if not 0 <= position < len(frames):
@@ -101,8 +102,11 @@ def adjacent_frame(source, current_ms, direction):
     return frames[position]
 
 
-def compose_video(data, source, segments, order, duration_ms, *, fps=None):
+def compose_video(data, source, segments, order, duration_ms, *, fps=None, stop_requested=None, progress=None):
     """Render requested indices in order; repeated indices are intentional."""
+    check_cancelled(stop_requested)
+    if progress:
+        progress("元動画とフレーム境界を確認中")
     validate_segments(segments, duration_ms)
     if not order or any(not isinstance(i, int) or i < 0 or i >= len(segments) for i in order):
         raise SegmentError("使用区間の順番が不正です")
@@ -114,31 +118,36 @@ def compose_video(data, source, segments, order, duration_ms, *, fps=None):
     ffmpeg = shutil.which("ffmpeg")
     if not ffmpeg:
         raise SegmentError("ffmpeg が必要です")
-    if fps is None and is_variable_fps(source):
+    if fps is None and is_variable_fps(source, stop_requested=stop_requested):
         raise SegmentError("可変fpsの動画です。固定fpsを指定してください")
-    average_fps, _, width, height = probe_frames(source)
+    average_fps, _, width, height = probe_frames(source, stop_requested=stop_requested)
     # Even dimensions are required by yuv420p and keep the source size where possible.
     width -= width % 2
     height -= height % 2
     from .media import _probe
-    info = _probe(source)
+    info = _probe(source, stop_requested=stop_requested)
     directory = data.path / "media" / "edits" / f"{source.stem}_{uuid.uuid4().hex[:12]}"
-    directory.mkdir(parents=True, exist_ok=True)
+    directory.parent.mkdir(parents=True, exist_ok=True)
     name = "_".join(f"S{i + 1}_{segments[i].start_ms}_{segments[i].end_ms}" for i in order)
     # Preserve available source encoding targets rather than ffmpeg defaults.
-    probe = subprocess.run([shutil.which("ffprobe"), "-v", "error", "-show_streams", "-of", "json", str(source)],
-                           capture_output=True, text=True, check=True)
+    probe = run_process([shutil.which("ffprobe"), "-v", "error", "-show_streams", "-of", "json", str(source)],
+                           stop=stop_requested)
+    if probe.returncode:
+        raise SegmentError("元動画のストリーム情報を読み取れません")
     streams = json.loads(probe.stdout)["streams"]
     video_stream = next(stream for stream in streams if stream["codec_type"] == "video")
     audio_stream = next((stream for stream in streams if stream["codec_type"] == "audio"), None)
-    source_frames = _nearby_frames(source, 0)
+    source_frames = _nearby_frames(source, 0, stop_requested=stop_requested)
     spans = []
     frame_counts = []
     rate = Fraction(str(fps)) if fps is not None else average_fps
     with tempfile.TemporaryDirectory(dir=data.path / "work", prefix="compose-") as temporary:
-        output = Path(temporary) / "editing.mp4"
+        staged = Path(temporary) / "result"
+        staged.mkdir()
+        output = staged / f"{name}_v1.mp4"
         filters = []
         for position, index in enumerate(order):
+            check_cancelled(stop_requested)
             row = segments[index]
             start_ms = _closest(source_frames, row.start_ms)
             end_ms = _closest(source_frames, row.end_ms)
@@ -165,7 +174,7 @@ def compose_video(data, source, segments, order, duration_ms, *, fps=None):
         else:
             inputs = "".join(f"[v{i}]" for i in range(len(order)))
             filters.append(f"{inputs}concat=n={len(order)}:v=1:a=0[v]")
-        command = [ffmpeg, "-nostdin", "-v", "error", "-i", str(source), "-filter_complex", ";".join(filters),
+        command = [ffmpeg, "-v", "error", "-i", str(source), "-filter_complex", ";".join(filters),
                    "-map", "[v]"]
         if info.audio:
             command += ["-map", "[a]"]
@@ -176,27 +185,16 @@ def compose_video(data, source, segments, order, duration_ms, *, fps=None):
         if audio_stream and audio_stream.get("sample_rate"):
             command += ["-ar", audio_stream["sample_rate"]]
         command += [str(output)]
-        result = subprocess.run(command, capture_output=True, text=True)
+        if progress:
+            progress("編集用動画を作成中")
+        result = run_process(command, stop=stop_requested, ffmpeg=True)
         if result.returncode or not output.is_file() or not output.stat().st_size:
             raise SegmentError(f"編集用動画を作れません: {result.stderr[-500:]}")
-        version = 1
-        while True:
-            destination = directory / f"{name}_v{version}.mp4"
-            try:
-                with destination.open("xb") as target, output.open("rb") as rendered:
-                    shutil.copyfileobj(rendered, target)
-                break
-            except FileExistsError:
-                version += 1
-            except Exception:
-                destination.unlink(missing_ok=True)
-                raise
-    try:
-        destination.with_suffix(".json").write_text(json.dumps({
+        output.with_suffix(".json").write_text(json.dumps({
             "source": str(source), "spans_ms": spans, "fps": str(rate),
             "frame_counts": frame_counts
         }, ensure_ascii=False), encoding="utf-8")
-    except Exception:
-        destination.unlink(missing_ok=True)
-        raise
-    return destination
+        check_cancelled(stop_requested)
+        # The directory rename publishes a complete video and metadata together.
+        os.replace(staged, directory)
+    return directory / output.name

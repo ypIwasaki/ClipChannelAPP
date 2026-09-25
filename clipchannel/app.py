@@ -12,22 +12,22 @@ from tkinter import filedialog, messagebox, ttk
 from tkinter import font
 
 from .download import DownloadSession, DownloadError
-from .media import MediaError, prepare_media
 from .people import PersonError, list_people, register_person, select_target, target_for_video, SPLITS
 from .storage import DataFolder, RESULT_KINDS, SHARED_KINDS, StorageError
-from .transcribe import (Interval, load_intervals, propose_intervals,
-                         save_intervals, transcribe_confirmed, validate_intervals)
+from .transcribe import Interval, load_intervals, validate_intervals
 from .word_counts import count_words
 from .segments import (Segment, SegmentError, candidates_from_transcript,
                        load_segments, merge_segments, save_segments, split_segment,
                        validate_segments)
 from .media import _probe
-from .compose import adjacent_frame, compose_video, is_variable_fps, nearest_frame, probe_frames
+from .compose import probe_frames
 from .subtitles import Subtitle, prepare_subtitle_import, write_subtitle_import
 from .layout import Layout, save_layout
 from .editor_bridge import apply_layout, apply_subtitles
 from .supporting_media_ui import SupportingMediaPanel
 from .save_export_ui import SaveExportPanel, WidgetLock
+from .managed_process_ui import ProcessPanel
+from . import operation_tasks
 
 
 def configure_japanese_fonts(window):
@@ -90,10 +90,8 @@ def build_app():
     info_only = tk.BooleanVar()
     for field in (url, media_format, retries, extra, audio_only, info_only):
         field.trace_add("write", mark_unsaved)
-    session = [None]
+    session: list[DownloadSession | None] = [None]
     pending = [False]
-    preparing = [False]
-    prepare_stop = [False]
     ttk.Label(media_panel, text="認証不要のURL").pack(anchor="w")
     tk.Entry(media_panel, textvariable=url).pack(fill="x")
     ttk.Label(media_panel, text="形式・品質 (yt-dlp format)").pack(anchor="w")
@@ -123,26 +121,11 @@ def build_app():
     review_list = tk.Listbox(people_panel, height=6)
     review_list.pack(fill="both", expand=True, pady=(6, 0))
     asr_model_path = tk.StringVar()
-    review_stop = [False]
     review_dirty = [False]
     edit_start = tk.StringVar()
     edit_end = tk.StringVar()
     edit_text = tk.StringVar()
     edit_state = tk.StringVar(value="unknown")
-
-    def run_review_worker(work, title):
-        review_stop[0] = False
-        pending[0] = data.running = True
-        def worker():
-            try:
-                work()
-            except Exception as error:
-                reason = str(error) or type(error).__name__
-                window.after(0, lambda: (status.set(reason), messagebox.showerror(title, reason)))
-            finally:
-                data.running = False
-                window.after(0, lambda: pending.__setitem__(0, False))
-        threading.Thread(target=worker, daemon=True).start()
 
     def display_review():
         review_list.delete(0, tk.END)
@@ -157,25 +140,13 @@ def build_app():
         if video is None or not review_rows[0] or pending[0] or data.running:
             return
         rows = tuple(review_rows[0])
-        pending[0] = data.running = True
-        def worker():
-            try:
-                path = save_intervals(data, video, rows)
-                def finish():
-                    listing.insert(tk.END, path.relative_to(data._root()).as_posix())
-                    review_dirty[0] = False
-                    status.set(f"自動保存しました: {path.name}")
-                window.after(0, finish)
-            except (OSError, StorageError) as error:
-                reason = str(error)
-                def failed():
-                    status.set(f"自動保存に失敗しました: {reason}。入力は保持しています")
-                    messagebox.showerror("自動保存できません", f"{reason}\n入力は保持しています。「保存を再試行」を押してください")
-                window.after(0, failed)
-            finally:
-                data.running = False
-                window.after(0, lambda: pending.__setitem__(0, False))
-        threading.Thread(target=worker, daemon=True).start()
+        def finish(result):
+            path, _rows = result
+            listing.insert(tk.END, path.relative_to(data._root()).as_posix())
+            review_dirty[0] = False
+            status.set(f"自動保存しました: {path.name}")
+        process_panel.start("文字起こし修正の自動保存", operation_tasks.save_review,
+                            (data, video, rows), on_result=finish)
 
     def review_video():
         if not target_video.get() or pending[0] or data.running:
@@ -188,16 +159,13 @@ def build_app():
         if video is None:
             return
         ecapa_directory = model_path.get()
-        def worker():
-            rows = propose_intervals(data, video, ecapa_directory, stop=lambda: review_stop[0],
-                                     progress=lambda value: window.after(0, status.set, value))
-            def finish():
-                review_rows[0] = rows
-                review_source[0] = video
-                display_review()
-                status.set(f"試聴待ち: {len(rows)} 区間")
-            window.after(0, finish)
-        run_review_worker(worker, "解析できません")
+        def finish(rows):
+            review_rows[0] = rows
+            review_source[0] = video
+            display_review()
+            status.set(f"試聴待ち: {len(rows)} 区間")
+        process_panel.start("対象話者の照合", operation_tasks.propose,
+                            (data, video, ecapa_directory), on_result=finish)
 
     def mark_review(state):
         if not review_list.curselection() or pending[0]:
@@ -295,22 +263,17 @@ def build_app():
             return
         rows = tuple(review_rows[0])
         whisper_directory = asr_model_path.get()
-        def worker():
-            if recognize:
-                path, completed = transcribe_confirmed(
-                    data, video, rows, whisper_directory, stop=lambda: review_stop[0],
-                    progress=lambda value: window.after(0, status.set, value))
-            else:
-                path = save_intervals(data, video, rows)
-                completed = rows
-            def finish():
-                review_rows[0] = completed
-                display_review()
-                listing.insert(tk.END, path.relative_to(data._root()).as_posix())
-                review_dirty[0] = False
-                status.set(f"保存しました: {path.name}")
-            window.after(0, finish)
-        run_review_worker(worker, "保存できません")
+        def finish(result):
+            path, completed = result
+            review_rows[0] = completed
+            display_review()
+            listing.insert(tk.END, path.relative_to(data._root()).as_posix())
+            review_dirty[0] = False
+            status.set(f"保存しました: {path.name}")
+        target = operation_tasks.transcribe if recognize else operation_tasks.save_review
+        args = (data, video, rows, whisper_directory) if recognize else (data, video, rows)
+        process_panel.start("対象話者の文字起こし" if recognize else "文字起こしの保存",
+                            target, args, on_result=finish)
 
     def retry_review():
         if review_dirty[0] and not pending[0] and not data.running:
@@ -349,7 +312,7 @@ def build_app():
     ttk.Entry(people_panel, textvariable=asr_model_path).pack(fill="x")
     ttk.Button(people_panel, text="対象発話を文字起こし・別版保存",
                command=lambda: save_review(True)).pack(anchor="w")
-    ttk.Button(people_panel, text="解析を中止", command=lambda: review_stop.__setitem__(0, True)).pack(anchor="w")
+    ttk.Button(people_panel, text="解析を中止", command=lambda: process_panel.stop()).pack(anchor="w")
     edit_line = ttk.Frame(people_panel)
     edit_line.pack(fill="x")
     for caption, variable, width in (("開始秒", edit_start, 9), ("終了秒", edit_end, 9),
@@ -723,31 +686,37 @@ def build_app():
 
     def inspect_frame():
         video = segment_video()
-        if video is None:
+        if video is None or pending[0] or data.running:
             return
         try:
+            requested = [round(float(value.get()) * 1000) for value in (segment_start, segment_end)]
+        except (ValueError, OverflowError):
+            messagebox.showerror("フレームを確認できません", "開始・終了時刻を数値で指定してください")
+            return
+        def finish(results):
             reports = []
-            for label, value in (("開始", segment_start), ("終了", segment_end)):
-                requested = round(float(value.get()) * 1000)
-                closest, difference = nearest_frame(video, requested)
+            for (label, value), (closest, difference) in zip((("開始", segment_start), ("終了", segment_end)), results):
                 reports.append(f"{label} {closest / 1000:.3f}秒 (差 {difference:+d}ms)")
                 value.set(f"{closest / 1000:.3f}")
             frame_status.set(" / ".join(reports))
-        except (ValueError, StorageError) as error:
-            messagebox.showerror("フレームを確認できません", str(error))
+        process_panel.start("フレーム境界の確認", operation_tasks.align_frames,
+                            (video, requested), on_result=finish)
 
     def step_frame(value, label, direction):
         video = segment_video()
-        if video is None:
+        if video is None or pending[0] or data.running:
             return
         try:
             requested = round(float(value.get()) * 1000)
-            closest = adjacent_frame(video, requested, direction)
+        except (ValueError, OverflowError):
+            messagebox.showerror("フレームを調整できません", "時刻を数値で指定してください")
+            return
+        def finish(closest):
             difference = closest - requested
             value.set(f"{closest / 1000:.3f}")
             frame_status.set(f"{label} {closest / 1000:.3f}秒 (差 {difference:+d}ms)。境界を修正で保存")
-        except (ValueError, StorageError) as error:
-            messagebox.showerror("フレームを調整できません", str(error))
+        process_panel.start("フレーム境界の調整", operation_tasks.step_frame,
+                            (video, requested, direction), on_result=finish)
 
     def play_composed():
         if composed_path[0] is None or not composed_path[0].is_file():
@@ -772,28 +741,30 @@ def build_app():
             return
         order = list(compose_order) or [i for i, row in enumerate(segment_rows[0]) if row.selected]
         try:
-            if is_variable_fps(video) and not compose_fps.get().strip():
-                raise SegmentError("可変fpsの動画です。固定fpsを指定してください")
             fps = float(compose_fps.get()) if compose_fps.get().strip() else None
-            path = compose_video(data, video, segment_rows[0], order, segment_duration[0], fps=fps)
-        except (OSError, ValueError, StorageError) as error:
-            messagebox.showerror("編集用動画を作れません", str(error))
+        except ValueError:
+            messagebox.showerror("編集用動画を作れません", "固定fpsを数値で指定してください")
             return
-        status.set(f"編集用動画を保存しました: {path}")
-        composed_path[0] = path
-        supporting_panel.set_video(path)
-        width, height = video_dimensions()
-        for name, value in Layout(width, height).__dict__.items():
-            screen[name].set(str(value))
-        layout_path[0] = None
-        subtitle_rows[0] = []
-        subtitle_dirty[0] = subtitle_pending[0] = False
-        subtitle_selected[0] = None
-        subtitle_applied_rows[0] = None
-        refresh_subtitle_list()
-        choose_screen("ショート" if messagebox.askyesno("画面を選択", "ショート画面で編集しますか？\n「いいえ」は横画面です") else "横")
-        save_export_panel.set_video(path, short=screen_kind.get() == "ショート")
-        messagebox.showinfo("編集用動画", f"保存しました: {path}\n映像・音声の継ぎ目を再生して確認してください")
+        def finish(path):
+            status.set(f"編集用動画を保存しました: {path}")
+            composed_path[0] = path
+            supporting_panel.set_video(path)
+            width, height = video_dimensions()
+            for name, value in Layout(width, height).__dict__.items():
+                screen[name].set(str(value))
+            layout_path[0] = None
+            subtitle_rows[0] = []
+            subtitle_dirty[0] = subtitle_pending[0] = False
+            subtitle_selected[0] = None
+            subtitle_applied_rows[0] = None
+            refresh_subtitle_list()
+            choose_screen("ショート" if messagebox.askyesno("画面を選択", "ショート画面で編集しますか？\n「いいえ」は横画面です") else "横")
+            save_export_panel.set_video(path, short=screen_kind.get() == "ショート")
+            messagebox.showinfo("編集用動画", f"保存しました: {path}\n映像・音声の継ぎ目を再生して確認してください")
+
+        process_panel.start("編集用動画の作成", operation_tasks.compose,
+                            (data, video, tuple(segment_rows[0]), order, segment_duration[0]),
+                            {"fps": fps}, on_result=finish)
 
     def export_subtitles():
         if subtitle_dirty[0] or subtitle_pending[0]:
@@ -1219,14 +1190,18 @@ def build_app():
     word_hits.bind("<Double-Button-1>", play_word)
 
     def refresh_downloads():
-        downloads.delete(0, tk.END)
         current = session[0]
         if current is None:
             return
+        previous = downloads.cget("state")
+        downloads.configure(state="normal")
+        downloads.delete(0, tk.END)
         for item in current.items:
             downloads.insert(tk.END, f"{item.state} | {item.seconds:.1f}秒 | {item.title} | {item.details} | {item.path or item.error}")
+        downloads.configure(state=previous)
         status.set(f"{current.state} | {current.elapsed:.1f}秒")
-        refresh_videos()
+        if not process_panel.active:
+            refresh_videos()
 
     def run_download(retry=False):
         if pending[0] or data.running:
@@ -1242,51 +1217,39 @@ def build_app():
             messagebox.showerror("取得できません", str(error))
             return
         current = session[0]
-        selected = set(downloads.curselection()) if retry else set()
+        if current is None:
+            return
+        selected = set(downloads.curselection()) if retry else None
         unsaved.set(False)
-        pending[0] = True
-        status.set("取得を開始します")
 
-        def tick():
-            if pending[0]:
-                status.set(f"{current.state} | {current.elapsed:.1f}秒")
-                window.after(500, tick)
+        def update(snapshot):
+            if isinstance(snapshot, DownloadSession):
+                session[0] = snapshot
+                refresh_downloads()
 
-        window.after(500, tick)
-
-        def finish():
-            pending[0] = False
+        def stopped(operation):
+            snapshot = session[0]
+            if snapshot is None:
+                return
+            if operation.state in ("中止", "強制停止", "失敗"):
+                for item in snapshot.items:
+                    if item.state == "取得中":
+                        item.state = "中止" if operation.state != "失敗" else "失敗"
+                snapshot.state = operation.state
+                if snapshot.started_at is not None:
+                    snapshot.ended_at = snapshot.started_at + operation.elapsed
             refresh_downloads()
 
-        def worker():
-            try:
-                callback = lambda: window.after(0, refresh_downloads)
-                if retry:
-                    current.retry_failed(selected, callback)
-                else:
-                    current.run(callback)
-            except DownloadError as error:
-                reason = str(error)
-                window.after(0, lambda: messagebox.showerror("取得できません", reason))
-            except Exception:
-                window.after(0, lambda: messagebox.showerror("取得できません", "情報取得に失敗しました。URLと依存物を確認してください"))
-            finally:
-                window.after(0, finish)
-
-        threading.Thread(target=worker, daemon=True).start()
+        process_panel.start("動画の情報取得" if current.info_only else "動画・音声の取得",
+                            operation_tasks.download, (current, selected),
+                            on_result=update, on_progress=update, on_finished=stopped)
 
     download_actions = ttk.Frame(media_panel)
     download_actions.pack(fill="x", pady=5)
     tk.Button(download_actions, text="取得・情報表示", command=run_download).pack(side="left", padx=(0, 4))
     tk.Button(download_actions, text="失敗項目を再試行", command=lambda: run_download(True)).pack(side="left", padx=4)
     def stop_download():
-        if preparing[0]:
-            prepare_stop[0] = True
-            status.set("媒体変換の停止待ち")
-            return
-        if session[0] and (pending[0] or data.running):
-            session[0].stop()
-            status.set("停止待ち")
+        process_panel.stop()
 
     tk.Button(download_actions, text="通常中止", command=stop_download).pack(side="left", padx=4)
     tk.Button(download_actions, text="機能案内", command=lambda: messagebox.showinfo(
@@ -1342,43 +1305,22 @@ def build_app():
         selected = filedialog.askopenfilename(title="ローカル動画を選択")
         if not selected:
             return
-        try:
-            path = data.register_video(selected)
-        except (OSError, StorageError) as error:
-            messagebox.showerror("登録できません", str(error))
-            return
-        refresh_videos()
-        status.set(f"登録済み動画: {path.name}")
-        prepare_video(path)
+        prepare_video(Path(selected))
 
     def prepare_video(path):
         if pending[0] or data.running:
             messagebox.showerror("媒体を準備できません", "処理完了を待ってください")
             return
-        pending[0] = True
-        preparing[0] = True
-        prepare_stop[0] = False
-        data.running = True
-        status.set(f"媒体確認・編集互換変換中: {path.name}")
-
-        def worker():
-            try:
-                result = prepare_media(data, path, stop_requested=lambda: prepare_stop[0])
-                summary = (f"編集用: {result.editing}\n"
-                           f"元映像開始: {result.source_info.video.start}秒 / "
-                           f"元音声開始: {result.source_info.audio.start if result.source_info.audio else 'なし'}秒\n"
-                           f"時刻対応: {result.manifest}")
-                window.after(0, lambda: messagebox.showinfo("媒体を準備しました", summary))
-                window.after(0, lambda: status.set(f"媒体準備完了: {path.name}"))
-            except (OSError, MediaError) as error:
-                reason = str(error)
-                window.after(0, lambda: messagebox.showerror("媒体を準備できません", reason))
-            finally:
-                data.running = False
-                preparing[0] = False
-                window.after(0, lambda: pending.__setitem__(0, False))
-
-        threading.Thread(target=worker, daemon=True).start()
+        def finish(result):
+            summary = (f"編集用: {result.editing}\n"
+                       f"元映像開始: {result.source_info.video.start}秒 / "
+                       f"元音声開始: {result.source_info.audio.start if result.source_info.audio else 'なし'}秒\n"
+                       f"時刻対応: {result.manifest}")
+            messagebox.showinfo("媒体を準備しました", summary)
+            status.set(f"媒体準備完了: {path.name}")
+        process_panel.start("媒体確認・編集互換変換", operation_tasks.prepare,
+                            (data, path), on_result=finish,
+                            on_finished=lambda _operation: refresh_videos())
 
     def prepare_selected():
         if not videos.curselection():
@@ -1425,9 +1367,8 @@ def build_app():
             save_export_panel.request_close(finish_close)
             return
         if pending[0] or data.running:
-            stop_download()
-            status.set("停止完了を待っています")
-            window.after(200, close)
+            process_panel.stop()
+            status.set("停止完了後にもう一度閉じてください。未保存の入力は保持しています")
         else:
             if review_dirty[0]:
                 messagebox.showerror("終了できません", "保存されていない文字起こし修正があります。「保存を再試行」を押してください")
@@ -1442,6 +1383,15 @@ def build_app():
             player[0].terminate()
         supporting_panel.stop_audio()
         window.destroy()
+
+    operation_lock = WidgetLock((header, saved_panel, media_panel))
+
+    def lock_operation(locked):
+        pending[0] = data.running = locked
+        operation_lock.set_locked(locked)
+
+    process_panel = ProcessPanel(window, status, lock_operation)
+    process_panel.pack(fill="x", padx=10, pady=4)
 
     window.protocol("WM_DELETE_WINDOW", close)
     listing.bind("<<ListboxSelect>>", show)

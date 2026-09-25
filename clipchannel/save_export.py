@@ -15,6 +15,8 @@ from pathlib import Path
 from typing import Callable
 
 from .editor_bridge import send_control
+from .managed_process import ManagedOperation
+from .process_control import check_cancelled, run_process
 from .storage import StorageError
 
 
@@ -135,9 +137,10 @@ def _instruction(project, video, action, **fields):
     return path
 
 
-def _host_alive(process_id):
+def _host_alive(process_id, process_started=None):
     """Return None when liveness is unknown, never release editing on uncertainty."""
-    if type(process_id) is not int or process_id <= 0:
+    if (type(process_id) is not int or process_id <= 0 or
+            not isinstance(process_started, str) or not process_started.isdecimal() or int(process_started) <= 0):
         return None
     if os.name == "nt":
         import ctypes
@@ -148,17 +151,28 @@ def _host_alive(process_id):
         kernel.WaitForSingleObject.argtypes = (wintypes.HANDLE, wintypes.DWORD)
         kernel.WaitForSingleObject.restype = wintypes.DWORD
         kernel.CloseHandle.argtypes = (wintypes.HANDLE,)
-        process = kernel.OpenProcess(0x00100000, False, process_id)
+        kernel.GetProcessTimes.argtypes = (wintypes.HANDLE, *([ctypes.POINTER(wintypes.FILETIME)] * 4))
+        kernel.GetProcessTimes.restype = wintypes.BOOL
+        process = kernel.OpenProcess(0x00100000 | 0x1000, False, process_id)
         if not process:
             return False if ctypes.get_last_error() == 87 else None
         try:
+            timestamps = [wintypes.FILETIME() for _ in range(4)]
+            if not kernel.GetProcessTimes(process, *(ctypes.byref(value) for value in timestamps)):
+                return None
+            created = timestamps[0].dwLowDateTime | timestamps[0].dwHighDateTime << 32
+            if created != int(process_started):
+                return False
             outcome = kernel.WaitForSingleObject(process, 0)
             return False if outcome == 0 else True if outcome == 258 else None
         finally:
             kernel.CloseHandle(process)
     try:
         query = subprocess.run(["powershell.exe", "-NoProfile", "-Command",
-                                f"if (Get-Process -Id {process_id} -ErrorAction SilentlyContinue) {{ exit 0 }} else {{ exit 1 }}"],
+                                f"try {{ $target = [Diagnostics.Process]::GetProcessById({process_id}) }} "
+                                "catch [ArgumentException] { exit 1 } catch { exit 2 }; "
+                                f"try {{ if ($target.HasExited -or $target.StartTime.ToUniversalTime().ToFileTimeUtc() -ne {process_started}) "
+                                "{ exit 1 }; exit 0 } catch { exit 2 }"],
                                capture_output=True, timeout=10)
         return query.returncode == 0 if query.returncode in (0, 1) else None
     except (OSError, subprocess.SubprocessError):
@@ -174,8 +188,12 @@ def _response(instruction):
 
 
 def _cleanup(instruction):
-    for path in (instruction, instruction.with_suffix(".json"), instruction.with_suffix(".cancel")):
-        path.unlink(missing_ok=True)
+    for path in (instruction, instruction.with_suffix(".json"), instruction.with_suffix(".cancel"),
+                 instruction.with_suffix(".force")):
+        try:
+            path.unlink(missing_ok=True)
+        except OSError:
+            pass  # A stopped operation stays terminal even if sidecar cleanup fails.
 
 
 def _project_state(project, response):
@@ -206,6 +224,7 @@ def _failure_detail(response):
         "host-audio-render-incomplete": "AviUtl2の音声を最後まで読み取れませんでした",
         "host-video-render-rejected": "AviUtl2で映像の描画を開始できませんでした",
         "host-video-render-incomplete": "AviUtl2の映像を最後まで読み取れませんでした",
+        "encoder-job-unavailable": "エンコーダーの停止範囲を確保できないため、書き出しを開始しませんでした",
         "encoder-start-failed": "Windows版FFmpegを起動できませんでした。設定した実行ファイルを確認してください",
         "encoder-output-incomplete-see-log": "完成動画の出力に失敗しました。保存先・空き容量とプロジェクトフォルダの出力ログを確認してください",
         "encoder-log-unavailable": "出力ログを書き込めません。プロジェクトフォルダの書込み権限を確認してください",
@@ -252,13 +271,14 @@ def _read_project(path, expected_video):
         raise ValueError("保存内容から対応する編集用動画を読み取れません")
 
 
-def _confirm_file(path, before, read_contents, *, timeout=10.0, interval=0.25):
+def _confirm_file(path, before, read_contents, *, timeout=10.0, interval=0.25, stop=None):
     """Require an update, three stable observations and a successful content read."""
     deadline = time.monotonic() + timeout
     previous = None
     stable = 0
     detail = "ファイルの新規作成・更新を確認できませんでした"
     while time.monotonic() < deadline:
+        check_cancelled(stop)
         try:
             current = FileState.read(path)
             if current is not None and current != before and current.size > 0:
@@ -266,6 +286,7 @@ def _confirm_file(path, before, read_contents, *, timeout=10.0, interval=0.25):
                 previous = current
                 if stable >= 3:
                     read_contents(path)
+                    check_cancelled(stop)
                     if FileState.read(path) == current:
                         return True, "更新・安定・内容の読取りを確認しました"
                     stable = 0
@@ -298,12 +319,13 @@ def save_project(project, video):
         _cleanup(instruction)
 
 
-def _check_video(path, state, settings):
+def _check_video(path, state, settings, *, stop=None):
     probe = shutil.which("ffprobe")
     if not probe:
         raise StorageError("出力確認には ffprobe が必要です")
-    result = subprocess.run([probe, "-v", "error", "-count_frames", "-show_streams", "-show_format",
-                             "-of", "json", str(path)], capture_output=True, text=True, check=True)
+    result = run_process([probe, "-v", "error", "-count_frames", "-show_streams", "-show_format",
+                          "-of", "json", str(path)], stop=stop)
+    result.check_returncode()
     if result.stderr.strip():
         raise StorageError("完成動画の読取りでエラーを検出しました")
     info = json.loads(result.stdout)
@@ -327,8 +349,49 @@ def _check_video(path, state, settings):
         raise StorageError("H.264・SDR・AAC-LC・音声サンプルレートが設定と一致しません")
 
 
+def _confirm_export(control, destination, before, state, settings):
+    """Spawn-safe verification target; ffprobe inherits this worker's ownership."""
+    check_cancelled(control.cancelled)
+    try:
+        result = _confirm_file(destination, before,
+            lambda path: _check_video(path, state, settings, stop=control.cancelled), stop=control.cancelled)
+    except (StopIteration, TypeError) as error:
+        result = False, str(error) or "映像・音声情報が不足しています"
+    check_cancelled(control.cancelled)
+    return result
+
+
+def _verify_export(destination, before, state, settings, cancel, force, report):
+    operation = ManagedOperation("完成動画の確認", _confirm_export, (destination, before, state, settings))
+    operation.start()
+    forced = False
+    while operation.active:
+        operation.poll()
+        if cancel.is_set():
+            operation.request_cancel()
+        warning = ""
+        if force is not None and force.is_set() and operation.can_force:
+            try:
+                forced = operation.force_stop() or forced
+            except OSError as error:
+                warning = f"確認処理の停止を確認できません: {error}"
+        report({"state": "verifying", "force_scope": "verification", "can_force": operation.can_force,
+                "detail": warning or ("完成動画の確認処理の停止を待っています。AviUtl2の編集は保持します"
+                                      if cancel.is_set() else "出力した動画の全フレーム・映像・音声を確認しています")})
+        if operation.active:
+            time.sleep(0.1)
+    if cancel.is_set() or operation.state in ("中止", "強制停止"):
+        return OperationResult("cancelled", "完成動画の確認処理を" + ("強制停止" if forced else "中止") +
+            "しました。AviUtl2の編集は保持します。出力ファイルは完成確認済みとして扱いません", destination)
+    if operation.state != "完了":
+        return OperationResult("unconfirmed", f"出力を確認できませんでした: {operation.error}", destination)
+    confirmed, detail = operation.result
+    return OperationResult("confirmed" if confirmed else "unconfirmed",
+        "完成動画を書き出しました（簡易確認）" if confirmed else f"出力を確認できませんでした: {detail}", destination)
+
+
 def export_video(project, video, destination, settings, *, cancel: threading.Event,
-                 on_progress: Callable[[dict], None] | None = None):
+                 force: threading.Event | None = None, on_progress: Callable[[dict], None] | None = None):
     """Wait for actual host termination before returning or releasing editing."""
     settings.validate()
     destination = Path(destination).resolve()
@@ -353,33 +416,66 @@ def export_video(project, video, destination, settings, *, cancel: threading.Eve
                                bitrate=round(settings.bitrate_mbps * 1000000), audio_rate=settings.audio_rate)
     before = FileState.read(destination)
     terminal = False
+    def report(progress):
+        if on_progress:
+            try:
+                on_progress(progress)
+            except Exception:
+                pass  # A UI callback failure is not evidence that the host stopped.
     try:
-        delivery = send_control(instruction)
+        try:
+            delivery = send_control(instruction)
+        except Exception:
+            delivery = 3  # Delivery may have reached the host; wait for proof of completion.
         response = _response(instruction)
-        if not response and delivery != 3:
+        if not response and delivery in (None, 0):
             terminal = True
             return OperationResult("unconfirmed", "AviUtl2へ書き出しを依頼できませんでした", destination)
         if not response:
             # A timed-out native message may still be running. Keep the operation
             # pending until its terminal response; cancellation remains available.
-            if on_progress:
-                on_progress({"state": "waiting", "detail": "AviUtl2の応答を確認中です。編集は停止完了まで待ってください"})
+            report({"state": "waiting", "detail": "AviUtl2の応答を確認中です。編集は停止完了まで待ってください"})
         checked_alive = 0.0
+        identity = None
+        cancelled_at = None
+        force_sent = False
         while True:
+            warning = ""
+            now = time.monotonic()
             if cancel.is_set():
-                instruction.with_suffix(".cancel").touch(exist_ok=True)
+                if cancelled_at is None:
+                    cancelled_at = now
+                try:
+                    instruction.with_suffix(".cancel").touch(exist_ok=True)
+                    if force is not None and force.is_set() and now - cancelled_at >= 3:
+                        instruction.with_suffix(".force").touch(exist_ok=True)
+                        force_sent = True
+                except OSError:
+                    warning = "停止要求を書き込めません。接続・書込み権限を確認してください。停止完了まで編集を待ってください"
             response = _response(instruction)
+            if identity is None and response.get("process_id") and response.get("process_started"):
+                identity = (response["process_id"], response["process_started"])
             status = response.get("state")
             if on_progress:
-                on_progress(response)
+                progress = dict(response)
+                progress["can_force"] = cancelled_at is not None and now - cancelled_at >= 3 and not force_sent
+                if warning:
+                    progress["detail"] = warning
+                elif force_sent:
+                    progress["detail"] = "強制停止を要求しました。AviUtl2とエンコーダーの終了確認を待っています"
+                elif cancelled_at is not None:
+                    progress["detail"] = "中止を要求しました。停止完了まで編集を待ってください"
+                report(progress)
             if status in ("completed", "cancelled", "failed"):
                 terminal = True
                 break
             if time.monotonic() - checked_alive >= 2:
                 checked_alive = time.monotonic()
-                if _host_alive(response.get("process_id")) is False:
+                if identity is not None and _host_alive(*identity) is False:
                     terminal = True
-                    return OperationResult("failed", "書き出し中にAviUtl2が終了しました。完成を確認できませんでした", destination)
+                    return OperationResult("cancelled" if force_sent else "failed",
+                        "AviUtl2と書き出し処理の終了を確認しました。未保存のAviUtl2編集は失われます。残ったファイルは完成動画として扱いません"
+                        if force_sent else "書き出し中にAviUtl2が終了しました。完成を確認できませんでした", destination)
             time.sleep(0.2)
         if status == "cancelled" or cancel.is_set():
             return OperationResult("cancelled", "書き出しを中止しました。残ったファイルは完成動画として扱いません", destination)
@@ -387,13 +483,7 @@ def export_video(project, video, destination, settings, *, cancel: threading.Eve
             return OperationResult("failed", _failure_detail(response), destination)
         # Compare against the actual source timeline captured when the host locked.
         state = _project_state(project, response)
-        try:
-            confirmed, detail = _confirm_file(destination, before,
-                lambda path: _check_video(path, state, settings))
-        except (StopIteration, TypeError) as error:
-            confirmed, detail = False, str(error) or "映像・音声情報が不足しています"
-        return OperationResult("confirmed" if confirmed else "unconfirmed",
-                               "完成動画を書き出しました（簡易確認）" if confirmed else f"出力を確認できませんでした: {detail}", destination)
+        return _verify_export(destination, before, state, settings, cancel, force, report)
     finally:
         if terminal:
             _cleanup(instruction)

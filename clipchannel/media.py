@@ -8,7 +8,6 @@ corresponding prepared time without assuming that both start at zero.
 import json
 import os
 import shutil
-import subprocess
 import tempfile
 import uuid
 from dataclasses import asdict, dataclass
@@ -16,6 +15,7 @@ from decimal import Decimal
 from pathlib import Path
 
 from .storage import StorageError
+from .process_control import check_cancelled, run_process
 
 
 class MediaError(StorageError):
@@ -55,12 +55,12 @@ class PreparedMedia:
         return Decimal(str(source_seconds)) - Decimal(original.start) + Decimal(prepared.start)
 
 
-def _probe(path):
+def _probe(path, *, stop_requested=None):
     ffprobe = shutil.which("ffprobe")
     if ffprobe is None:
         raise MediaError("媒体の確認に ffprobe が必要です")
-    result = subprocess.run([ffprobe, "-v", "error", "-show_format", "-show_streams",
-                             "-of", "json", str(path)], capture_output=True, text=True)
+    result = run_process([ffprobe, "-v", "error", "-show_format", "-show_streams",
+                             "-of", "json", str(path)], stop=stop_requested)
     if result.returncode:
         raise MediaError("媒体の映像・音声情報を読み取れません")
     try:
@@ -115,55 +115,46 @@ def _record(path, source_info, editing_info):
             temporary.unlink(missing_ok=True)
 
 
-def prepare_media(data, source, *, stop_requested=lambda: False):
+def prepare_media(data, source, *, stop_requested=None):
     """Inspect and prepare an already retained source; safe to retry after failure."""
+    check_cancelled(stop_requested)
     source = Path(source).resolve()
     if data.path is None or not source.is_file() or not source.is_relative_to(data.path / "media" / "originals"):
         raise MediaError("データ用フォルダ内の元動画を選んでください")
-    source_info = _probe(source)
+    source_info = _probe(source, stop_requested=stop_requested)
     compatible = ("mp4" in source_info.format.split(",") and
                   source_info.video.codec == "h264" and
                   (source_info.audio is None or
                    (source_info.audio.codec == "aac" and source_info.audio.profile == "LC")))
     directory = _prepared_dir(data, source)
     if compatible:
-        editing = source
-        editing_info = source_info
         manifest = directory / "source.json"
-    else:
-        ffmpeg = shutil.which("ffmpeg")
-        if ffmpeg is None:
-            raise MediaError("編集互換変換に ffmpeg が必要です。元動画は保持しました")
+        check_cancelled(stop_requested)
+        _record(manifest, source_info, source_info)
+        return PreparedMedia(source, source, source_info, source_info, manifest)
+    ffmpeg = shutil.which("ffmpeg")
+    if ffmpeg is None:
+        raise MediaError("編集互換変換に ffmpeg が必要です。元動画は保持しました")
+    version = directory / f"editing-{uuid.uuid4().hex}"
+    editing = version / "editing.mp4"
+    manifest = version / "editing.json"
+    with tempfile.TemporaryDirectory(dir=data.path / "work", prefix="prepare-") as temporary:
+        staged = Path(temporary) / "result"
+        staged.mkdir()
+        output = staged / "editing.mp4"
+        command = [ffmpeg, "-v", "error", "-y", "-copyts", "-start_at_zero",
+                   "-i", str(source), "-map", f"0:{source_info.video.index}"]
+        if source_info.audio:
+            command += ["-map", f"0:{source_info.audio.index}"]
+        command += ["-c:v", "libx264", "-c:a", "aac", "-movflags", "+faststart", str(output)]
+        result = run_process(command, stop=stop_requested, ffmpeg=True)
+        if result.returncode or not output.is_file() or not output.stat().st_size:
+            raise MediaError("編集互換変換に失敗しました。元動画は保持しました")
+        info = _probe(output, stop_requested=stop_requested)
+        editing_info = MediaInfo(editing, info.format, info.video, info.audio, info.duration)
+        _record(staged / "editing.json", source_info, editing_info)
         directory.mkdir(parents=True, exist_ok=True)
-        editing = directory / f"editing-{uuid.uuid4().hex}.mp4"
-        manifest = editing.with_suffix(".json")
-        with tempfile.TemporaryDirectory(dir=data.path / "work", prefix="prepare-") as temporary:
-            output = Path(temporary) / "editing.mp4"
-            command = [ffmpeg, "-nostdin", "-v", "error", "-y", "-copyts", "-start_at_zero",
-                       "-i", str(source), "-map", f"0:{source_info.video.index}"]
-            if source_info.audio:
-                command += ["-map", f"0:{source_info.audio.index}"]
-            command += ["-c:v", "libx264", "-c:a", "aac", "-movflags", "+faststart", str(output)]
-            process = subprocess.Popen(command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-            while process.poll() is None:
-                if stop_requested():
-                    process.terminate()
-                    process.wait()
-                    raise MediaError("変換を中止しました。元動画は保持しました")
-                try:
-                    process.wait(timeout=0.2)
-                except subprocess.TimeoutExpired:
-                    pass
-            if process.returncode or not output.is_file() or not output.stat().st_size:
-                raise MediaError("編集互換変換に失敗しました。元動画は保持しました")
-            editing_info = _probe(output)
-            os.replace(output, editing)
-            editing_info = MediaInfo(editing, editing_info.format, editing_info.video,
-                                     editing_info.audio, editing_info.duration)
-    try:
-        _record(manifest, source_info, editing_info)
-    except Exception:
-        if editing != source:
-            editing.unlink(missing_ok=True)
-        raise
+        check_cancelled(stop_requested)
+        # Publish the video and its manifest together, after both are complete.
+        os.replace(staged, version)
     return PreparedMedia(source, editing, source_info, editing_info, manifest)

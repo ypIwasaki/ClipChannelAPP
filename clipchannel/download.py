@@ -108,20 +108,29 @@ class DownloadSession:
         self.stopping = False
         self.state = "未着手"
         self.started_at = None
+        self.ended_at = None
 
     @property
     def elapsed(self):
-        return time.monotonic() - self.started_at if self.started_at is not None else 0.0
+        if self.started_at is None:
+            return 0.0
+        end = self.ended_at if self.ended_at is not None else time.monotonic()
+        return max(0.0, end - self.started_at)
 
     def stop(self):
         self.stopping = True
         self.state = "停止待ち"
 
-    def _hook(self, _progress):
-        if self.stopping:
+    def _is_stopping(self, stop_requested):
+        if stop_requested and stop_requested():
+            self.stop()
+        return self.stopping
+
+    def _hook(self, _progress, stop_requested=None):
+        if self._is_stopping(stop_requested):
             raise DownloadStopped("通常中止しました")
 
-    def run(self, on_change=None):
+    def run(self, on_change=None, *, stop_requested=None):
         if self.data.path is None:
             raise DownloadError("データ用フォルダを選んでください")
         if self.data.running:
@@ -132,10 +141,11 @@ class DownloadSession:
             raise DownloadError("yt-dlp が必要です") from error
         self.data.running = True
         self.started_at = time.monotonic()
+        self.ended_at = None
         self.state = "情報取得中"
         notify = on_change or (lambda: None)
         try:
-            if self.stopping:
+            if self._is_stopping(stop_requested):
                 self.state = "停止完了"
                 notify()
                 return self.items
@@ -146,7 +156,7 @@ class DownloadSession:
                     info = ydl.extract_info(self.url, download=False, process=False)
                 entries = list(info.get("entries") or [info])
             except Exception as error:
-                if self.stopping:
+                if self._is_stopping(stop_requested):
                     self.state = "停止完了"
                     notify()
                     return self.items
@@ -160,31 +170,32 @@ class DownloadSession:
                     item.details = self._details(entry)
                     self.items.append(item)
             notify()
-            if self.stopping:
+            if self._is_stopping(stop_requested):
                 self.state = "停止完了"
                 notify()
                 return self.items
             if self.info_only:
                 for item in self.items:
-                    if self.stopping:
+                    if self._is_stopping(stop_requested):
                         break
-                    self._run_info_item(item, yt_dlp)
+                    self._run_info_item(item, yt_dlp, stop_requested)
                     notify()
-                self.state = "停止完了" if self.stopping else "完了"
+                self.state = "停止完了" if self._is_stopping(stop_requested) else "完了"
                 notify()
                 return self.items
             for item in self.items:
-                if self.stopping:
+                if self._is_stopping(stop_requested):
                     break
-                self._run_item(item, yt_dlp)
+                self._run_item(item, yt_dlp, stop_requested, notify)
                 notify()
-            self.state = "停止完了" if self.stopping else "完了"
+            self.state = "停止完了" if self._is_stopping(stop_requested) else "完了"
             notify()
             return self.items
         finally:
+            self.ended_at = time.monotonic()
             self.data.running = False
 
-    def retry_failed(self, indices, on_change=None):
+    def retry_failed(self, indices, on_change=None, *, stop_requested=None):
         if self.data.running:
             raise DownloadError("別の処理が実行中です")
         try:
@@ -194,47 +205,53 @@ class DownloadSession:
         self.stopping = False
         self.data.running = True
         self.started_at = time.monotonic()
+        self.ended_at = None
         notify = on_change or (lambda: None)
         try:
             for index, item in enumerate(self.items):
-                if index in indices and item.state == "失敗" and not self.stopping:
+                if index in indices and item.state == "失敗" and not self._is_stopping(stop_requested):
                     if self.info_only:
-                        self._run_info_item(item, yt_dlp)
+                        self._run_info_item(item, yt_dlp, stop_requested)
                     else:
-                        self._run_item(item, yt_dlp)
+                        self._run_item(item, yt_dlp, stop_requested, notify)
                     notify()
-            self.state = "停止完了" if self.stopping else "完了"
+            self.state = "停止完了" if self._is_stopping(stop_requested) else "完了"
             notify()
         finally:
+            self.ended_at = time.monotonic()
             self.data.running = False
 
-    def _run_info_item(self, item, yt_dlp):
+    def _run_info_item(self, item, yt_dlp, stop_requested=None):
         started = time.monotonic()
         try:
             with yt_dlp.YoutubeDL({"quiet": True, "no_warnings": True,
                                     "skip_download": True, "cachedir": False,
                                     "socket_timeout": 10}) as ydl:
                 item.details = self._details(ydl.extract_info(_safe_url(item.url), download=False))
-            item.state, item.error = ("中止", "") if self.stopping else ("情報のみ", "")
+            item.state, item.error = ("中止", "") if self._is_stopping(stop_requested) else ("情報のみ", "")
         except Exception:
-            item.state, item.error = "失敗", "情報取得に失敗しました"
+            item.state, item.error = (("中止", "") if self._is_stopping(stop_requested) else
+                                      ("失敗", "情報取得に失敗しました"))
         finally:
             item.seconds += time.monotonic() - started
 
-    def _run_item(self, item, yt_dlp):
+    def _run_item(self, item, yt_dlp, stop_requested=None, notify=lambda: None):
         started = time.monotonic()
         self.state = "取得中"
         item.state, item.error = "取得中", ""
+        notify()
         try:
+            self._hook(None, stop_requested)
             if item.source_path and item.source_path.is_file():
-                item.path = self._prepare_video(item.source_path)
+                item.path = self._prepare_video(item.source_path, stop_requested)
                 item.state = "成功"
                 return
             with tempfile.TemporaryDirectory(dir=self.data.path / "work", prefix="download-") as temporary:
                 options = {"quiet": True, "no_warnings": True, "noplaylist": True,
                            "cachedir": False, "socket_timeout": 10,
                            "outtmpl": str(Path(temporary) / "%(id)s.%(ext)s"),
-                           "progress_hooks": [self._hook], "overwrites": False,
+                           "progress_hooks": [lambda value: self._hook(value, stop_requested)],
+                           "postprocessor_hooks": [lambda value: self._hook(value, stop_requested)], "overwrites": False,
                            "restrictfilenames": True, **self.options}
                 if "subtitleslangs" in options:
                     options["writesubtitles"] = True
@@ -242,7 +259,7 @@ class DownloadSession:
                     result = ydl.extract_info(_safe_url(item.url), download=True)
                     item.details = self._details(result)
                     paths = [Path(path) for path in Path(temporary).iterdir() if path.is_file()]
-                if self.stopping:
+                if self._is_stopping(stop_requested):
                     raise DownloadStopped("通常中止しました")
                 if self.audio_only and result.get("vcodec") not in (None, "none"):
                     raise DownloadError("音声のみの成果物を確認できませんでした")
@@ -258,6 +275,7 @@ class DownloadSession:
                     target = destination / media[0].name
                     if target.exists():
                         raise DownloadError("同名の音声成果物があります")
+                    self._hook(None, stop_requested)
                     media[0].replace(target)
                 else:
                     source_dir = self.data.path / "media" / "downloaded" / uuid.uuid4().hex
@@ -268,14 +286,15 @@ class DownloadSession:
                         if sidecar.is_file() and sidecar.suffix.lower() in (".srt", ".vtt", ".ass"):
                             sidecar.replace(source_dir / sidecar.name)
                     item.source_path = source
-                    target = self._prepare_video(source)
+                    notify()
+                    target = self._prepare_video(source, stop_requested)
                 item.path = target
                 item.state = "成功"
         except DownloadStopped:
             item.state = "中止"
             self.stopping = True
         except Exception:
-            item.state = "中止" if self.stopping else "失敗"
+            item.state = "中止" if self._is_stopping(stop_requested) else "失敗"
             # yt-dlp errors may contain credentials or the source URL.
             item.error = "取得または成果物の確認に失敗しました。URL・形式・空き容量を確認してください"
             if item.source_path:
@@ -283,10 +302,12 @@ class DownloadSession:
         finally:
             item.seconds += time.monotonic() - started
 
-    def _prepare_video(self, source):
-        registered = self.data.register_video(source)
+    def _prepare_video(self, source, stop_requested=None):
+        self._hook(None, stop_requested)
+        registered = self.data.register_video(source, stop_requested=stop_requested)
+        self._hook(None, stop_requested)
         self.state = "媒体確認・編集互換変換中"
-        return prepare_media(self.data, registered, stop_requested=lambda: self.stopping).editing
+        return prepare_media(self.data, registered, stop_requested=lambda: self._is_stopping(stop_requested)).editing
 
     @staticmethod
     def _details(info):

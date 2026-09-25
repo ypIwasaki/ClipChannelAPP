@@ -47,7 +47,25 @@ def _name(value):
     return value
 
 
-def _same_file_contents(left, right):
+def _check_stop(stop):
+    if stop and stop():
+        raise StorageError("通常中止しました")
+
+
+def _publish_new(staged, destination):
+    """Publish a complete file without replacing an existing result."""
+    if os.name == "nt":
+        # Windows rename is atomic and refuses an existing destination.
+        os.rename(staged, destination)
+    else:
+        os.link(staged, destination)
+        staged.unlink()
+
+
+def _same_file_contents(left, right, stop_requested=None):
+    _check_stop(stop_requested)
+    if left.samefile(right):
+        return True
     if left.stat().st_size != right.stat().st_size:
         return False
 
@@ -55,12 +73,13 @@ def _same_file_contents(left, right):
         checksum = hashlib.sha256()
         with path.open("rb") as stream:
             for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+                _check_stop(stop_requested)
                 checksum.update(chunk)
         return checksum.digest()
     return digest(left) == digest(right)
 
 
-def _write_csv(path, kind, rows):
+def _write_csv(path, kind, rows, *, stop_requested=None):
     columns = SCHEMAS[kind]
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = None
@@ -71,6 +90,7 @@ def _write_csv(path, kind, rows):
             writer = csv.DictWriter(stream, fieldnames=columns, lineterminator="\n", quoting=csv.QUOTE_MINIMAL)
             writer.writeheader()
             for row in rows:
+                _check_stop(stop_requested)
                 if set(row) != set(columns) - {"schema_version"}:
                     raise StorageError(f"{kind} の列が一致しません")
                 if any(not isinstance(value, str) for value in row.values()):
@@ -85,6 +105,7 @@ def _write_csv(path, kind, rows):
                 writer.writerow({"schema_version": "1", **row})
             stream.flush()
             os.fsync(stream.fileno())
+        _check_stop(stop_requested)
         os.replace(temporary, path)
         temporary = None
     finally:
@@ -150,7 +171,8 @@ class DataFolder:
         return sorted((path for path in (self._root() / "media" / "originals").glob("*")
                        if path.is_file() and path.suffix.lower() in VIDEO_EXTENSIONS), key=lambda path: path.name)
 
-    def register_video(self, source):
+    def register_video(self, source, *, stop_requested=None):
+        _check_stop(stop_requested)
         source = Path(source).expanduser().resolve()
         if not source.is_file():
             raise StorageError("動画ファイルを選んでください")
@@ -163,38 +185,38 @@ class DataFolder:
         existing = [path for path in originals.iterdir() if path.is_file() and path.stem.casefold() == stem.casefold()]
         if existing:
             registered = existing[0]
-            if _same_file_contents(source, registered):
+            if _same_file_contents(source, registered, stop_requested):
                 return registered
             raise VideoNameConflict("同じ保存名の別動画があります。元動画の名前を変更してください")
         if any(path.name.casefold() == stem.casefold() for path in (self._root() / "catalog").iterdir()):
             raise VideoNameConflict("同じ結果保存名が既にあります。元動画の名前を変更してください")
         target = originals / source.name
-        created = False
-        try:
-            with target.open("xb") as output:
-                created = True
-                with source.open("rb") as input_file:
-                    shutil.copyfileobj(input_file, output)
+        with tempfile.TemporaryDirectory(dir=self._root() / "work", prefix="register-") as temporary:
+            staged = Path(temporary) / source.name
+            with staged.open("xb") as output, source.open("rb") as input_file:
+                for chunk in iter(lambda: input_file.read(1024 * 1024), b""):
+                    _check_stop(stop_requested)
+                    output.write(chunk)
                 output.flush()
                 os.fsync(output.fileno())
-            if not _same_file_contents(source, target):
+            if not _same_file_contents(source, staged, stop_requested):
                 raise StorageError("コピー中に動画の内容が変わりました。登録をやり直してください")
-        except Exception:
-            if created:
-                target.unlink(missing_ok=True)
-            raise
+            _check_stop(stop_requested)
+            _publish_new(staged, target)
         return target
 
-    def save_result(self, source_name, kind, rows):
+    def save_result(self, source_name, kind, rows, *, stop_requested=None):
         if kind not in RESULT_KINDS:
             raise StorageError("不明な結果の種類です")
-        source = self.register_video(source_name)
+        _check_stop(stop_requested)
+        source = self.register_video(source_name, stop_requested=stop_requested)
         stem = _name(source.stem)
         _name(source.name)
         identity = self._root() / "catalog" / stem / "source.sha256"
         digest = hashlib.sha256()
         with source.open("rb") as stream:
             for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+                _check_stop(stop_requested)
                 digest.update(chunk)
         fingerprint = f"{source.name}\n{digest.hexdigest()}\n"
         if identity.exists() and identity.read_text(encoding="utf-8") != fingerprint:
@@ -204,22 +226,23 @@ class DataFolder:
         directory = self._root() / "catalog" / stem / kind
         directory.mkdir(parents=True, exist_ok=True)
         if not identity.exists():
-            with identity.open("x", encoding="utf-8") as stream:
-                stream.write(fingerprint)
-                stream.flush()
-                os.fsync(stream.fileno())
+            with tempfile.TemporaryDirectory(dir=self._root() / "work", prefix="identity-") as temporary:
+                staged_identity = Path(temporary) / "source.sha256"
+                with staged_identity.open("w", encoding="utf-8") as identity_stream:
+                    identity_stream.write(fingerprint)
+                    identity_stream.flush()
+                    os.fsync(identity_stream.fileno())
+                _check_stop(stop_requested)
+                _publish_new(staged_identity, identity)
         versions = [int(match.group(1)) for path in directory.glob(f"{stem}_v*.csv")
                     if (match := re.fullmatch(re.escape(stem) + r"_v([1-9][0-9]*)\.csv", path.name))]
         version = max(versions, default=0) + 1
         target = directory / f"{stem}_v{version}.csv"
-        # Exclusive reservation prevents another writer from silently replacing this version.
-        with target.open("x"):
-            pass
-        try:
-            _write_csv(target, kind, rows)
-        except Exception:
-            target.unlink(missing_ok=True)
-            raise
+        with tempfile.TemporaryDirectory(dir=self._root() / "work", prefix="save-") as temporary:
+            staged = Path(temporary) / target.name
+            _write_csv(staged, kind, rows, stop_requested=stop_requested)
+            _check_stop(stop_requested)
+            _publish_new(staged, target)
         return target
 
     def load_result(self, source_name, kind, version):
