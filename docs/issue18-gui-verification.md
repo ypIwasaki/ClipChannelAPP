@@ -8,26 +8,25 @@
 
 1. Windows から直接使える内蔵・外付けドライブに、今回専用の**空のデータ用フォルダ**を作ります。例: `C:\Users\raimu\AppData\Local\ClipChannelAPP-validation\issue18-gui`。既存の検証データを守るため、[先行検証の Temp フォルダ](../.scratch/clip-production-v1/evidence/18-full-flow.md)は作業先にしません。
 2. 元動画、対象話者の参照音声、ローカル ECAPA モデル、ローカル Whisper モデル、AviUtl2 2.1.9 と専用プラグインを用意します。同じ素材を再確認する場合、元動画は `C:\Users\raimu\AppData\Local\ClipChannelAPP-validation\issue06-announcerA\u5Bwx8Vl0U8-55-90-video.mp4`、参照音声は同じフォルダの `u5Bwx8Vl0U8-55-90.wav` です。これらが見つからなければ、本人の声を確認できる別の動画と参照音声を使い、そのパスを記録します。
-3. **一つの Python 環境**でアプリを起動します。Windows Python と WSL Python のどちらでも構いません。その環境に Torch・SpeechBrain・faster-whisper・SudachiPy・SudachiDict-core が必要です。モデルと依存物の準備情報は[開発環境の引き継ぎ資料](development-handoff.md)を参照してください。`ffmpeg`・`ffprobe`・`ffplay` を実行でき、完成動画の出力には Windows 版 `ffmpeg.exe` を `CLIPCHANNEL_FFMPEG` へ指定します。AviUtl2 では専用プラグインを読み込んでおきます。Windows PowerShell からの起動例は以下のとおりです。`$Python` は必要な依存物を一緒に導入した Windows Python の実パスに置き換えてください。
+3. **一つの Python 環境**でアプリを起動します。Windows Python と WSL Python のどちらでも構いません。その環境に Torch・SpeechBrain・faster-whisper・SudachiPy・SudachiDict-core が必要です。モデルと依存物の準備情報は[開発環境の引き継ぎ資料](development-handoff.md)を参照してください。`ffmpeg`・`ffprobe`・`ffplay` を実行でき、完成動画の出力には Windows 版 `ffmpeg.exe` を `CLIPCHANNEL_FFMPEG` へ指定します。AviUtl2 では専用プラグインを読み込んでおきます。Windows PowerShell から起動する場合、次の `$Python` はこのPCに実在する Python 3.12 のパスです。**起動確認用**であり、この環境は現時点で faster-whisper・SudachiPy・SudachiDict-core が不足します。全工程には同じ Windows Python 環境にそれらも準備してください。
 
    ```powershell
-   $Python = 'C:\path\to\python.exe'
+   $Python = 'C:\Users\raimu\AppData\Local\Temp\clipchannel-a105-speaker\venv\Scripts\python.exe'
+   if (-not (Test-Path -LiteralPath $Python -PathType Leaf)) { throw "Python が見つかりません: $Python" }
    $FfmpegBin = 'C:\Users\raimu\AppData\Local\ClipChannelAPP-validation\a106\ffmpeg-mirror\ffmpeg-9.0.1-essentials_build\bin'
    $env:PATH = "$FfmpegBin;$env:PATH"
    $env:CLIPCHANNEL_FFMPEG = "$FfmpegBin\ffmpeg.exe"
    Set-Location '\\wsl.localhost\Ubuntu\home\raimu\workspace\ClipChannelAPP\ClipChannelAPP'
-   & $Python -c 'import torch, speechbrain, faster_whisper, sudachipy, sudachidict_core'
    & $Python -m clipchannel.app
    ```
 
    必要なモデルの既存候補は ECAPA が `C:\Users\raimu\AppData\Local\Temp\clipchannel-a105-speaker\model`、Whisper が `C:\Users\raimu\AppData\Local\ClipChannelAPP-validation\asr-probe\model` です。Temp 内のファイルは残っているか事前に確認してください。
 
-   WSL から起動する場合は、データ用フォルダと動画・モデルを **`/mnt/c/` など Windows から直接使えるドライブ上**に置き、WSL 内のパスで選びます。`/home/...` をデータ用フォルダにしないでください。WSLg、`wslpath`、`powershell.exe` と Windows 側の AviUtl2・専用プラグインを使用します。この環境では WSLg の Tk 起動と WSL→Windows の連携入口を確認済みですが、リポジトリの `.venv` には現時点で Torch・SpeechBrain・faster-whisper が入っていません。これらを同じ WSL Python 環境に準備してから全工程を実行してください。Windows アプリのデータが通常の `/mnt/c/Users/.../AppData/Local/` に見えないときは、`/mnt/c/Users/raimu/AppData/Local/Packages/OpenAI.Codex_2p2nqsd0c76g0/LocalCache/Local/` 配下も確認します。WSL の `CLIPCHANNEL_FFMPEG` には Windows 版 `ffmpeg.exe` の `/mnt/c/...` パス、または `C:\...` パスを指定できます。
+   WSL から起動する場合は、データ用フォルダと動画・モデルを **`/mnt/c/` など Windows から直接使えるドライブ上**に置き、WSL 内のパスで選びます。`/home/...` をデータ用フォルダにしないでください。WSLg、`wslpath`、`powershell.exe` と Windows 側の AviUtl2・専用プラグインを使用します。この環境では WSLg の Tk 起動と WSL→Windows の連携入口を確認済みです。一方、リポジトリの `.venv` は Python 3.14 で、現時点で Torch・SpeechBrain・faster-whisper が入っていません。GUIの起動確認はできますが、全工程には互換性のある WSL Python 環境と依存物の準備が必要です。Windows アプリのデータが通常の `/mnt/c/Users/.../AppData/Local/` に見えないときは、`/mnt/c/Users/raimu/AppData/Local/Packages/OpenAI.Codex_2p2nqsd0c76g0/LocalCache/Local/` 配下も確認します。WSL の `CLIPCHANNEL_FFMPEG` には Windows 版 `ffmpeg.exe` の `/mnt/c/...` パス、または `C:\...` パスを指定できます。
 
    ```sh
    cd /home/raimu/workspace/ClipChannelAPP/ClipChannelAPP
    export CLIPCHANNEL_FFMPEG='/mnt/c/Users/raimu/AppData/Local/Packages/OpenAI.Codex_2p2nqsd0c76g0/LocalCache/Local/ClipChannelAPP-validation/a106/ffmpeg-mirror/ffmpeg-9.0.1-essentials_build/bin/ffmpeg.exe'
-   .venv/bin/python -c 'import torch, speechbrain, faster_whisper, sudachipy, sudachidict_core'
    .venv/bin/python -m clipchannel.app
    ```
 4. 元動画の名前、長さ、対象話者、参照音声、使用するモデルの場所を記録します。今回の素材なら元動画は約35.035秒、640×360、30000/1001 fpsです。以降の工程では、登録された**同じ元動画**を選び続けてください。
