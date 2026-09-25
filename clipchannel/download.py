@@ -2,6 +2,7 @@
 
 import shlex
 import os
+import shutil
 import tempfile
 import time
 import uuid
@@ -90,6 +91,11 @@ def _safe_url(url):
 
 
 class DownloadSession:
+    @staticmethod
+    def _yt_dlp_options(options):
+        location = os.environ.get("CLIPCHANNEL_FFMPEG") or shutil.which("ffmpeg")
+        return {**options, "ffmpeg_location": location} if location else options
+
     def __init__(self, data, url, *, format="bestvideo*+bestaudio/best", audio_only=False,
                  info_only=False, retries=3, extra=""):
         self.data = data
@@ -156,9 +162,9 @@ class DownloadSession:
                 notify()
                 return self.items
             try:
-                with yt_dlp.YoutubeDL({"quiet": True, "no_warnings": True, "extract_flat": "in_playlist",
+                with yt_dlp.YoutubeDL(self._yt_dlp_options({"quiet": True, "no_warnings": True, "extract_flat": "in_playlist",
                                         "skip_download": True, "noplaylist": False, "cachedir": False,
-                                        "socket_timeout": 10}) as ydl:
+                                        "socket_timeout": 10})) as ydl:
                     info = ydl.extract_info(self.url, download=False, process=False)
                 entries = list(info.get("entries") or [info])
             except Exception as error:
@@ -230,9 +236,9 @@ class DownloadSession:
     def _run_info_item(self, item, yt_dlp, stop_requested=None):
         started = time.monotonic()
         try:
-            with yt_dlp.YoutubeDL({"quiet": True, "no_warnings": True,
+            with yt_dlp.YoutubeDL(self._yt_dlp_options({"quiet": True, "no_warnings": True,
                                     "skip_download": True, "cachedir": False,
-                                    "socket_timeout": 10}) as ydl:
+                                    "socket_timeout": 10})) as ydl:
                 item.details = self._details(ydl.extract_info(_safe_url(item.url), download=False))
             item.state, item.error = ("中止", "") if self._is_stopping(stop_requested) else ("情報のみ", "")
         except Exception:
@@ -259,9 +265,7 @@ class DownloadSession:
                            "progress_hooks": [lambda value: self._hook(value, stop_requested)],
                            "postprocessor_hooks": [lambda value: self._hook(value, stop_requested)], "overwrites": False,
                            "restrictfilenames": True, **self.options}
-                configured_ffmpeg = os.environ.get("CLIPCHANNEL_FFMPEG")
-                if configured_ffmpeg:
-                    options["ffmpeg_location"] = configured_ffmpeg
+                options = self._yt_dlp_options(options)
                 if "subtitleslangs" in options:
                     options["writesubtitles"] = True
                 with yt_dlp.YoutubeDL(options) as ydl:
@@ -302,10 +306,15 @@ class DownloadSession:
         except DownloadStopped:
             item.state = "中止"
             self.stopping = True
-        except Exception:
+        except Exception as error:
             item.state = "中止" if self._is_stopping(stop_requested) else "失敗"
             # yt-dlp errors may contain credentials or the source URL.
-            item.error = "取得または成果物の確認に失敗しました。URL・形式・空き容量を確認してください"
+            if "You have requested merging of multiple formats but ffmpeg is not installed" in str(error):
+                configured = os.environ.get("CLIPCHANNEL_FFMPEG")
+                status = ("指定ファイルあり" if Path(configured).is_file() else "指定ファイルなし") if configured else "設定なし"
+                item.error = f"yt-dlp が ffmpeg を認識できません（CLIPCHANNEL_FFMPEG: {status}）。アプリの起動環境を確認してください"
+            else:
+                item.error = "取得または成果物の確認に失敗しました。URL・形式・空き容量を確認してください"
             if item.source_path:
                 item.error += f" 取得済みファイル: {item.source_path}"
         finally:

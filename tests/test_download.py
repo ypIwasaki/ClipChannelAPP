@@ -32,6 +32,25 @@ class FakeYoutubeDL:
 
 
 class DownloadTests(unittest.TestCase):
+    def test_merge_failure_reports_ffmpeg_configuration_without_url(self):
+        class MergeFailureYoutubeDL(FakeYoutubeDL):
+            def extract_info(self, url, download, process=True):
+                if download:
+                    raise RuntimeError("You have requested merging of multiple formats but ffmpeg is not installed; secret=123")
+                return {"title": "A", "webpage_url": url}
+
+        with tempfile.TemporaryDirectory() as temporary:
+            data = DataFolder()
+            data.select(temporary)
+            session = DownloadSession(data, "https://example.test/a")
+            with patch.dict(sys.modules, {"yt_dlp": types.SimpleNamespace(YoutubeDL=MergeFailureYoutubeDL)}), \
+                 patch.dict(os.environ, {"CLIPCHANNEL_FFMPEG": str(Path(temporary) / "missing.exe")}):
+                item = session.run()[0]
+            self.assertEqual(item.state, "失敗")
+            self.assertIn("ffmpeg を認識できません", item.error)
+            self.assertIn("指定ファイルなし", item.error)
+            self.assertNotIn("secret", item.error)
+
     def test_retry_can_use_updated_format_without_losing_items(self):
         with tempfile.TemporaryDirectory() as temporary:
             data = DataFolder()
@@ -61,7 +80,9 @@ class DownloadTests(unittest.TestCase):
                  patch("clipchannel.download.prepare_media") as prepare:
                 prepare.side_effect = lambda _data, source, **_kwargs: types.SimpleNamespace(editing=source)
                 session.run()
-        self.assertEqual(seen[1]["ffmpeg_location"], str(Path(temporary) / "ffmpeg.exe"))
+        self.assertTrue(seen)
+        self.assertTrue(all(options["ffmpeg_location"] == str(Path(temporary) / "ffmpeg.exe")
+                            for options in seen))
 
     def test_managed_download_preserves_missing_dependency_message(self):
         class Control:
