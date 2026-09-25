@@ -68,7 +68,9 @@ class ProcessPanel(ttk.LabelFrame):
                     on_result(operation.result)
             elif operation.state == "失敗":
                 self.message.set(f"{summary} — {operation.error}")
-                messagebox.showerror("処理できません", operation.error + "\n未保存の入力は保持しています。保存は再試行できます。")
+                retry = ("取得を再試行できます。" if label in ("動画・音声の取得", "動画の情報取得")
+                         else "保存は再試行できます。")
+                messagebox.showerror("処理できません", operation.error + "\n未保存の入力は保持しています。" + retry)
             else:
                 self.message.set(summary + "。編集を再開できます。途中のファイルは完成扱いしません。")
 
