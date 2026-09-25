@@ -8,7 +8,7 @@
 
 **Blocked by:** 10: 区間を選び、順番を決めて編集用動画を作る; 11: 編集可能な字幕をAviUtl2へ渡す
 
-**Status:** implemented-locally
+**Status:** ready-for-agent
 
 ## 完了条件
 
