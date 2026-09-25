@@ -46,12 +46,12 @@ class SupportingMediaInputTest(unittest.TestCase):
                 add.invoke()
             # Run the real Tk event loop, including the worker's completion callback.
             deadline = time.monotonic() + 5
-            def attempt_switch():
+            def wait_for_import():
                 if panel.data.running and time.monotonic() < deadline:
-                    window.after(20, attempt_switch)
+                    window.after(20, wait_for_import)
                 else:
                     window.quit()
-            window.after(20, attempt_switch)
+            window.after(20, wait_for_import)
             window.mainloop()
             self.assertFalse(panel.data.running)
             with patch("tkinter.filedialog.askdirectory", return_value=str(second)), patch("tkinter.messagebox.showerror") as error:
