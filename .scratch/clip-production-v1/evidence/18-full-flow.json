@@ -1,0 +1,531 @@
+{
+  "steps": [
+    {
+      "name": "register",
+      "source": "C:\\Users\\raimu\\AppData\\Local\\ClipChannelAPP-validation\\issue06-announcerA\\u5Bwx8Vl0U8-55-90-video.mp4",
+      "video": "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-issue18-c613be1bcce644439d5ebd6bae063b0d\\data\\media\\originals\\u5Bwx8Vl0U8-55-90-video.mp4",
+      "sha256": "b938a25da32163cefd19b0d46bad1a46eb409c2936f6f7c0f3c32c1f07d79ac3"
+    },
+    {
+      "name": "speaker-review",
+      "person_id": "5bdfb381df1a409bbd707c53a70d1ad6",
+      "proposal_csv": "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-issue18-c613be1bcce644439d5ebd6bae063b0d\\data\\catalog\\u5Bwx8Vl0U8-55-90-video\\transcripts\\u5Bwx8Vl0U8-55-90-video_v1.csv",
+      "windows": [
+        {
+          "start_ms": 0,
+          "end_ms": 5000,
+          "state": "unknown",
+          "score": 0.8869040608406067,
+          "text": ""
+        },
+        {
+          "start_ms": 5000,
+          "end_ms": 10000,
+          "state": "unknown",
+          "score": 0.8755931258201599,
+          "text": ""
+        },
+        {
+          "start_ms": 10000,
+          "end_ms": 15000,
+          "state": "unknown",
+          "score": 0.8274604678153992,
+          "text": ""
+        },
+        {
+          "start_ms": 15000,
+          "end_ms": 20000,
+          "state": "unknown",
+          "score": 0.8805938959121704,
+          "text": ""
+        },
+        {
+          "start_ms": 20000,
+          "end_ms": 25000,
+          "state": "unknown",
+          "score": 0.9076030254364014,
+          "text": ""
+        },
+        {
+          "start_ms": 25000,
+          "end_ms": 30000,
+          "state": "unknown",
+          "score": 0.8938550353050232,
+          "text": ""
+        },
+        {
+          "start_ms": 30000,
+          "end_ms": 35000,
+          "state": "unknown",
+          "score": 0.8980801105499268,
+          "text": ""
+        }
+      ],
+      "elapsed_seconds": 1.047
+    },
+    {
+      "name": "confirm-target",
+      "transcript_csv": "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-issue18-c613be1bcce644439d5ebd6bae063b0d\\data\\catalog\\u5Bwx8Vl0U8-55-90-video\\transcripts\\u5Bwx8Vl0U8-55-90-video_v2.csv",
+      "version": 2,
+      "reviewed_windows": [
+        {
+          "start_ms": 0,
+          "end_ms": 5000,
+          "state": "target",
+          "score": 0.8869040608406067,
+          "text": ""
+        },
+        {
+          "start_ms": 5000,
+          "end_ms": 10000,
+          "state": "target",
+          "score": 0.8755931258201599,
+          "text": ""
+        },
+        {
+          "start_ms": 10000,
+          "end_ms": 15000,
+          "state": "target",
+          "score": 0.8274604678153992,
+          "text": ""
+        },
+        {
+          "start_ms": 15000,
+          "end_ms": 20000,
+          "state": "target",
+          "score": 0.8805938959121704,
+          "text": ""
+        },
+        {
+          "start_ms": 20000,
+          "end_ms": 25000,
+          "state": "target",
+          "score": 0.9076030254364014,
+          "text": ""
+        },
+        {
+          "start_ms": 25000,
+          "end_ms": 30000,
+          "state": "target",
+          "score": 0.8938550353050232,
+          "text": ""
+        },
+        {
+          "start_ms": 30000,
+          "end_ms": 35000,
+          "state": "target",
+          "score": 0.8980801105499268,
+          "text": ""
+        }
+      ]
+    },
+    {
+      "name": "asr",
+      "transcript_csv": "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-issue18-c613be1bcce644439d5ebd6bae063b0d\\data\\catalog\\u5Bwx8Vl0U8-55-90-video\\transcripts\\u5Bwx8Vl0U8-55-90-video_v3.csv",
+      "version": 3,
+      "utterances": [
+        {
+          "start_ms": 0,
+          "end_ms": 4980,
+          "state": "target",
+          "score": null,
+          "text": "4日に米中首脳会談を控える中、経済安全保障を含めた"
+        },
+        {
+          "start_ms": 5000,
+          "end_ms": 9320,
+          "state": "target",
+          "score": null,
+          "text": "中国をめぐる諸課題について意見交換を行うとともに"
+        },
+        {
+          "start_ms": 10000,
+          "end_ms": 13700,
+          "state": "target",
+          "score": null,
+          "text": "引き続き、日米で緊密に連携していくことで一致しました。"
+        },
+        {
+          "start_ms": 15000,
+          "end_ms": 19980,
+          "state": "target",
+          "score": null,
+          "text": "またトランプ政権がICC国際刑事裁判所の赤根"
+        },
+        {
+          "start_ms": 20000,
+          "end_ms": 25000,
+          "state": "target",
+          "score": null,
+          "text": "所長らを制裁対象としていること について会談に同席した尾崎"
+        },
+        {
+          "start_ms": 25000,
+          "end_ms": 28360,
+          "state": "target",
+          "score": null,
+          "text": "山崎官房副長官は日本側から切り出した。"
+        },
+        {
+          "start_ms": 30000,
+          "end_ms": 34000,
+          "state": "target",
+          "score": null,
+          "text": "立場を踏まえて率直なやり取りを行ったと説明しました。"
+        }
+      ],
+      "elapsed_seconds": 71.829
+    },
+    {
+      "name": "manual-correction",
+      "transcript_csv": "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-issue18-c613be1bcce644439d5ebd6bae063b0d\\data\\catalog\\u5Bwx8Vl0U8-55-90-video\\transcripts\\u5Bwx8Vl0U8-55-90-video_v4.csv",
+      "version": 4,
+      "before": "4日に米中首脳会談を控える中、経済安全保障を含めた",
+      "after": "4日に米中首脳会談を控える中、経済安全保障を含めた。",
+      "reloaded": true
+    },
+    {
+      "name": "frequent-word",
+      "csv": "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-issue18-c613be1bcce644439d5ebd6bae063b0d\\data\\catalog\\u5Bwx8Vl0U8-55-90-video\\word-counts\\u5Bwx8Vl0U8-55-90-video_v1.csv",
+      "word": "こと",
+      "occurrences": "2",
+      "utterances": "2",
+      "seek_ms": "10000",
+      "matching": [
+        {
+          "word": "こと",
+          "occurrences": "2",
+          "utterances": "2",
+          "start_ms": "10000",
+          "end_ms": "13700",
+          "text": "引き続き、日米で緊密に連携していくことで一致しました。",
+          "transcript_version": "4",
+          "include_verbs": "0",
+          "include_adjectives": "0"
+        },
+        {
+          "word": "こと",
+          "occurrences": "2",
+          "utterances": "2",
+          "start_ms": "20000",
+          "end_ms": "25000",
+          "text": "所長らを制裁対象としていること について会談に同席した尾崎",
+          "transcript_version": "4",
+          "include_verbs": "0",
+          "include_adjectives": "0"
+        }
+      ]
+    },
+    {
+      "name": "segments",
+      "candidates_csv": "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-issue18-c613be1bcce644439d5ebd6bae063b0d\\data\\catalog\\u5Bwx8Vl0U8-55-90-video\\segments\\u5Bwx8Vl0U8-55-90-video_v1.csv",
+      "final_csv": "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-issue18-c613be1bcce644439d5ebd6bae063b0d\\data\\catalog\\u5Bwx8Vl0U8-55-90-video\\segments\\u5Bwx8Vl0U8-55-90-video_v2.csv",
+      "candidates": [
+        {
+          "start_ms": 0,
+          "end_ms": 9980,
+          "kind": "target",
+          "selected": true
+        },
+        {
+          "start_ms": 0,
+          "end_ms": 10000,
+          "kind": "unknown",
+          "selected": true
+        },
+        {
+          "start_ms": 0,
+          "end_ms": 14320,
+          "kind": "target",
+          "selected": true
+        },
+        {
+          "start_ms": 4320,
+          "end_ms": 15000,
+          "kind": "unknown",
+          "selected": true
+        },
+        {
+          "start_ms": 5000,
+          "end_ms": 18700,
+          "kind": "target",
+          "selected": true
+        },
+        {
+          "start_ms": 8700,
+          "end_ms": 20000,
+          "kind": "unknown",
+          "selected": true
+        },
+        {
+          "start_ms": 10000,
+          "end_ms": 24980,
+          "kind": "target",
+          "selected": true
+        },
+        {
+          "start_ms": 14980,
+          "end_ms": 25000,
+          "kind": "unknown",
+          "selected": true
+        },
+        {
+          "start_ms": 15000,
+          "end_ms": 33360,
+          "kind": "target",
+          "selected": true
+        },
+        {
+          "start_ms": 23360,
+          "end_ms": 35000,
+          "kind": "unknown",
+          "selected": true
+        },
+        {
+          "start_ms": 25000,
+          "end_ms": 35035,
+          "kind": "target",
+          "selected": true
+        },
+        {
+          "start_ms": 29000,
+          "end_ms": 35035,
+          "kind": "unknown",
+          "selected": true
+        }
+      ],
+      "selected": [
+        {
+          "start_ms": 0,
+          "end_ms": 5080,
+          "kind": "target",
+          "selected": true
+        },
+        {
+          "start_ms": 29900,
+          "end_ms": 34100,
+          "kind": "target",
+          "selected": true
+        }
+      ]
+    },
+    {
+      "name": "compose",
+      "edit": "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-issue18-c613be1bcce644439d5ebd6bae063b0d\\data\\media\\edits\\u5Bwx8Vl0U8-55-90-video_d2cea4446b52\\S1_0_5080_S2_29900_34100_v1.mp4",
+      "metadata": {
+        "source": "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-issue18-c613be1bcce644439d5ebd6bae063b0d\\data\\media\\originals\\u5Bwx8Vl0U8-55-90-video.mp4",
+        "spans_ms": [
+          [
+            33,
+            5072
+          ],
+          [
+            29897,
+            34101
+          ]
+        ],
+        "fps": "30000/1001",
+        "frame_counts": [
+          151,
+          126
+        ]
+      },
+      "project": "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-issue18-c613be1bcce644439d5ebd6bae063b0d\\data\\projects\\u5Bwx8Vl0U8-55-90-video_d2cea4446b52\\S1_0_5080_S2_29900_34100_v1.aup2",
+      "subtitles": "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-issue18-c613be1bcce644439d5ebd6bae063b0d\\data\\projects\\u5Bwx8Vl0U8-55-90-video_d2cea4446b52\\S1_0_5080_S2_29900_34100_v1_subtitles_v1.ccsub",
+      "caption_objects": [
+        {
+          "start_frame": 0,
+          "end_frame": 148,
+          "text": "4日に米中首脳会談を控える中、経済安全保障を含めた。"
+        },
+        {
+          "start_frame": 148,
+          "end_frame": 150,
+          "text": "中国をめぐる諸課題について意見交換を行うとともに"
+        },
+        {
+          "start_frame": 154,
+          "end_frame": 273,
+          "text": "立場を踏まえて率直なやり取りを行ったと説明しました。"
+        }
+      ]
+    },
+    {
+      "name": "save-export",
+      "save": {
+        "state": "confirmed",
+        "detail": "保存しました（簡易確認）",
+        "path": "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-issue18-c613be1bcce644439d5ebd6bae063b0d\\data\\projects\\u5Bwx8Vl0U8-55-90-video_d2cea4446b52\\S1_0_5080_S2_29900_34100_v1.aup2"
+      },
+      "export": {
+        "state": "confirmed",
+        "detail": "完成動画を書き出しました（簡易確認）",
+        "path": "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-issue18-c613be1bcce644439d5ebd6bae063b0d\\data\\exports\\full-flow.mp4"
+      },
+      "output_probe": {
+        "streams": [
+          {
+            "index": 0,
+            "codec_name": "h264",
+            "codec_long_name": "H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10",
+            "profile": "High",
+            "codec_type": "video",
+            "codec_tag_string": "avc1",
+            "codec_tag": "0x31637661",
+            "mime_codec_string": "avc1.64001f",
+            "width": 640,
+            "height": 360,
+            "coded_width": 640,
+            "coded_height": 368,
+            "has_b_frames": 2,
+            "pix_fmt": "yuv420p",
+            "level": 31,
+            "color_range": "tv",
+            "color_space": "bt709",
+            "color_transfer": "bt709",
+            "color_primaries": "bt709",
+            "chroma_location": "left",
+            "field_order": "progressive",
+            "refs": 4,
+            "is_avc": "true",
+            "nal_length_size": "4",
+            "id": "0x1",
+            "r_frame_rate": "30000/1001",
+            "avg_frame_rate": "30000/1001",
+            "time_base": "1/30000",
+            "start_pts": 0,
+            "start_time": "0.000000",
+            "duration_ts": 277277,
+            "duration": "9.242567",
+            "bit_rate": "7210487",
+            "bits_per_raw_sample": "8",
+            "nb_frames": "277",
+            "nb_read_frames": "277",
+            "extradata_size": 47,
+            "disposition": {
+              "default": 1,
+              "dub": 0,
+              "original": 0,
+              "comment": 0,
+              "lyrics": 0,
+              "karaoke": 0,
+              "forced": 0,
+              "hearing_impaired": 0,
+              "visual_impaired": 0,
+              "clean_effects": 0,
+              "attached_pic": 0,
+              "timed_thumbnails": 0,
+              "non_diegetic": 0,
+              "captions": 0,
+              "descriptions": 0,
+              "metadata": 0,
+              "dependent": 0,
+              "still_image": 0,
+              "multilayer": 0
+            },
+            "tags": {
+              "language": "und",
+              "handler_name": "VideoHandler",
+              "encoder": "Lavc63.1.101 libx264"
+            }
+          },
+          {
+            "index": 1,
+            "codec_name": "aac",
+            "codec_long_name": "AAC (Advanced Audio Coding)",
+            "profile": "LC",
+            "codec_type": "audio",
+            "codec_tag_string": "mp4a",
+            "codec_tag": "0x6134706d",
+            "mime_codec_string": "mp4a.40.2",
+            "sample_fmt": "fltp",
+            "sample_rate": "48000",
+            "channels": 2,
+            "channel_layout": "stereo",
+            "bits_per_sample": 0,
+            "initial_padding": 1024,
+            "id": "0x2",
+            "r_frame_rate": "0/0",
+            "avg_frame_rate": "0/0",
+            "time_base": "1/48000",
+            "start_pts": 0,
+            "start_time": "0.000000",
+            "duration_ts": 443643,
+            "duration": "9.242563",
+            "bit_rate": "193532",
+            "nb_frames": "435",
+            "nb_read_frames": "434",
+            "extradata_size": 5,
+            "disposition": {
+              "default": 1,
+              "dub": 0,
+              "original": 0,
+              "comment": 0,
+              "lyrics": 0,
+              "karaoke": 0,
+              "forced": 0,
+              "hearing_impaired": 0,
+              "visual_impaired": 0,
+              "clean_effects": 0,
+              "attached_pic": 0,
+              "timed_thumbnails": 0,
+              "non_diegetic": 0,
+              "captions": 0,
+              "descriptions": 0,
+              "metadata": 0,
+              "dependent": 0,
+              "still_image": 0,
+              "multilayer": 0
+            },
+            "tags": {
+              "language": "und",
+              "handler_name": "SoundHandler"
+            }
+          }
+        ],
+        "format": {
+          "filename": "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-issue18-c613be1bcce644439d5ebd6bae063b0d\\data\\exports\\full-flow.mp4",
+          "nb_streams": 2,
+          "nb_programs": 0,
+          "nb_stream_groups": 0,
+          "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+          "format_long_name": "QuickTime / MOV",
+          "start_time": "0.000000",
+          "duration": "9.242567",
+          "size": "8566043",
+          "bit_rate": "7414427",
+          "probe_score": 100,
+          "tags": {
+            "major_brand": "isom",
+            "minor_version": "512",
+            "compatible_brands": "isomiso2avc1mp41",
+            "encoder": "Lavf63.1.101"
+          }
+        }
+      },
+      "project_contains_caption": true
+    },
+    {
+      "name": "layout-export",
+      "instruction": "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-issue18-c613be1bcce644439d5ebd6bae063b0d\\data\\projects\\u5Bwx8Vl0U8-55-90-video_d2cea4446b52\\S1_0_5080_S2_29900_34100_v1_layout_v1.cclayout",
+      "save": {
+        "state": "confirmed",
+        "detail": "保存しました（簡易確認）",
+        "path": "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-issue18-c613be1bcce644439d5ebd6bae063b0d\\data\\projects\\u5Bwx8Vl0U8-55-90-video_d2cea4446b52\\S1_0_5080_S2_29900_34100_v1.aup2"
+      },
+      "export": {
+        "state": "confirmed",
+        "detail": "完成動画を書き出しました（簡易確認）",
+        "path": "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-issue18-c613be1bcce644439d5ebd6bae063b0d\\data\\exports\\full-flow-layout.mp4"
+      },
+      "frame": "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-issue18-c613be1bcce644439d5ebd6bae063b0d\\caption-visible.png"
+    },
+    {
+      "name": "word-video-seek",
+      "seek_ms": "10000",
+      "frame": "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-issue18-c613be1bcce644439d5ebd6bae063b0d\\word-seek.png",
+      "frame_sha256": "f6e030af8b4d765d1f24cb14ee6f27eb74fd6e155240b6e2eb201bfbb10ac093"
+    }
+  ],
+  "video": "C:\\Users\\raimu\\AppData\\Local\\Temp\\clipchannel-issue18-c613be1bcce644439d5ebd6bae063b0d\\data\\media\\originals\\u5Bwx8Vl0U8-55-90-video.mp4"
+}
