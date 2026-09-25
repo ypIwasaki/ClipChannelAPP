@@ -1,4 +1,5 @@
 import sys
+import os
 import tempfile
 import types
 import unittest
@@ -31,6 +32,25 @@ class FakeYoutubeDL:
 
 
 class DownloadTests(unittest.TestCase):
+    def test_configured_ffmpeg_is_passed_to_yt_dlp(self):
+        seen = []
+
+        class RecordingYoutubeDL(FakeYoutubeDL):
+            def __init__(self, options):
+                seen.append(options)
+                super().__init__(options)
+
+        with tempfile.TemporaryDirectory() as temporary:
+            data = DataFolder()
+            data.select(temporary)
+            session = DownloadSession(data, "https://example.test/list")
+            with patch.dict(os.environ, {"CLIPCHANNEL_FFMPEG": str(Path(temporary) / "ffmpeg.exe")}), \
+                 patch.dict(sys.modules, {"yt_dlp": types.SimpleNamespace(YoutubeDL=RecordingYoutubeDL)}), \
+                 patch("clipchannel.download.prepare_media") as prepare:
+                prepare.side_effect = lambda _data, source, **_kwargs: types.SimpleNamespace(editing=source)
+                session.run()
+        self.assertEqual(seen[1]["ffmpeg_location"], str(Path(temporary) / "ffmpeg.exe"))
+
     def test_managed_download_preserves_missing_dependency_message(self):
         class Control:
             def cancelled(self):

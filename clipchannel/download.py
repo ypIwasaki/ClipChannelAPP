@@ -1,6 +1,7 @@
 """Unauthenticated media acquisition with per-item results and cooperative stop."""
 
 import shlex
+import os
 import tempfile
 import time
 import uuid
@@ -253,6 +254,9 @@ class DownloadSession:
                            "progress_hooks": [lambda value: self._hook(value, stop_requested)],
                            "postprocessor_hooks": [lambda value: self._hook(value, stop_requested)], "overwrites": False,
                            "restrictfilenames": True, **self.options}
+                configured_ffmpeg = os.environ.get("CLIPCHANNEL_FFMPEG")
+                if configured_ffmpeg:
+                    options["ffmpeg_location"] = configured_ffmpeg
                 if "subtitleslangs" in options:
                     options["writesubtitles"] = True
                 with yt_dlp.YoutubeDL(options) as ydl:
