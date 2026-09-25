@@ -7,7 +7,7 @@ from pathlib import Path
 
 def _send_file(path, kind):
     """Return the plugin result after sending a file to an open AviUtl2."""
-    key = 0x43435331 if kind == "subtitles" else 0x43434C31
+    key = {"subtitles": 0x43435331, "layout": 0x43434C31, "media": 0x43434D31}[kind]
     if os.name != "nt":
         if not Path("/mnt/c/Windows").is_dir():
             return None
@@ -57,9 +57,14 @@ def _send_file(path, kind):
 
 def apply_layout(path):
     """Return 'preview', 'applied', or None after applying a layout."""
-    return {1: "preview", 2: "applied"}.get(_send_file(path, "layout"))
+    return {1: "preview", 2: "applied"}.get(_send_file(path, "layout") or 0)
 
 
 def apply_subtitles(path):
     """Return whether a subtitle version was added to an open AviUtl2."""
     return _send_file(path, "subtitles") == 1
+
+
+def apply_supporting_media(path):
+    """Return 'preview', 'applied', or None for a supporting-media adjustment."""
+    return {1: "preview", 2: "applied"}.get(_send_file(path, "media") or 0)

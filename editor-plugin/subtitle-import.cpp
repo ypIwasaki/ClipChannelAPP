@@ -247,6 +247,8 @@ static void write_preview(void*, int, const void* buffer, int width, int height,
     }
 }
 
+#include "supporting-media.h"
+
 static void create_objects(EDIT_SECTION* edit) {
     imported = rejected = 0;
     matching_project = matching_video(edit) != nullptr;
@@ -313,13 +315,15 @@ static void layout_menu(void*) {
 static LRESULT CALLBACK layout_bridge_proc(HWND window, UINT message, WPARAM key, LPARAM data) {
     if (message == WM_COPYDATA) {
         auto packet = reinterpret_cast<const COPYDATASTRUCT*>(data);
-        if (!packet || (packet->dwData != 0x43434c31 && packet->dwData != 0x43435331) || !packet->lpData ||
+        if (!packet || (packet->dwData != 0x43434c31 && packet->dwData != 0x43435331 &&
+                        packet->dwData != 0x43434d31) || !packet->lpData ||
             packet->cbData < sizeof(wchar_t) || packet->cbData > 32768 * sizeof(wchar_t) ||
             packet->cbData % sizeof(wchar_t)) return 0;
         auto chars = reinterpret_cast<const wchar_t*>(packet->lpData);
         size_t length = packet->cbData / sizeof(wchar_t);
         if (chars[length - 1] != L'\0' || wcsnlen_s(chars, length) != length - 1) return 0;
         if (packet->dwData == 0x43435331) return apply_subtitle_file(chars) ? 1 : 0;
+        if (packet->dwData == 0x43434d31) return apply_media_file(chars);
         bool complete = apply_layout_file(chars);
         return complete ? 1 : layout_applied ? 2 : 0;
     }

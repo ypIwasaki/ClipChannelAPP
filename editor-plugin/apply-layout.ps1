@@ -1,5 +1,5 @@
 param([Parameter(Mandatory = $true)][string]$FilePath,
-      [ValidateSet('layout', 'subtitles')][string]$Kind = 'layout')
+      [ValidateSet('layout', 'subtitles', 'media')][string]$Kind = 'layout')
 
 Add-Type -TypeDefinition @'
 using System;
@@ -24,7 +24,7 @@ public static class ClipChannelLayoutBridge {
         IntPtr data = Marshal.StringToHGlobalUni(path);
         try {
             CopyData packet = new CopyData {
-                dwData = new IntPtr(kind == "subtitles" ? 0x43435331 : 0x43434c31),
+                dwData = new IntPtr(kind == "subtitles" ? 0x43435331 : kind == "media" ? 0x43434d31 : 0x43434c31),
                 cbData = checked((path.Length + 1) * 2),
                 lpData = data
             };

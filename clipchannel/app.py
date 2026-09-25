@@ -26,6 +26,7 @@ from .compose import adjacent_frame, compose_video, is_variable_fps, nearest_fra
 from .subtitles import Subtitle, prepare_subtitle_import, write_subtitle_import
 from .layout import Layout, save_layout
 from .editor_bridge import apply_layout, apply_subtitles
+from .supporting_media_ui import SupportingMediaPanel
 
 
 def configure_japanese_fonts(window):
@@ -640,6 +641,8 @@ def build_app():
         screen["height"].set(str(width if kind == "ショート" else height))
 
     def prepare_layout():
+        if pending[0] or data.running:
+            return
         try:
             width, height = video_dimensions()
             path = save_layout(data, composed_path[0], current_layout(), width, height)
@@ -749,6 +752,7 @@ def build_app():
             return
         status.set(f"編集用動画を保存しました: {path}")
         composed_path[0] = path
+        supporting_panel.set_video(path)
         width, height = video_dimensions()
         for name, value in Layout(width, height).__dict__.items():
             screen[name].set(str(value))
@@ -759,6 +763,8 @@ def build_app():
         messagebox.showinfo("編集用動画", f"保存しました: {path}\n映像・音声の継ぎ目を再生して確認してください")
 
     def export_subtitles():
+        if pending[0] or data.running:
+            return
         video = segment_video()
         if video is None or composed_path[0] is None or not listing.curselection() or review_dirty[0]:
             messagebox.showerror("字幕を取り込めません", "編集用動画と保存済み文字起こしCSVを選んでください")
@@ -804,6 +810,8 @@ def build_app():
         subtitle_text.insert("1.0", row.text)
 
     def save_subtitle_edit():
+        if pending[0] or data.running:
+            return
         selected = subtitle_list.curselection()
         if composed_path[0] is None or len(selected) != 1:
             messagebox.showerror("字幕を変更できません", "編集用動画と字幕を選んでください")
@@ -874,6 +882,9 @@ def build_app():
     subtitle_text = tk.Text(layout_tab, height=3, width=32)
     subtitle_text.pack(fill="x")
     ttk.Button(layout_tab, text="選択字幕を別版保存", command=save_subtitle_edit).pack(anchor="w")
+
+    supporting_panel = SupportingMediaPanel(saved_tabs, data, status)
+    saved_tabs.add(supporting_panel, text="補助素材")
 
     def refresh_people():
         current_people[0] = tuple(list_people(data))
@@ -1183,6 +1194,8 @@ def build_app():
             messagebox.showerror("フォルダを切り替えられません", str(error))
             return
         location.set(str(data.path))
+        composed_path[0] = None
+        supporting_panel.set_video(None)
         listing.delete(0, tk.END)
         for path in paths:
             listing.insert(tk.END, path)
@@ -1302,6 +1315,7 @@ def build_app():
                 return
             if player[0] and player[0].poll() is None:
                 player[0].terminate()
+            supporting_panel.stop_audio()
             window.destroy()
 
     window.protocol("WM_DELETE_WINDOW", close)
