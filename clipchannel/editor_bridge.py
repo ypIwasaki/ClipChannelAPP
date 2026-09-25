@@ -7,7 +7,7 @@ from pathlib import Path
 
 def _send_file(path, kind):
     """Return the plugin result after sending a file to an open AviUtl2."""
-    key = {"subtitles": 0x43435331, "layout": 0x43434C31, "media": 0x43434D31}[kind]
+    key = {"subtitles": 0x43435331, "layout": 0x43434C31, "media": 0x43434D31, "control": 0x43434531}[kind]
     if os.name != "nt":
         if not Path("/mnt/c/Windows").is_dir():
             return None
@@ -19,7 +19,9 @@ def _send_file(path, kind):
             result = subprocess.run(["powershell.exe", "-NoProfile", "-ExecutionPolicy", "Bypass",
                                      "-File", *paths, kind],
                                     capture_output=True, text=True, timeout=70)
-        except (OSError, subprocess.CalledProcessError, subprocess.TimeoutExpired):
+        except subprocess.TimeoutExpired:
+            return 3 if kind == "control" else None
+        except (OSError, subprocess.CalledProcessError):
             return None
         return result.returncode
     import ctypes
@@ -30,6 +32,8 @@ def _send_file(path, kind):
                     ("lpData", ctypes.c_void_p))
 
     user32 = ctypes.WinDLL("user32", use_last_error=True)
+    user32.IsWindow.argtypes = (wintypes.HWND,)
+    user32.IsWindow.restype = wintypes.BOOL
     user32.FindWindowExW.argtypes = (wintypes.HWND, wintypes.HWND,
                                       wintypes.LPCWSTR, wintypes.LPCWSTR)
     user32.FindWindowExW.restype = wintypes.HWND
@@ -50,6 +54,8 @@ def _send_file(path, kind):
         result = ctypes.c_size_t()
         sent = user32.SendMessageTimeoutW(window, 0x004A, 0, ctypes.addressof(packet),
                                           0x0002, 60000, ctypes.byref(result))
+        if kind == "control" and not sent:
+            return 3 if user32.IsWindow(window) else 0
         if sent and result.value in (1, 2):
             return result.value
         previous = window
@@ -68,3 +74,8 @@ def apply_subtitles(path):
 def apply_supporting_media(path):
     """Return 'preview', 'applied', or None for a supporting-media adjustment."""
     return {1: "preview", 2: "applied"}.get(_send_file(path, "media") or 0)
+
+
+def send_control(path):
+    """Submit control once; 3 means delivery completion could not be confirmed."""
+    return _send_file(path, "control")

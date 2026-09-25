@@ -193,6 +193,31 @@ class SupportingMediaPanel(ttk.Frame):
                                      "保存したAviUtl2プロジェクトを開いてください。プラグインの更新も確認してください。")
         self.run(lambda: apply_supporting_media(path), finish)
 
+    def pending_snapshot(self):
+        """Capture draft placement values on the Tk thread without clearing input."""
+        placements = list(self.placements)
+        if self.form_dirty and self.selected_index is not None:
+            values = {name: int(variable.get()) if name in ("first", "length")
+                      else float(variable.get()) for name, variable in self.fields.items()
+                      if name != "preview_frame"}
+            placements[self.selected_index] = replace(placements[self.selected_index], **values)
+        return [item for item in placements if item != self.applied.get(item.identity)]
+
+    def apply_pending(self, placements):
+        """Apply a captured batch in a worker; a failure retains every GUI draft."""
+        for placement in placements:
+            path = save_supporting_media(self.data, placement, preview_frame=placement.first)
+            if apply_supporting_media(path) not in ("preview", "applied"):
+                raise StorageError("補助素材をAviUtl2へ適用できません。入力を保持しています")
+
+    def commit_pending(self, placements):
+        by_identity = {item.identity: item for item in placements}
+        self.placements = [by_identity.get(item.identity, item) for item in self.placements]
+        self.applied.update(by_identity)
+        self.form_dirty = False
+        if self.selected_index is not None and self.placements:
+            self.refresh(self.selected_index)
+
     def show_preview(self):
         if self.preview is None:
             messagebox.showinfo("プレビュー", "先に配置を適用してください")

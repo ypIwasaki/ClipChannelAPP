@@ -27,6 +27,7 @@ from .subtitles import Subtitle, prepare_subtitle_import, write_subtitle_import
 from .layout import Layout, save_layout
 from .editor_bridge import apply_layout, apply_subtitles
 from .supporting_media_ui import SupportingMediaPanel
+from .save_export_ui import SaveExportPanel, WidgetLock
 
 
 def configure_japanese_fonts(window):
@@ -609,13 +610,32 @@ def build_app():
     compose_list.pack(fill="x")
     compose_fps = tk.StringVar()
     frame_status = tk.StringVar()
-    composed_path = [None]
+    composed_path: list[Path | None] = [None]
     screen = {name: tk.StringVar(value=str(value)) for name, value in Layout(1920, 1080).__dict__.items()}
     screen_kind = tk.StringVar(value="横")
-    layout_path = [None]
+    layout_path: list[Path | None] = [None]
     subtitle_rows = [[]]
     subtitle_first = tk.StringVar()
     subtitle_last = tk.StringVar()
+    layout_dirty = [False]
+    subtitle_dirty = [False]
+    subtitle_pending = [False]
+    subtitle_applied_rows: list[tuple[Subtitle, ...] | None] = [None]
+    subtitle_selected: list[int | None] = [None]
+    filling_subtitle = [False]
+
+    def mark_layout_dirty(*_args):
+        if composed_path[0] is not None:
+            layout_dirty[0] = True
+
+    def mark_subtitle_dirty(*_args):
+        if not filling_subtitle[0] and subtitle_selected[0] is not None:
+            subtitle_dirty[0] = True
+
+    for variable in screen.values():
+        variable.trace_add("write", mark_layout_dirty)
+    for variable in (subtitle_first, subtitle_last):
+        variable.trace_add("write", mark_subtitle_dirty)
 
     def current_layout():
         integer_fields = {"width", "height", "crop_left", "crop_top", "crop_right",
@@ -630,6 +650,8 @@ def build_app():
         return probe_frames(composed_path[0])[2:4]
 
     def choose_screen(kind):
+        if pending[0] or data.running:
+            return
         try:
             width, height = video_dimensions()
         except (OSError, StorageError) as error:
@@ -652,6 +674,7 @@ def build_app():
         layout_path[0] = path
         status.set(f"画面設定を保存しました: {path.name}")
         applied = apply_layout(path)
+        layout_dirty[0] = applied not in ("preview", "applied")
         if applied == "preview":
             show_layout_preview()
         elif applied == "applied":
@@ -737,6 +760,9 @@ def build_app():
                          stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
     def render_compose():
+        if save_export_panel.has_unsaved_project():
+            messagebox.showerror("編集用動画を作れません", "現在の編集を「保存」してから別の編集用動画を作成してください")
+            return
         if supporting_panel.has_unsaved:
             messagebox.showerror("編集用動画を作れません", "補助素材の入力を適用するか破棄してください")
             return
@@ -761,11 +787,18 @@ def build_app():
             screen[name].set(str(value))
         layout_path[0] = None
         subtitle_rows[0] = []
+        subtitle_dirty[0] = subtitle_pending[0] = False
+        subtitle_selected[0] = None
+        subtitle_applied_rows[0] = None
         refresh_subtitle_list()
         choose_screen("ショート" if messagebox.askyesno("画面を選択", "ショート画面で編集しますか？\n「いいえ」は横画面です") else "横")
+        save_export_panel.set_video(path, short=screen_kind.get() == "ショート")
         messagebox.showinfo("編集用動画", f"保存しました: {path}\n映像・音声の継ぎ目を再生して確認してください")
 
     def export_subtitles():
+        if subtitle_dirty[0] or subtitle_pending[0]:
+            messagebox.showerror("字幕を取り込めません", "現在の字幕入力を「保存」してから取り込んでください")
+            return
         if pending[0] or data.running:
             return
         video = segment_video()
@@ -784,13 +817,18 @@ def build_app():
             return
         status.set(f"字幕 {len(rows)} 件を準備しました: {path.name}")
         subtitle_rows[0] = rows
+        subtitle_selected[0] = None
+        subtitle_pending[0] = True
         refresh_subtitle_list()
         apply_subtitle_version(path)
 
     def apply_subtitle_version(path):
+        subtitle_pending[0] = True
         if not apply_subtitles(path):
             messagebox.showinfo("字幕の取込み", f"AviUtl2で直接追加できませんでした。「ClipChannel\\字幕を追加」から選んでください。\n{path}")
             return
+        subtitle_dirty[0] = subtitle_pending[0] = False
+        subtitle_applied_rows[0] = tuple(subtitle_rows[0])
         status.set(f"AviUtl2へ字幕を追加しました: {path.name}")
         if layout_path[0] is not None and apply_layout(layout_path[0]) == "preview":
             show_layout_preview()
@@ -806,11 +844,26 @@ def build_app():
         selected = subtitle_list.curselection()
         if len(selected) != 1:
             return
-        row = subtitle_rows[0][selected[0]]
-        subtitle_first.set(str(row.start_frame))
-        subtitle_last.set(str(row.end_frame))
-        subtitle_text.delete("1.0", tk.END)
-        subtitle_text.insert("1.0", row.text)
+        index = selected[0]
+        if subtitle_dirty[0] and index != subtitle_selected[0]:
+            subtitle_list.selection_clear(0, tk.END)
+            if subtitle_selected[0] is not None:
+                subtitle_list.selection_set(subtitle_selected[0])
+            messagebox.showerror("編集用字幕", "現在の字幕入力を保存してから別の字幕を選んでください")
+            return
+        if subtitle_dirty[0]:
+            return
+        row = subtitle_rows[0][index]
+        subtitle_selected[0] = index
+        filling_subtitle[0] = True
+        try:
+            subtitle_first.set(str(row.start_frame))
+            subtitle_last.set(str(row.end_frame))
+            subtitle_text.delete("1.0", tk.END)
+            subtitle_text.insert("1.0", row.text)
+            subtitle_text.edit_modified(False)
+        finally:
+            filling_subtitle[0] = False
 
     def save_subtitle_edit():
         if pending[0] or data.running:
@@ -847,7 +900,7 @@ def build_app():
                             ("終了+1F", lambda: step_frame(segment_end, "終了", 1)),
                             ("編集用MP4を作成", render_compose),
                             ("字幕をAviUtl2へ追加", export_subtitles),
-                            ("完成動画を再生", play_composed)):
+                            ("編集用動画を再生", play_composed)):
         ttk.Button(compose_actions, text=caption, command=action).pack(side="left")
     ttk.Label(segments_tab, text="固定fps（可変fpsでは必須。空欄なら元動画優先）").pack(anchor="w")
     ttk.Entry(segments_tab, textvariable=compose_fps, width=10).pack(anchor="w")
@@ -884,10 +937,68 @@ def build_app():
         ttk.Entry(subtitle_line, textvariable=variable, width=7).pack(side="left")
     subtitle_text = tk.Text(layout_tab, height=3, width=32)
     subtitle_text.pack(fill="x")
+    def text_modified(_event=None):
+        if subtitle_text.edit_modified():
+            mark_subtitle_dirty()
+            subtitle_text.edit_modified(False)
+    subtitle_text.bind("<<Modified>>", text_modified)
     ttk.Button(layout_tab, text="選択字幕を別版保存", command=save_subtitle_edit).pack(anchor="w")
 
     supporting_panel = SupportingMediaPanel(saved_tabs, data, status)
     saved_tabs.add(supporting_panel, text="補助素材")
+
+    def has_editor_drafts():
+        return layout_dirty[0] or subtitle_dirty[0] or subtitle_pending[0] or supporting_panel.has_unsaved
+
+    def prepare_editor_drafts():
+        """Capture Tk values before dispatch; clear drafts only after confirmed save."""
+        video = composed_path[0]
+        if video is None:
+            raise StorageError("編集用動画を作成してください")
+        layout = current_layout() if layout_dirty[0] else None
+        dimensions = video_dimensions() if layout is not None else (0, 0)
+        if layout is not None:
+            layout.validate(*dimensions)
+        rows = list(subtitle_rows[0]) if subtitle_dirty[0] or subtitle_pending[0] else None
+        if subtitle_dirty[0] and rows is not None:
+            index = subtitle_selected[0]
+            if index is None:
+                raise StorageError("変更する字幕を選択してください")
+            rows[index] = Subtitle(int(subtitle_first.get()), int(subtitle_last.get()),
+                                   subtitle_text.get("1.0", "end-1c"))
+        placements = supporting_panel.pending_snapshot()
+        layout_result: list[Path | None] = [None]
+        def work():
+            if rows is not None and tuple(rows) != subtitle_applied_rows[0]:
+                metadata = json.loads(video.with_suffix(".json").read_text(encoding="utf-8"))
+                path, _ = write_subtitle_import(data, video, rows, sum(metadata["frame_counts"]))
+                if not apply_subtitles(path):
+                    raise StorageError("字幕をAviUtl2へ適用できません。入力を保持しています")
+                subtitle_applied_rows[0] = tuple(rows)
+            if layout is not None:
+                path = save_layout(data, video, layout, *dimensions)
+                if apply_layout(path) not in ("preview", "applied"):
+                    raise StorageError("画面設定をAviUtl2へ適用できません。入力を保持しています")
+                layout_result[0] = path
+            supporting_panel.apply_pending(placements)
+        def commit():
+            if rows is not None:
+                subtitle_rows[0] = rows
+                subtitle_dirty[0] = subtitle_pending[0] = False
+                refresh_subtitle_list()
+                if subtitle_selected[0] is not None:
+                    subtitle_list.selection_set(subtitle_selected[0])
+            if layout is not None:
+                layout_path[0] = layout_result[0]
+                layout_dirty[0] = False
+            supporting_panel.commit_pending(placements)
+        return work, commit
+
+    editor_widget_lock = WidgetLock((segments_tab, layout_tab, supporting_panel))
+
+    save_export_panel = SaveExportPanel(saved_tabs, data, status, has_drafts=has_editor_drafts,
+                                        prepare_drafts=prepare_editor_drafts, lock_editing=editor_widget_lock.set_locked)
+    saved_tabs.add(save_export_panel, text="保存・書き出し")
 
     def refresh_people():
         current_people[0] = tuple(list_people(data))
@@ -1184,13 +1295,14 @@ def build_app():
         "情報のみはファイルを保存しません。" )).pack(side="left", padx=4)
 
     def choose():
-        if pending[0]:
+        if pending[0] or data.running:
             messagebox.showerror("フォルダを切り替えられません", "処理中のためフォルダを切り替えられません")
             return
         selected = filedialog.askdirectory(mustexist=True)
         if not selected:
             return
-        data.unsaved = unsaved.get() or review_dirty[0] or segment_dirty[0] or supporting_panel.has_unsaved
+        data.unsaved = (unsaved.get() or review_dirty[0] or segment_dirty[0] or
+                        has_editor_drafts() or save_export_panel.has_unsaved_project())
         try:
             paths = data.select(selected)
         except (OSError, StorageError) as error:
@@ -1199,6 +1311,10 @@ def build_app():
         location.set(str(data.path))
         composed_path[0] = None
         supporting_panel.set_video(None)
+        save_export_panel.set_video(None)
+        layout_dirty[0] = subtitle_dirty[0] = subtitle_pending[0] = False
+        subtitle_selected[0] = None
+        subtitle_applied_rows[0] = None
         listing.delete(0, tk.END)
         for path in paths:
             listing.insert(tk.END, path)
@@ -1305,6 +1421,9 @@ def build_app():
     tk.Button(media_actions, text="ローカル動画を登録", command=register).pack(side="left", padx=(0, 4))
     tk.Button(media_actions, text="選択した動画を媒体確認・変換（再試行）", command=prepare_selected).pack(side="left", padx=4)
     def close():
+        if save_export_panel.busy:
+            save_export_panel.request_close(finish_close)
+            return
         if pending[0] or data.running:
             stop_download()
             status.set("停止完了を待っています")
@@ -1316,13 +1435,13 @@ def build_app():
             if segment_dirty[0]:
                 messagebox.showerror("終了できません", "保存されていない切り出し区間があります。「保存を再試行」を押してください")
                 return
-            if supporting_panel.has_unsaved:
-                messagebox.showerror("終了できません", "補助素材の入力を適用するか破棄してください")
-                return
-            if player[0] and player[0].poll() is None:
-                player[0].terminate()
-            supporting_panel.stop_audio()
-            window.destroy()
+            save_export_panel.request_close(finish_close)
+
+    def finish_close():
+        if player[0] and player[0].poll() is None:
+            player[0].terminate()
+        supporting_panel.stop_audio()
+        window.destroy()
 
     window.protocol("WM_DELETE_WINDOW", close)
     listing.bind("<<ListboxSelect>>", show)

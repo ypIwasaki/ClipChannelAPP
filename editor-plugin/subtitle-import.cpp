@@ -137,7 +137,7 @@ static std::string alias_for(const std::string& text, int length) {
 static OBJECT_HANDLE matching_video(EDIT_SECTION* edit) {
     auto project = edit->get_project_file(edit_handle);
     auto path = project ? project->get_project_file_path() : nullptr;
-    if (!path || std::filesystem::path(path).parent_path() != selected_file.parent_path())
+    if (path && *path && std::filesystem::path(path).parent_path() != selected_file.parent_path())
         return nullptr;
     std::string normalized = video_path;
     std::replace(normalized.begin(), normalized.end(), '\\', '/');
@@ -248,6 +248,7 @@ static void write_preview(void*, int, const void* buffer, int width, int height,
 }
 
 #include "supporting-media.h"
+#include "save-export.h"
 
 static void create_objects(EDIT_SECTION* edit) {
     imported = rejected = 0;
@@ -313,15 +314,27 @@ static void layout_menu(void*) {
 }
 
 static LRESULT CALLBACK layout_bridge_proc(HWND window, UINT message, WPARAM key, LPARAM data) {
+    if (message == WM_TIMER && key == 14) { poll_initial_save(); return 0; }
+    if (message == control_finished_message) return finish_control_export() ? 1 : 0;
     if (message == WM_COPYDATA) {
         auto packet = reinterpret_cast<const COPYDATASTRUCT*>(data);
         if (!packet || (packet->dwData != 0x43434c31 && packet->dwData != 0x43435331 &&
-                        packet->dwData != 0x43434d31) || !packet->lpData ||
+                        packet->dwData != 0x43434d31 && packet->dwData != 0x43434531) || !packet->lpData ||
             packet->cbData < sizeof(wchar_t) || packet->cbData > 32768 * sizeof(wchar_t) ||
             packet->cbData % sizeof(wchar_t)) return 0;
         auto chars = reinterpret_cast<const wchar_t*>(packet->lpData);
         size_t length = packet->cbData / sizeof(wchar_t);
         if (chars[length - 1] != L'\0' || wcsnlen_s(chars, length) != length - 1) return 0;
+        if (packet->dwData == 0x43434531) {
+            try { return apply_control_file(chars); }
+            catch (...) {
+                ControlRequest request;
+                request.instruction = chars;
+                control_response(request, ControlSnapshot{}, "failed", "control-request-failed");
+                return 1;
+            }
+        }
+        if (export_busy) return 0;
         if (packet->dwData == 0x43435331) return apply_subtitle_file(chars) ? 1 : 0;
         if (packet->dwData == 0x43434d31) return apply_media_file(chars);
         bool complete = apply_layout_file(chars);
@@ -362,10 +375,15 @@ extern "C" __declspec(dllexport) DWORD RequiredVersion() { return 2010900; }
 extern "C" __declspec(dllexport) COMMON_PLUGIN_TABLE* GetCommonPluginTable() { return &plugin_table; }
 extern "C" __declspec(dllexport) bool InitializePlugin(DWORD) { return true; }
 extern "C" __declspec(dllexport) void UninitializePlugin() {
+    shutdown_control();
     if (layout_bridge_window) DestroyWindow(layout_bridge_window);
 }
 extern "C" __declspec(dllexport) void RegisterPlugin(HOST_APP_TABLE* host) {
     edit_handle = host->create_edit_handle();
+    host->register_project_save_handler(save_control_marker);
+    host->register_project_load_handler(load_control_project);
+    host->register_event_listener(EVENT_TYPE::UPDATE_OBJECT, nullptr, control_changed);
+    host->register_event_listener(EVENT_TYPE::CHANGE_EDIT_SCENE, nullptr, control_changed);
     host->register_edit_menu_param(L"ClipChannel\\字幕を追加", nullptr, import_menu);
     host->register_edit_menu_param(L"ClipChannel\\画面設定を適用", nullptr, layout_menu);
     WNDCLASSW window_class{};

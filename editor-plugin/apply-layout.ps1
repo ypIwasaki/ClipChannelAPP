@@ -1,5 +1,5 @@
 param([Parameter(Mandatory = $true)][string]$FilePath,
-      [ValidateSet('layout', 'subtitles', 'media')][string]$Kind = 'layout')
+      [ValidateSet('layout', 'subtitles', 'media', 'control')][string]$Kind = 'layout')
 
 Add-Type -TypeDefinition @'
 using System;
@@ -20,11 +20,13 @@ public static class ClipChannelLayoutBridge {
     private static extern IntPtr SendMessageTimeout(IntPtr window, uint message, IntPtr key,
         ref CopyData data, uint flags, uint timeout, out IntPtr result);
 
+    [DllImport("user32.dll")]
+    private static extern bool IsWindow(IntPtr window);
     public static int Apply(string path, string kind) {
         IntPtr data = Marshal.StringToHGlobalUni(path);
         try {
             CopyData packet = new CopyData {
-                dwData = new IntPtr(kind == "subtitles" ? 0x43435331 : kind == "media" ? 0x43434d31 : 0x43434c31),
+                dwData = new IntPtr(kind == "control" ? 0x43434531 : kind == "subtitles" ? 0x43435331 : kind == "media" ? 0x43434d31 : 0x43434c31),
                 cbData = checked((path.Length + 1) * 2),
                 lpData = data
             };
@@ -33,8 +35,9 @@ public static class ClipChannelLayoutBridge {
                 IntPtr window = FindWindowEx(new IntPtr(-3), previous, "ClipChannelLayoutBridge", null);
                 if (window == IntPtr.Zero) return 0;
                 IntPtr result;
-                if (SendMessageTimeout(window, 0x004a, IntPtr.Zero, ref packet, 0x0002, 60000,
-                    out result) != IntPtr.Zero && (result.ToInt64() == 1 || result.ToInt64() == 2))
+                IntPtr delivered = SendMessageTimeout(window, 0x004a, IntPtr.Zero, ref packet, 0x0002, 60000, out result);
+                if (delivered == IntPtr.Zero && kind == "control") return IsWindow(window) ? 3 : 0;
+                if (delivered != IntPtr.Zero && (result.ToInt64() == 1 || result.ToInt64() == 2))
                     return (int)result.ToInt64();
                 previous = window;
             }
