@@ -3,7 +3,7 @@
 from dataclasses import dataclass
 from pathlib import Path
 
-from .storage import StorageError, _read_csv, _write_csv
+from .storage import StorageError, _read_csv, _write_csv, result_relative_path
 
 
 SHARED_KEYS = {"people": "person_id", "registered-words": "word", "excluded-words": "word"}
@@ -17,18 +17,28 @@ class Registration:
     hidden: bool = False
 
 
-def snapshot_references(data, source, kind, rows, extra=()):
+def snapshot_references(data, source, kind, rows, extra=(), source_version=None):
     """Capture references at save time; later target changes cannot rewrite them."""
     references = {("videos", source.relative_to(data._root()).as_posix()), *extra}
     if kind == "transcripts":
-        references.update(("people", row["person_id"]) for row in data.load_shared("targets")
-                          if row["video_name"].casefold() == source.name.casefold())
+        if source_version is None:
+            references.update(("people", row["person_id"]) for row in data.load_shared("targets")
+                              if row["video_name"].casefold() == source.name.casefold())
+        else:
+            data.load_result(source.name, kind, source_version)
+            original = data._root() / result_relative_path(source.name, kind, source_version)
+            previous_references = original.with_suffix(".refs.csv")
+            if previous_references.exists():
+                references.update((row["kind"], row["key"])
+                                  for row in _read_csv(previous_references, "result-references"))
+            else:
+                references.add(("unresolved-people", ""))
         references.update(("people", row["speaker_id"]) for row in rows
                           if row["speaker_id"] not in {"target", "non-target", "unknown", ""})
     if kind == "word-counts":
         for dictionary in ("registered-words", "excluded-words"):
             references.update((dictionary, row["word"]) for row in data.load_shared(dictionary))
-        references.update(("results", f"catalog/{source.stem}/transcripts/{source.stem}_v{row['transcript_version']}.csv")
+        references.update(("results", result_relative_path(source.name, "transcripts", int(row["transcript_version"])))
                           for row in rows)
     return [{"kind": kind, "key": key} for kind, key in sorted(references)]
 
@@ -82,6 +92,10 @@ class RegistrationManager:
             rows.append({"kind": kind, "key": key, "state": state})
         _write_csv(self.data._root() / "catalog" / "list-state.csv", "list-state", rows)
 
+    def restore_deleted(self, kind, key):
+        if any((row["kind"], row["key"], row["state"]) == (kind, key, "deleted") for row in self._states()):
+            self._set_state(kind, key, "")
+
     def set_hidden(self, kind, key, hidden):
         self._require_entry(kind, key)
         self._set_state(kind, key, "hidden" if hidden else "")
@@ -91,6 +105,8 @@ class RegistrationManager:
             references = result.with_suffix(".refs.csv")
             if references.exists():
                 rows = _read_csv(references, "result-references")
+                if kind == "people" and any(row["kind"] == "unresolved-people" for row in rows):
+                    raise StorageError("修正元の旧結果の人物参照を確認できません。非表示にしてください")
                 if any((row["kind"], row["key"]) == (kind, key) for row in rows):
                     raise StorageError(f"保存済み結果から参照されています: {result.name}")
             else:

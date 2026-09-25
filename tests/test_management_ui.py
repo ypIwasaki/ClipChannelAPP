@@ -95,6 +95,57 @@ class ManagementUiTests(unittest.TestCase):
             self.assertTrue(archive.is_file())
             self.assertEqual(len(list((root / "logs").glob("*.log"))), 2)
 
+    def test_reopening_old_transcript_keeps_person_reference_through_autosave(self):
+        from clipchannel.managed_process_ui import ProcessPanel
+        from clipchannel.registrations import RegistrationManager
+        from clipchannel.storage import StorageError
+        from clipchannel.transcribe import Interval, save_intervals
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            data = DataFolder()
+            data.select(root)
+            source = root / "sample.mp4"
+            source.write_bytes(b"video")
+            video = data.register_video(source)
+            data.save_shared("people", [
+                {"person_id": key, "name": key, "reference_audio": f"people/{key}.wav",
+                 "feature_file": f"people/{key}.json"} for key in ("Alice", "Bob")])
+            data.save_shared("targets", [{"video_name": video.name, "person_id": "Alice"}])
+            first = save_intervals(data, video, [Interval(0, 1000, "target", text="Aliceの発言")])
+            data.save_shared("targets", [{"video_name": video.name, "person_id": "Bob"}])
+            window = build_app()
+            self.addCleanup(window.destroy)
+            widgets = list(descendants(window))
+            choose = next(w for w in widgets if w.winfo_class() == "Button"
+                          and w.cget("text") == "フォルダを選択・切り替え")
+            with patch("tkinter.filedialog.askdirectory", return_value=str(root)):
+                choose.invoke()
+            relative = first.relative_to(root).as_posix()
+            saved = next(w for w in widgets if isinstance(w, tk.Listbox) and relative in w.get(0, tk.END))
+            saved.selection_set(saved.get(0, tk.END).index(relative))
+            next(w for w in widgets if w.winfo_class() == "TButton" and
+                 w.cget("text") == "保存版を再表示").invoke()
+            review = next(w for w in widgets if isinstance(w, tk.Listbox) and
+                          any("Aliceの発言" in item for item in w.get(0, tk.END)))
+            review.selection_set(0)
+            next(w for w in widgets if w.winfo_class() == "TButton" and
+                 w.cget("text") == "対象発話").invoke()
+            processes = next(w for w in widgets if isinstance(w, ProcessPanel))
+            deadline = time.monotonic() + 15
+            def tick():
+                if processes.active and time.monotonic() < deadline:
+                    window.after(25, tick)
+                else:
+                    window.quit()
+            window.after(25, tick)
+            window.mainloop()
+            self.assertFalse(processes.active)
+            self.assertEqual(processes.operation.state, "完了")
+            manager = RegistrationManager(data)
+            manager.delete_file(relative, confirmed=True)
+            with self.assertRaisesRegex(StorageError, "参照"):
+                manager.delete_registration("people", "Alice")
+
 
 if __name__ == "__main__":
     unittest.main()

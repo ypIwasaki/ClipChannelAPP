@@ -120,6 +120,7 @@ def build_app():
     target_video_box.pack(fill="x")
     review_rows = [[]]
     review_source = [None]
+    review_version: list[int | None] = [None]
     review_list = tk.Listbox(people_panel, height=6)
     review_list.pack(fill="both", expand=True, pady=(6, 0))
     asr_model_path = tk.StringVar()
@@ -144,11 +145,12 @@ def build_app():
         rows = tuple(review_rows[0])
         def finish(result):
             path, _rows = result
+            review_version[0] = int(path.stem.rsplit("_v", 1)[1])
             listing.insert(tk.END, path.relative_to(data._root()).as_posix())
             review_dirty[0] = False
             status.set(f"自動保存しました: {path.name}")
         process_panel.start("文字起こし修正の自動保存", operation_tasks.save_review,
-                            (data, video, rows), on_result=finish)
+                            (data, video, rows), kwargs={"source_version": review_version[0]}, on_result=finish)
 
     def review_video():
         if not target_video.get() or pending[0] or data.running:
@@ -164,6 +166,7 @@ def build_app():
         def finish(rows):
             review_rows[0] = rows
             review_source[0] = video
+            review_version[0] = None
             display_review()
             status.set(f"試聴待ち: {len(rows)} 区間")
         process_panel.start("対象話者の照合", operation_tasks.propose,
@@ -267,6 +270,7 @@ def build_app():
         whisper_directory = asr_model_path.get()
         def finish(result):
             path, completed = result
+            review_version[0] = int(path.stem.rsplit("_v", 1)[1])
             review_rows[0] = completed
             display_review()
             listing.insert(tk.END, path.relative_to(data._root()).as_posix())
@@ -275,7 +279,7 @@ def build_app():
         target = operation_tasks.transcribe if recognize else operation_tasks.save_review
         args = (data, video, rows, whisper_directory) if recognize else (data, video, rows)
         process_panel.start("対象話者の文字起こし" if recognize else "文字起こしの保存",
-                            target, args, on_result=finish)
+                            target, args, kwargs={"source_version": review_version[0]}, on_result=finish)
 
     def retry_review():
         if review_dirty[0] and not pending[0] and not data.running:
@@ -295,6 +299,7 @@ def build_app():
         try:
             version = int(relative.rsplit("_v", 1)[1].removesuffix(".csv"))
             review_rows[0] = load_intervals(data, video, version)
+            review_version[0] = version
             review_source[0] = video
             display_review()
             review_dirty[0] = False
@@ -1274,6 +1279,8 @@ def build_app():
             messagebox.showerror("フォルダを切り替えられません", str(error))
             return
         location.set(str(data.path))
+        review_rows[0], review_source[0], review_version[0] = [], None, None
+        display_review()
         composed_path[0] = None
         supporting_panel.set_video(None)
         save_export_panel.set_video(None)

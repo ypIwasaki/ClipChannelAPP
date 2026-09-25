@@ -12,10 +12,16 @@
     "errorCount": 54,
     "warningCount": 0,
     "informationCount": 0,
-    "timeInSec": 2.187
+    "timeInSec": 2.213
   },
   "new_diagnostics": [],
   "existing_by_file": {
+    "app.py": 37,
+    "download.py": 3,
+    "people.py": 8,
+    "transcribe.py": 6
+  },
+  "final_existing_by_file": {
     "app.py": 37,
     "download.py": 3,
     "people.py": 8,

@@ -49,6 +49,14 @@ def _name(value):
     return value
 
 
+def result_relative_path(source_name, kind, version):
+    """One naming rule for saved results and references to a particular version."""
+    if kind not in RESULT_KINDS or not isinstance(version, int) or version < 1:
+        raise StorageError("結果の種類または版が不正です")
+    stem = _name(Path(source_name).stem)
+    return f"catalog/{stem}/{kind}/{stem}_v{version}.csv"
+
+
 def _check_stop(stop):
     if stop and stop():
         raise StorageError("通常中止しました")
@@ -203,6 +211,8 @@ class DataFolder:
         if existing:
             registered = existing[0]
             if _same_file_contents(source, registered, stop_requested):
+                from .registrations import RegistrationManager
+                RegistrationManager(self).restore_deleted("videos", registered.relative_to(self._root()).as_posix())
                 return registered
             raise VideoNameConflict("同じ保存名の別動画があります。元動画の名前を変更してください")
         if any(path.name.casefold() == stem.casefold() for path in (self._root() / "catalog").iterdir()):
@@ -220,16 +230,18 @@ class DataFolder:
                 raise StorageError("コピー中に動画の内容が変わりました。登録をやり直してください")
             _check_stop(stop_requested)
             _publish_new(staged, target)
+        from .registrations import RegistrationManager
+        RegistrationManager(self).restore_deleted("videos", target.relative_to(self._root()).as_posix())
         return target
 
-    def save_result(self, source_name, kind, rows, *, stop_requested=None, references=()):
+    def save_result(self, source_name, kind, rows, *, stop_requested=None, references=(), source_version=None):
         if kind not in RESULT_KINDS:
             raise StorageError("不明な結果の種類です")
         _check_stop(stop_requested)
         rows = list(rows)
         source = self.register_video(source_name, stop_requested=stop_requested)
         from .registrations import snapshot_references
-        references = snapshot_references(self, source, kind, rows, references)
+        references = snapshot_references(self, source, kind, rows, references, source_version)
         stem = _name(source.stem)
         _name(source.name)
         identity = self._root() / "catalog" / stem / "source.sha256"
@@ -257,7 +269,7 @@ class DataFolder:
         versions = [int(match.group(1)) for path in directory.glob(f"{stem}_v*.csv")
                     if (match := re.fullmatch(re.escape(stem) + r"_v([1-9][0-9]*)(?:\.refs)?\.csv", path.name))]
         version = max(versions, default=0) + 1
-        target = directory / f"{stem}_v{version}.csv"
+        target = self._root() / result_relative_path(source.name, kind, version)
         with tempfile.TemporaryDirectory(dir=self._root() / "work", prefix="save-") as temporary:
             staged = Path(temporary) / target.name
             _write_csv(staged, kind, rows, stop_requested=stop_requested)
@@ -275,10 +287,7 @@ class DataFolder:
         return target
 
     def load_result(self, source_name, kind, version):
-        if kind not in RESULT_KINDS or not isinstance(version, int) or version < 1:
-            raise StorageError("結果の種類または版が不正です")
-        stem = _name(Path(source_name).stem)
-        return _read_csv(self._root() / "catalog" / stem / kind / f"{stem}_v{version}.csv", kind)
+        return _read_csv(self._root() / result_relative_path(source_name, kind, version), kind)
 
     def save_shared(self, kind, rows):
         if kind not in SHARED_KINDS:

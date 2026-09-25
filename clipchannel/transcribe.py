@@ -52,8 +52,12 @@ def validate_intervals(intervals):
         previous = row.end_ms
 
 
-def save_intervals(data, video, intervals, *, stop=None):
-    """Persist a reviewed snapshot as a new CSV version, including unknowns."""
+def save_intervals(data, video, intervals, *, stop=None, source_version=None):
+    """Persist a reviewed snapshot, including unknowns.
+
+    Pass source_version when editing/re-recognizing a saved version so its
+    person references survive changes to the video's currently selected target.
+    """
     _check_stop(stop)
     if target_for_video(data, video) is None:
         raise TranscriptionError("この動画の対象話者を選んでください")
@@ -61,7 +65,7 @@ def save_intervals(data, video, intervals, *, stop=None):
     return data.save_result(video, "transcripts", [
         {"start_ms": str(row.start_ms), "end_ms": str(row.end_ms),
          "text": row.text, "speaker_id": row.state}
-        for row in intervals], stop_requested=stop)
+        for row in intervals], stop_requested=stop, source_version=source_version)
 
 
 def load_intervals(data, video, version):
@@ -165,7 +169,7 @@ def propose_intervals(data, video, model_dir, *, stop=None, progress=None):
         return rows
 
 
-def transcribe_confirmed(data, video, intervals, model_dir, *, stop=None, progress=None):
+def transcribe_confirmed(data, video, intervals, model_dir, *, stop=None, progress=None, source_version=None):
     """ASR only on user-confirmed target ranges; save complete version on success."""
     validate_intervals(intervals)
     _check_stop(stop)
@@ -225,4 +229,4 @@ def transcribe_confirmed(data, video, intervals, model_dir, *, stop=None, progre
                 if cursor < row.end_ms:
                     output.append(Interval(cursor, row.end_ms, "unknown", row.score))
         _check_stop(stop)
-        return save_intervals(data, video, output, stop=stop), output
+        return save_intervals(data, video, output, stop=stop, source_version=source_version), output

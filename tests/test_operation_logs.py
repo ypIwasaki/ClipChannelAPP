@@ -130,5 +130,92 @@ class OperationLogTests(unittest.TestCase):
             self.assertTrue(linked.is_symlink())
             self.assertEqual(external.read_text(encoding="utf-8"), "outside")
 
+    def test_finished_export_logs_expire_but_pending_and_unrelated_files_remain(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            data = DataFolder()
+            data.select(root)
+            project = root / "projects" / "edit-one"
+            project.mkdir()
+            old_time = datetime(2026, 10, 1, tzinfo=timezone.utc).timestamp()
+            finished, pending = [], []
+            for number, state in enumerate((None, "completed", "cancelled", "failed", "running", "waiting", "unknown")):
+                log = project / f"control-{number:032x}.log"
+                log.write_text("encoder output", encoding="utf-8")
+                os.utime(log, (old_time, old_time))
+                if state is not None:
+                    log.with_suffix(".json").write_text(json.dumps({"state": state}), encoding="utf-8")
+                    log.with_suffix(".cccontrol").write_text("ClipChannel-Control-1\n", encoding="ascii")
+                (finished if state in (None, "completed", "cancelled", "failed") else pending).append(log)
+            unrelated = project / "notes.log"
+            unrelated.write_text("keep", encoding="utf-8")
+            os.utime(unrelated, (old_time, old_time))
+
+            removed = cleanup_logs(data, now=datetime(2026, 10, 31, tzinfo=timezone.utc))
+
+            self.assertEqual(removed, finished)
+            self.assertTrue(all(not log.exists() for log in finished))
+            self.assertTrue(all(log.is_file() for log in pending))
+            self.assertEqual(unrelated.read_text(encoding="utf-8"), "keep")
+            self.assertTrue(finished[1].with_suffix(".json").exists())
+
+    def test_recovery_and_uncertain_export_requests_keep_old_logs(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            data = DataFolder()
+            data.select(root)
+            project = root / "projects" / "edit-one"
+            project.mkdir()
+            old_time = datetime(2026, 10, 1, tzinfo=timezone.utc).timestamp()
+            logs = []
+            for number, sidecar in enumerate((None, ".cccontrol", ".cancel", ".force", ".f32le", ".json")):
+                log = project / f"control-{number:032x}.log"
+                log.write_text("encoder output", encoding="utf-8")
+                os.utime(log, (old_time, old_time))
+                if sidecar:
+                    log.with_suffix(sidecar).write_text("unfinished", encoding="utf-8")
+                logs.append(log)
+            recovery = root / "recovery" / "pending.json"
+            recovery.write_text("pending", encoding="utf-8")
+            current = datetime(2026, 10, 31, tzinfo=timezone.utc)
+
+            self.assertEqual(cleanup_logs(data, now=current), [])
+            self.assertTrue(all(log.exists() for log in logs))
+            recovery.unlink()
+            self.assertEqual(cleanup_logs(data, now=current), [logs[0]])
+            self.assertTrue(all(log.exists() for log in logs[1:]))
+
+    def test_export_log_cleanup_never_follows_project_or_state_links(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            folder, outside = root / "data", root / "outside"
+            folder.mkdir()
+            outside.mkdir()
+            data = DataFolder()
+            data.select(folder)
+            project = folder / "projects" / "edit-one"
+            project.mkdir()
+            external = outside / ("control-" + "a" * 32 + ".log")
+            external.write_text("outside", encoding="utf-8")
+            protected = project / ("control-" + "b" * 32 + ".log")
+            protected.write_text("unknown state", encoding="utf-8")
+            response = outside / "terminal.json"
+            response.write_text('{"state":"completed"}', encoding="utf-8")
+            old_time = datetime(2026, 10, 1, tzinfo=timezone.utc).timestamp()
+            for path in (external, protected):
+                os.utime(path, (old_time, old_time))
+            try:
+                (folder / "projects" / "linked-edit").symlink_to(outside, target_is_directory=True)
+                (project / external.name).symlink_to(external)
+                protected.with_suffix(".json").symlink_to(response)
+            except OSError:
+                self.skipTest("Symbolic links are unavailable")
+
+            self.assertEqual(cleanup_logs(data, now=datetime(2026, 10, 31, tzinfo=timezone.utc)), [])
+            self.assertEqual(external.read_text(encoding="utf-8"), "outside")
+            self.assertEqual(protected.read_text(encoding="utf-8"), "unknown state")
+            self.assertTrue((project / external.name).is_symlink())
+            self.assertTrue(protected.with_suffix(".json").is_symlink())
+
 if __name__ == "__main__":
     unittest.main()

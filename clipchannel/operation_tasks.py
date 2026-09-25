@@ -43,16 +43,17 @@ def propose(control, data, video, model):
     return propose_intervals(data, video, model, stop=control.cancelled, progress=control.report)
 
 
-def transcribe(control, data, video, rows, model):
+def transcribe(control, data, video, rows, model, *, source_version=None):
     data.running = False
-    return transcribe_confirmed(data, video, rows, model, stop=control.cancelled, progress=control.report)
+    return transcribe_confirmed(data, video, rows, model, stop=control.cancelled, progress=control.report,
+                                source_version=source_version)
 
 
-def save_review(control, data, video, rows):
+def save_review(control, data, video, rows, *, source_version=None):
     data.running = False
     check_cancelled(control.cancelled)
     control.report("確認した区間を保存中")
-    return save_intervals(data, video, rows, stop=control.cancelled), rows
+    return save_intervals(data, video, rows, stop=control.cancelled, source_version=source_version), rows
 
 
 def compose(control, data, source, segments, order, duration_ms, fps=None):

@@ -128,6 +128,43 @@ class RegistrationTests(unittest.TestCase):
             self.assertEqual(data.load_result(source, "segments", 1), rows)
             self.assertEqual(len(data.list_saved()), 2)
 
+    def test_re_registering_deleted_video_restores_its_registration(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            data = DataFolder()
+            data.select(root)
+            source = root / "sample.mp4"
+            source.write_bytes(b"video")
+            registered = data.register_video(source)
+            RegistrationManager(data).delete_registration("videos", registered.relative_to(root).as_posix())
+            self.assertEqual(data.list_videos(), [])
+            self.assertEqual(data.register_video(source), registered)
+            self.assertEqual(data.list_videos(), [registered])
+
+    def test_corrected_transcript_inherits_people_from_saved_version(self):
+        from clipchannel.transcribe import Interval, load_intervals, save_intervals
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            data = DataFolder()
+            data.select(root)
+            source = root / "sample.mp4"
+            source.write_bytes(b"video")
+            video = data.register_video(source)
+            data.save_shared("people", [
+                {"person_id": key, "name": key, "reference_audio": f"people/{key}.wav",
+                 "feature_file": f"people/{key}.json"} for key in ("Alice", "Bob")])
+            data.save_shared("targets", [{"video_name": video.name, "person_id": "Alice"}])
+            first = save_intervals(data, video, [Interval(0, 1000, "target", text="Aliceの発言")])
+            data.save_shared("targets", [{"video_name": video.name, "person_id": "Bob"}])
+            rows = load_intervals(data, video, 1)
+            rows[0] = Interval(0, 1000, "target", text="Aliceの修正発言")
+            save_intervals(data, video, rows, source_version=1)
+            manager = RegistrationManager(data)
+            manager.delete_file(first.relative_to(root).as_posix(), confirmed=True)
+            with self.assertRaisesRegex(StorageError, "参照"):
+                manager.delete_registration("people", "Alice")
+            self.assertEqual(load_intervals(data, video, 2)[0].text, "Aliceの修正発言")
+
 
 if __name__ == "__main__":
     unittest.main()

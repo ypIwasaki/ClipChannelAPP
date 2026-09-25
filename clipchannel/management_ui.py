@@ -24,30 +24,41 @@ class ManagementPanel(ttk.Frame):
         self.has_drafts = has_drafts
         self.entries = []
         self.show_hidden = tk.BooleanVar()
-        ttk.Label(self, text="非表示にしても保存済み結果と辞書の内容は保持します。",
+        self.scroll_canvas = tk.Canvas(self, highlightthickness=0)
+        scrollbar = ttk.Scrollbar(self, orient="vertical", command=self.scroll_canvas.yview)
+        self.scroll_canvas.configure(yscrollcommand=scrollbar.set)
+        scrollbar.pack(side="right", fill="y")
+        self.scroll_canvas.pack(side="left", fill="both", expand=True)
+        body = ttk.Frame(self.scroll_canvas)
+        body_id = self.scroll_canvas.create_window((0, 0), window=body, anchor="nw")
+        body.bind("<Configure>", lambda _event: self.scroll_canvas.configure(
+            scrollregion=self.scroll_canvas.bbox("all")))
+        self.scroll_canvas.bind("<Configure>", lambda event: self.scroll_canvas.itemconfigure(
+            body_id, width=event.width))
+        ttk.Label(body, text="非表示にしても保存済み結果と辞書の内容は保持します。",
                   wraplength=440).pack(anchor="w")
-        ttk.Checkbutton(self, text="非表示の項目も表示", variable=self.show_hidden,
+        ttk.Checkbutton(body, text="非表示の項目も表示", variable=self.show_hidden,
                         command=self.refresh).pack(anchor="w")
-        self.listing = tk.Listbox(self, height=9, exportselection=False)
+        self.listing = tk.Listbox(body, height=9, exportselection=False)
         self.listing.pack(fill="both", expand=True)
-        actions = ttk.Frame(self)
+        actions = ttk.Frame(body)
         actions.pack(fill="x", pady=4)
         ttk.Button(actions, text="非表示", command=lambda: self.set_hidden(True)).pack(side="left")
         ttk.Button(actions, text="再表示", command=lambda: self.set_hidden(False)).pack(side="left", padx=4)
         ttk.Button(actions, text="登録情報を削除…", command=self.delete_registration).pack(side="left")
-        ttk.Label(self, text="登録情報の削除では実ファイルを残します。参照中の情報は削除できません。",
+        ttk.Label(body, text="登録情報の削除では実ファイルを残します。参照中の情報は削除できません。",
                   wraplength=440).pack(anchor="w")
-        ttk.Button(self, text="実ファイルを選んで削除…", command=self.delete_file).pack(anchor="w", pady=6)
-        archive_actions = ttk.LabelFrame(self, text="動画の可逆保管", padding=6)
+        ttk.Button(body, text="実ファイルを選んで削除…", command=self.delete_file).pack(anchor="w", pady=6)
+        archive_actions = ttk.LabelFrame(body, text="動画の可逆保管", padding=6)
         archive_actions.pack(fill="x", pady=4)
         ttk.Label(archive_actions, text="元動画・保管物は保持し、展開先は毎回別フォルダにします。",
                   wraplength=420).pack(anchor="w")
         ttk.Button(archive_actions, text="動画を保管…", command=self.archive).pack(side="left", pady=4)
         ttk.Button(archive_actions, text="保管物を展開…", command=self.restore).pack(side="left", padx=4)
         self.result_text = tk.StringVar()
-        ttk.Label(self, textvariable=self.result_text, wraplength=440).pack(anchor="w", fill="x", pady=4)
-        ttk.Button(self, text="30日経過した通常ログを整理", command=self.clean_logs).pack(anchor="w", pady=4)
-        ttk.Label(self, text="復旧待ちの情報がある間はログを保持します。",
+        ttk.Label(body, textvariable=self.result_text, wraplength=440).pack(anchor="w", fill="x", pady=4)
+        ttk.Button(body, text="30日経過した通常ログを整理", command=self.clean_logs).pack(anchor="w", pady=4)
+        ttk.Label(body, text="復旧待ちの情報がある間はログを保持します。",
                   wraplength=440).pack(anchor="w")
 
     def refresh(self):
