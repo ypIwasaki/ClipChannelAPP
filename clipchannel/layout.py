@@ -23,10 +23,6 @@ class Layout:
     subtitle_size: int = 40
     preview_frame: int = 0
 
-    @classmethod
-    def for_video(cls, width, height, short=False):
-        return cls(height if short else width, width if short else height)
-
     def validate(self, video_width, video_height):
         numbers = (self.scale, self.x, self.y, self.subtitle_x, self.subtitle_y)
         if any(not math.isfinite(value) for value in numbers):

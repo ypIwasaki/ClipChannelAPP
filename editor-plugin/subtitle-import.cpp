@@ -2,7 +2,6 @@
 #include <windows.h>
 #include <commdlg.h>
 #include <algorithm>
-#include <array>
 #include <climits>
 #include <cmath>
 #include <cstring>
@@ -23,8 +22,14 @@ static int imported, rejected;
 static std::filesystem::path selected_file;
 static bool matching_project;
 static std::string video_path;
-static std::array<double, 13> layout_values;
+struct LayoutValues {
+    double width, height, scale, x, y;
+    double crop_left, crop_top, crop_right, crop_bottom;
+    double subtitle_x, subtitle_y, subtitle_size, preview_frame;
+};
+static LayoutValues layout_values;
 static bool layout_applied;
+static HWND layout_bridge_window = nullptr;
 
 static bool decode_hex(const std::string& value, std::string& output) {
     if (value.size() % 2) return false;
@@ -51,22 +56,30 @@ static bool read_layout(const wchar_t* path) {
     constexpr const char* names[] = {"width", "height", "scale", "x", "y",
         "crop_left", "crop_top", "crop_right", "crop_bottom", "subtitle_x",
         "subtitle_y", "subtitle_size", "preview_frame"};
-    std::array<double, 13> values{};
-    for (size_t index = 0; index < values.size(); ++index) {
+    constexpr double LayoutValues::* members[] = {
+        &LayoutValues::width, &LayoutValues::height, &LayoutValues::scale,
+        &LayoutValues::x, &LayoutValues::y, &LayoutValues::crop_left,
+        &LayoutValues::crop_top, &LayoutValues::crop_right, &LayoutValues::crop_bottom,
+        &LayoutValues::subtitle_x, &LayoutValues::subtitle_y,
+        &LayoutValues::subtitle_size, &LayoutValues::preview_frame};
+    LayoutValues values{};
+    for (size_t index = 0; index < std::size(members); ++index) {
         if (!std::getline(file, line) || line.rfind(std::string(names[index]) + "\t", 0) != 0)
             return false;
         try {
             size_t used = 0;
-            values[index] = std::stod(line.substr(std::strlen(names[index]) + 1), &used);
-            if (used != line.size() - std::strlen(names[index]) - 1 || !std::isfinite(values[index]))
+            values.*members[index] = std::stod(line.substr(std::strlen(names[index]) + 1), &used);
+            if (used != line.size() - std::strlen(names[index]) - 1 ||
+                !std::isfinite(values.*members[index]))
                 return false;
         } catch (...) { return false; }
     }
-    if (std::getline(file, line) || values[0] < 1 || values[0] > 8192 ||
-        values[1] < 1 || values[1] > 8192 || values[2] < 1 || values[2] > 1000 ||
-        values[11] < 1 || values[11] > 300 || values[12] < 0 ||
-        values[12] > INT_MAX || std::floor(values[12]) != values[12]) return false;
-    for (int index = 5; index <= 8; ++index) if (values[index] < 0) return false;
+    if (std::getline(file, line) || values.width < 1 || values.width > 8192 ||
+        values.height < 1 || values.height > 8192 || values.scale < 1 || values.scale > 1000 ||
+        values.subtitle_size < 1 || values.subtitle_size > 300 || values.preview_frame < 0 ||
+        values.preview_frame > INT_MAX || std::floor(values.preview_frame) != values.preview_frame ||
+        values.crop_left < 0 || values.crop_top < 0 || values.crop_right < 0 ||
+        values.crop_bottom < 0) return false;
     video_path = std::move(encoded);
     layout_values = values;
     return true;
@@ -131,7 +144,8 @@ static OBJECT_HANDLE matching_video(EDIT_SECTION* edit) {
     for (int layer = 0; layer < 32; ++layer) {
         auto object = edit->find_object(layer, 0);
         auto alias = object ? edit->get_object_alias(object) : nullptr;
-        if (alias && std::string(alias).find("ファイル=" + normalized + "\r\n") != std::string::npos)
+        if (alias && (std::string(alias).find("ファイル=" + normalized + "\r\n") != std::string::npos ||
+                      std::string(alias).find("ファイル=" + video_path + "\r\n") != std::string::npos))
             return object;
     }
     return nullptr;
@@ -145,6 +159,27 @@ static std::string decimal(double value, int precision = 2) {
     return stream.str();
 }
 
+using CaptionIdentity = std::tuple<int, int, std::string>;
+
+static std::set<CaptionIdentity> imported_caption_identities() {
+    const auto target_video = video_path;
+    const auto target_captions = captions;
+    std::set<CaptionIdentity> identities;
+    for (const auto& entry : std::filesystem::directory_iterator(selected_file.parent_path())) {
+        if (entry.path().extension() != L".ccsub" || !read_captions(entry.path().c_str()) ||
+            video_path != target_video) continue;
+        for (const auto& row : captions) {
+            auto alias = alias_for(row.text, row.last - row.first + 1);
+            auto start = alias.find("テキスト=");
+            auto end = alias.find("\r\n", start);
+            identities.emplace(row.first, row.last, alias.substr(start, end - start));
+        }
+    }
+    video_path = target_video;
+    captions = target_captions;
+    return identities;
+}
+
 static void apply_layout(EDIT_SECTION* edit) {
     layout_applied = false;
     auto video = matching_video(edit);
@@ -152,31 +187,22 @@ static void apply_layout(EDIT_SECTION* edit) {
     auto set_video = [&](const wchar_t* item, double value, int precision = 2) {
         return edit->set_object_item_value(video, L"映像再生", item, decimal(value, precision).c_str());
     };
-    if (!set_video(L"X", layout_values[3]) || !set_video(L"Y", layout_values[4]) ||
-        !set_video(L"拡大率", layout_values[2], 3)) return;
-    const bool crop_requested = layout_values[5] || layout_values[6] || layout_values[7] || layout_values[8];
+    if (!set_video(L"X", layout_values.x) || !set_video(L"Y", layout_values.y) ||
+        !set_video(L"拡大率", layout_values.scale, 3)) return;
+    const bool crop_requested = layout_values.crop_left || layout_values.crop_top ||
+                                layout_values.crop_right || layout_values.crop_bottom;
     if (crop_requested && !edit->find_effect(video, L"クリッピング") &&
         !edit->create_effect(video, L"クリッピング")) return;
     if (edit->find_effect(video, L"クリッピング")) {
         constexpr const wchar_t* sides[] = {L"左", L"上", L"右", L"下"};
+        const double cuts[] = {layout_values.crop_left, layout_values.crop_top,
+                               layout_values.crop_right, layout_values.crop_bottom};
         for (int index = 0; index < 4; ++index)
             if (!edit->set_object_item_value(video, L"クリッピング", sides[index],
-                    decimal(layout_values[index + 5], 0).c_str())) return;
+                    decimal(cuts[index], 0).c_str())) return;
     }
     // Match only captions represented by this editing video's saved import files.
-    std::set<std::tuple<int, int, std::string>> imported_captions;
-    const auto layout_video = video_path;
-    for (const auto& entry : std::filesystem::directory_iterator(selected_file.parent_path())) {
-        if (entry.path().extension() != L".ccsub" || !read_captions(entry.path().c_str()) ||
-            video_path != layout_video) continue;
-        for (const auto& caption : captions) {
-            auto alias = alias_for(caption.text, caption.last - caption.first + 1);
-            auto start = alias.find("テキスト=");
-            auto end = alias.find("\r\n", start);
-            imported_captions.emplace(caption.first, caption.last, alias.substr(start, end - start));
-        }
-    }
-    video_path = layout_video;
+    auto imported_captions = imported_caption_identities();
     for (int layer = 2; layer < 512; ++layer) {
         int frame = 0;
         while (auto object = edit->find_object(layer, frame)) {
@@ -192,17 +218,17 @@ static void apply_layout(EDIT_SECTION* edit) {
             }
             if (is_imported) {
                 if (!edit->set_object_item_value(object, L"標準描画", L"X",
-                        decimal(layout_values[9]).c_str()) ||
+                        decimal(layout_values.subtitle_x).c_str()) ||
                     !edit->set_object_item_value(object, L"標準描画", L"Y",
-                        decimal(layout_values[10]).c_str()) ||
+                        decimal(layout_values.subtitle_y).c_str()) ||
                     !edit->set_object_item_value(object, L"テキスト", L"サイズ",
-                        decimal(layout_values[11], 2).c_str())) return;
+                        decimal(layout_values.subtitle_size, 2).c_str())) return;
             }
             if (range.end < frame || range.end == INT_MAX) break;
             frame = range.end + 1;
         }
     }
-    edit->set_scene_size(static_cast<int>(layout_values[0]), static_cast<int>(layout_values[1]));
+    edit->set_scene_size(static_cast<int>(layout_values.width), static_cast<int>(layout_values.height));
     layout_applied = true;
 }
 
@@ -242,6 +268,31 @@ static void create_objects(EDIT_SECTION* edit) {
     }
 }
 
+static bool apply_subtitle_file(const wchar_t* filename) {
+    if (!read_captions(filename)) return false;
+    selected_file = std::filesystem::path(filename);
+    if (!edit_handle->call_edit_section(create_objects)) return false;
+    return matching_project && rejected == 0 && imported == static_cast<int>(captions.size());
+}
+
+static bool apply_layout_file(const wchar_t* filename) {
+    layout_applied = false;
+    if (!read_layout(filename)) {
+        return false;
+    }
+    selected_file = std::filesystem::path(filename);
+    if (!edit_handle->call_edit_section(apply_layout) || !layout_applied) {
+        return false;
+    }
+    auto preview = selected_file;
+    preview.replace_extension(L".ppm");
+    std::error_code ignored;
+    std::filesystem::remove(preview, ignored);
+    bool requested = edit_handle->rendering_scene_video(static_cast<int>(layout_values.preview_frame), nullptr, write_preview);
+    if (requested) edit_handle->wait_rendering_task();
+    return requested && std::filesystem::is_regular_file(preview);
+}
+
 static void layout_menu(void*) {
     wchar_t filename[32768] = L"";
     OPENFILENAMEW dialog{};
@@ -252,26 +303,27 @@ static void layout_menu(void*) {
     dialog.nMaxFile = 32768;
     dialog.Flags = OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST;
     if (!GetOpenFileNameW(&dialog)) return;
-    if (!read_layout(filename)) {
-        MessageBoxW(nullptr, L"画面設定ファイルを読み取れません", L"ClipChannel", MB_ICONERROR);
-        return;
-    }
-    selected_file = std::filesystem::path(filename);
-    layout_applied = false;
-    if (!edit_handle->call_edit_section(apply_layout) || !layout_applied) {
-        MessageBoxW(nullptr, L"画面設定を適用できません。対応する編集フォルダ・動画と各効果を確認してください", L"ClipChannel", MB_ICONERROR);
-        return;
-    }
-    auto preview = selected_file;
-    preview.replace_extension(L".ppm");
-    std::error_code ignored;
-    std::filesystem::remove(preview, ignored);
-    bool requested = edit_handle->rendering_scene_video(static_cast<int>(layout_values[12]), nullptr, write_preview);
-    if (requested) edit_handle->wait_rendering_task();
-    MessageBoxW(nullptr, requested && std::filesystem::is_regular_file(preview)
+    bool complete = apply_layout_file(filename);
+    MessageBoxW(nullptr, complete
         ? L"画面設定を適用しました。アプリでプレビューを開いて確認してください"
-        : L"画面設定は適用されましたが、プレビューを生成できませんでした",
-        L"ClipChannel", requested && std::filesystem::is_regular_file(preview) ? MB_OK : MB_ICONWARNING);
+        : L"画面設定またはプレビューを適用できませんでした",
+        L"ClipChannel", complete ? MB_OK : layout_applied ? MB_ICONWARNING : MB_ICONERROR);
+}
+
+static LRESULT CALLBACK layout_bridge_proc(HWND window, UINT message, WPARAM key, LPARAM data) {
+    if (message == WM_COPYDATA) {
+        auto packet = reinterpret_cast<const COPYDATASTRUCT*>(data);
+        if (!packet || (packet->dwData != 0x43434c31 && packet->dwData != 0x43435331) || !packet->lpData ||
+            packet->cbData < sizeof(wchar_t) || packet->cbData > 32768 * sizeof(wchar_t) ||
+            packet->cbData % sizeof(wchar_t)) return 0;
+        auto chars = reinterpret_cast<const wchar_t*>(packet->lpData);
+        size_t length = packet->cbData / sizeof(wchar_t);
+        if (chars[length - 1] != L'\0' || wcsnlen_s(chars, length) != length - 1) return 0;
+        if (packet->dwData == 0x43435331) return apply_subtitle_file(chars) ? 1 : 0;
+        bool complete = apply_layout_file(chars);
+        return complete ? 1 : layout_applied ? 2 : 0;
+    }
+    return DefWindowProcW(window, message, key, data);
 }
 
 static void import_menu(void*) {
@@ -305,9 +357,18 @@ static void import_menu(void*) {
 extern "C" __declspec(dllexport) DWORD RequiredVersion() { return 2010900; }
 extern "C" __declspec(dllexport) COMMON_PLUGIN_TABLE* GetCommonPluginTable() { return &plugin_table; }
 extern "C" __declspec(dllexport) bool InitializePlugin(DWORD) { return true; }
-extern "C" __declspec(dllexport) void UninitializePlugin() {}
+extern "C" __declspec(dllexport) void UninitializePlugin() {
+    if (layout_bridge_window) DestroyWindow(layout_bridge_window);
+}
 extern "C" __declspec(dllexport) void RegisterPlugin(HOST_APP_TABLE* host) {
     edit_handle = host->create_edit_handle();
     host->register_edit_menu_param(L"ClipChannel\\字幕を追加", nullptr, import_menu);
     host->register_edit_menu_param(L"ClipChannel\\画面設定を適用", nullptr, layout_menu);
+    WNDCLASSW window_class{};
+    window_class.lpfnWndProc = layout_bridge_proc;
+    window_class.hInstance = GetModuleHandleW(nullptr);
+    window_class.lpszClassName = L"ClipChannelLayoutBridge";
+    RegisterClassW(&window_class);
+    layout_bridge_window = CreateWindowExW(0, window_class.lpszClassName, L"", 0,
+        0, 0, 0, 0, HWND_MESSAGE, nullptr, window_class.hInstance, nullptr);
 }

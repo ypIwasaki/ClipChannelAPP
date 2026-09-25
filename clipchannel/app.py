@@ -25,6 +25,7 @@ from .media import _probe
 from .compose import adjacent_frame, compose_video, is_variable_fps, nearest_frame, probe_frames
 from .subtitles import Subtitle, prepare_subtitle_import, write_subtitle_import
 from .layout import Layout, save_layout
+from .editor_bridge import apply_layout, apply_subtitles
 
 
 def configure_japanese_fonts(window):
@@ -647,7 +648,13 @@ def build_app():
             return
         layout_path[0] = path
         status.set(f"画面設定を保存しました: {path.name}")
-        messagebox.showinfo("画面設定", f"AviUtl2の「ClipChannel\\画面設定を適用」から選んでください。\n{path}")
+        applied = apply_layout(path)
+        if applied == "preview":
+            show_layout_preview()
+        elif applied == "applied":
+            messagebox.showwarning("画面設定", "AviUtl2へ画面設定を適用しましたが、プレビューの生成に失敗しました")
+        else:
+            messagebox.showinfo("画面設定", f"AviUtl2で直接適用できませんでした。開いている対応プロジェクトを確認するか、「ClipChannel\\画面設定を適用」から選んでください。\n{path}")
 
     def show_layout_preview():
         if layout_path[0] is None:
@@ -769,7 +776,17 @@ def build_app():
         status.set(f"字幕 {len(rows)} 件を準備しました: {path.name}")
         subtitle_rows[0] = rows
         refresh_subtitle_list()
-        messagebox.showinfo("字幕の取込み", f"{len(rows)} 件の字幕を準備しました。\nAviUtl2の「ClipChannel\\字幕を追加」から次のファイルを選んでください。\n{path}")
+        apply_subtitle_version(path)
+
+    def apply_subtitle_version(path):
+        if not apply_subtitles(path):
+            messagebox.showinfo("字幕の取込み", f"AviUtl2で直接追加できませんでした。「ClipChannel\\字幕を追加」から選んでください。\n{path}")
+            return
+        status.set(f"AviUtl2へ字幕を追加しました: {path.name}")
+        if layout_path[0] is not None and apply_layout(layout_path[0]) == "preview":
+            show_layout_preview()
+        else:
+            messagebox.showinfo("字幕の取込み", "AviUtl2へ字幕を追加しました。画面設定を渡すとプレビューできます")
 
     def refresh_subtitle_list():
         subtitle_list.delete(0, tk.END)
@@ -806,7 +823,7 @@ def build_app():
         refresh_subtitle_list()
         subtitle_list.selection_set(index)
         status.set(f"編集用字幕を別版保存しました: {path.name}")
-        messagebox.showinfo("字幕の変更", f"AviUtl2の「ClipChannel\\字幕を追加」から取り込んでください。\n{path}")
+        apply_subtitle_version(path)
 
     compose_actions = ttk.Frame(segments_tab)
     compose_actions.pack(fill="x")
