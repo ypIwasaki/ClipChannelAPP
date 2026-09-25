@@ -20,6 +20,8 @@
    & $Python -m clipchannel.app
    ```
 
+   取得時に `You have requested merging of multiple formats but ffmpeg is not installed` が出る場合は、アプリを完全に終了し、同じ PowerShell で `Test-Path -LiteralPath $env:CLIPCHANNEL_FFMPEG` が `True`、`Get-Command ffmpeg.exe` が上記の実行ファイルを指すことを確認してから起動し直します。取得画面の「形式・品質 (yt-dlp format)」を `best` にすると、映像と音声が一体の形式を選ぶため、結合を必要としない素材では取得を続けられます。選べる画質が下がる可能性があるので、この設定を確認結果に記録してください。
+
    必要なモデルの既存候補は ECAPA が `C:\Users\raimu\AppData\Local\Temp\clipchannel-a105-speaker\model`、Whisper が `C:\Users\raimu\AppData\Local\ClipChannelAPP-validation\asr-probe\model` です。Temp 内のファイルは残っているか事前に確認してください。
 
    WSL から起動する場合は、データ用フォルダと動画・モデルを **`/mnt/c/` など Windows から直接使えるドライブ上**に置き、WSL 内のパスで選びます。`/home/...` をデータ用フォルダにしないでください。WSLg、`wslpath`、`powershell.exe` と Windows 側の AviUtl2・専用プラグインを使用します。この環境では WSLg の Tk 起動と WSL→Windows の連携入口を確認済みです。一方、リポジトリの `.venv` は Python 3.14 で、現時点で Torch・SpeechBrain・faster-whisper が入っていません。GUIの起動確認はできますが、全工程には互換性のある WSL Python 環境と依存物の準備が必要です。Windows アプリのデータが通常の `/mnt/c/Users/.../AppData/Local/` に見えないときは、`/mnt/c/Users/raimu/AppData/Local/Packages/OpenAI.Codex_2p2nqsd0c76g0/LocalCache/Local/` 配下も確認します。WSL の `CLIPCHANNEL_FFMPEG` には Windows 版 `ffmpeg.exe` の `/mnt/c/...` パス、または `C:\...` パスを指定できます。
