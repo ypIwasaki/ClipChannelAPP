@@ -21,6 +21,10 @@ class SupportingMediaPanel(ttk.Frame):
         self.status = status
         self.video = None
         self.placements: list[MediaPlacement] = []
+        self.applied: dict[str, MediaPlacement] = {}
+        self.selected_index: int | None = None
+        self.form_dirty = False
+        self.filling_form = False
         self.preview = None
         self.player = None
         self.video_label = tk.StringVar(value="切り出し区間タブで編集用動画を作成してください")
@@ -35,6 +39,9 @@ class SupportingMediaPanel(ttk.Frame):
         self.fields = {name: tk.StringVar(value=value) for name, value in
                        (("first", "0"), ("length", "1"), ("offset", "0"), ("volume", "100"),
                         ("x", "0"), ("y", "0"), ("scale", "100"), ("preview_frame", "0"))}
+        for name, variable in self.fields.items():
+            if name != "preview_frame":
+                variable.trace_add("write", self.mark_dirty)
         form = ttk.Frame(self)
         form.pack(anchor="w", pady=6)
         for index, (label, name) in enumerate((("開始F (0始まり)", "first"), ("長さF", "length"),
@@ -46,11 +53,23 @@ class SupportingMediaPanel(ttk.Frame):
                   "プレビュー音声は開始Fから最大5秒、映像終端までです。", wraplength=500).pack(anchor="w")
         ttk.Button(self, text="配置をAviUtl2へ適用・プレビュー", command=self.apply).pack(anchor="w", pady=6)
         ttk.Button(self, text="直前のプレビューを開く", command=self.show_preview).pack(anchor="w")
+        ttk.Button(self, text="未適用入力を破棄", command=self.discard).pack(anchor="w")
+
+    @property
+    def has_unsaved(self):
+        return self.form_dirty or any(item != self.applied.get(item.identity) for item in self.placements)
+
+    def mark_dirty(self, *_args):
+        if not self.filling_form and self.selected_index is not None:
+            self.form_dirty = True
 
     def set_video(self, video):
         self.stop_audio()
         self.video = video
         self.placements.clear()
+        self.applied.clear()
+        self.selected_index = None
+        self.form_dirty = False
         self.preview = None
         self.listing.delete(0, tk.END)
         self.video_label.set(str(video) if video else "切り出し区間タブで編集用動画を作成してください")
@@ -66,9 +85,40 @@ class SupportingMediaPanel(ttk.Frame):
         selected = self.listing.curselection()
         if not selected:
             return
-        item = self.placements[selected[0]]
-        for name, variable in self.fields.items():
-            variable.set(str(item.first if name == "preview_frame" else getattr(item, name)))
+        index = selected[0]
+        if self.form_dirty and index != self.selected_index:
+            self.listing.selection_clear(0, tk.END)
+            if self.selected_index is not None:
+                self.listing.selection_set(self.selected_index)
+            messagebox.showerror("補助素材", "入力を適用するか破棄してから、別の素材を選んでください")
+            return
+        if self.form_dirty:
+            return
+        self.selected_index = index
+        item = self.placements[index]
+        self.filling_form = True
+        try:
+            for name, variable in self.fields.items():
+                variable.set(str(item.first if name == "preview_frame" else getattr(item, name)))
+        finally:
+            self.filling_form = False
+
+    def discard(self):
+        if self.data.running or self.selected_index is None:
+            return
+        index = self.selected_index
+        item = self.placements[index]
+        previous = self.applied.get(item.identity)
+        self.form_dirty = False
+        if previous is None:
+            self.placements.pop(index)
+        else:
+            self.placements[index] = previous
+        self.selected_index = None
+        self.listing.delete(0, tk.END)
+        if self.placements:
+            self.refresh(min(index, len(self.placements) - 1))
+        self.status.set("選択素材の未適用入力を破棄しました。コピーした素材ファイルは保持しています")
 
     def run(self, work, finish):
         if self.data.running:
@@ -95,8 +145,8 @@ class SupportingMediaPanel(ttk.Frame):
         messagebox.showerror("補助素材を処理できません", reason)
 
     def add(self, kind):
-        if self.video is None or self.data.running:
-            messagebox.showerror("補助素材", "編集用動画を作成し、処理完了を待ってください")
+        if self.video is None or self.data.running or self.form_dirty:
+            messagebox.showerror("補助素材", "編集用動画を作成し、入力を適用するか破棄してから追加してください")
             return
         source = filedialog.askopenfilename(title="補助素材を選択（データ用フォルダへコピーします）")
         if not source:
@@ -123,10 +173,13 @@ class SupportingMediaPanel(ttk.Frame):
             messagebox.showerror("配置を適用できません", str(error))
             return
         self.placements[index] = placement
+        self.form_dirty = False
         self.refresh(index)
         self.fields["preview_frame"].set(str(preview_frame))
         self.preview = None
         def finish(result):
+            if result in ("preview", "applied"):
+                self.applied[placement.identity] = placement
             if result == "preview":
                 self.preview = path
                 self.status.set("補助素材の配置を適用しました。画像と音声を確認してください")

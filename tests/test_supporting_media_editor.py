@@ -80,7 +80,8 @@ class SupportingMediaEditorTest(unittest.TestCase):
 
                 audio = root / "BGM.wav"
                 subprocess.run(["ffmpeg", "-v", "error", "-f", "lavfi", "-i",
-                                "sine=frequency=440:sample_rate=48000:duration=6", str(audio)], check=True)
+                                "aevalsrc=(0.125+0.125*gte(t\\,3))*sin(2*PI*440*t):s=48000:d=6",
+                                str(audio)], check=True)
                 bgm = import_supporting_media(data, video, audio, "bgm")
                 self.assertEqual(bgm.length, 60)
                 path = save_supporting_media(data, replace(bgm, first=10))
@@ -108,13 +109,16 @@ class SupportingMediaEditorTest(unittest.TestCase):
                 second = samples(adjusted)
                 self.assertLess(rms(second, 1.1, 1.9), 0.0001)
                 self.assertAlmostEqual(rms(second, 2.1, 2.9) / rms(first, 2.1, 2.9), 0.25, delta=0.02)
+                # The source doubles in amplitude at three seconds. With source offset=2,
+                # that change must be heard at timeline second 3, not at second 5.
+                self.assertAlmostEqual(rms(second, 3.1, 3.9) / rms(first, 3.1, 3.9), 0.5, delta=0.02)
 
                 # A sound effect is a distinct placement, added to the scene's BGM mix.
                 effect = import_supporting_media(data, video, audio, "sound")
                 sound = save_supporting_media(data, replace(effect, first=30, length=10, volume=25))
                 self.assertEqual(apply_supporting_media(sound), "preview")
                 mixed = samples(sound)
-                self.assertAlmostEqual(rms(mixed, 3.1, 3.9) / rms(first, 3.1, 3.9), 0.5, delta=0.02)
+                self.assertAlmostEqual(rms(mixed, 3.1, 3.9) / rms(first, 3.1, 3.9), 0.75, delta=0.02)
             finally:
                 host.terminate()
                 host.wait(timeout=10)

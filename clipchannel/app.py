@@ -737,6 +737,9 @@ def build_app():
                          stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
     def render_compose():
+        if supporting_panel.has_unsaved:
+            messagebox.showerror("編集用動画を作れません", "補助素材の入力を適用するか破棄してください")
+            return
         video = segment_video()
         if video is None or segment_source[0] != video or segment_dirty[0] or pending[0] or data.running:
             messagebox.showerror("編集用動画を作れません", "対象動画と保存済み区間を選んでください")
@@ -1187,7 +1190,7 @@ def build_app():
         selected = filedialog.askdirectory(mustexist=True)
         if not selected:
             return
-        data.unsaved = unsaved.get() or review_dirty[0] or segment_dirty[0]
+        data.unsaved = unsaved.get() or review_dirty[0] or segment_dirty[0] or supporting_panel.has_unsaved
         try:
             paths = data.select(selected)
         except (OSError, StorageError) as error:
@@ -1312,6 +1315,9 @@ def build_app():
                 return
             if segment_dirty[0]:
                 messagebox.showerror("終了できません", "保存されていない切り出し区間があります。「保存を再試行」を押してください")
+                return
+            if supporting_panel.has_unsaved:
+                messagebox.showerror("終了できません", "補助素材の入力を適用するか破棄してください")
                 return
             if player[0] and player[0].poll() is None:
                 player[0].terminate()
