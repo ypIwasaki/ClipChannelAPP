@@ -408,7 +408,10 @@ def build_app():
             segment_list.insert(tk.END, f"{'✓' if row.selected else '—'} {row.start_ms / 1000:.3f}–{row.end_ms / 1000:.3f}  {row.kind}")
 
     def persist_segments():
-        if pending[0] or data.running or segment_source[0] is None:
+        if segment_source[0] is None:
+            messagebox.showerror("区間を保存できません", "先に保存済みの区間を開くか、区間を作成してください")
+            return
+        if pending[0] or data.running:
             segment_dirty[0] = True
             return
         try:
@@ -456,8 +459,11 @@ def build_app():
         status.set("手動追加する開始秒・終了秒を入力してください")
 
     def reopen_segments():
-        if not listing.curselection() or segment_dirty[0]:
-            messagebox.showerror("区間を開けません", "保存版を選び、未保存の入力を保存してください")
+        if segment_dirty[0]:
+            messagebox.showerror("区間を開けません", "切り出し区間に未保存の変更があります。「保存を再試行」で保存してください")
+            return
+        if not listing.curselection():
+            messagebox.showerror("区間を開けません", "「保存済み情報」タブで対象動画の segments/ 内の区間CSVを選んでください")
             return
         relative = listing.get(listing.curselection()[0])
         parts = relative.split("/")
