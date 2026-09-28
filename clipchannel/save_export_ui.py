@@ -8,11 +8,13 @@ import time
 import tkinter as tk
 from fractions import Fraction
 from pathlib import Path
-from tkinter import filedialog, messagebox, ttk
+from tkinter import filedialog, ttk
 
 from .editor_bridge import windows_path
 from .save_export import ExportSettings, export_video, inspect_project, save_project
 from .storage import StorageError
+from .responsive_ui import WrappedLabel, ResponsivePage, ActionRow, PathLabel, VariableText
+from .dialogs import messagebox, choose_action
 
 
 
@@ -39,7 +41,8 @@ class WidgetLock:
                 yield from descendants(child)
         self.previous = []
         for root in self.roots:
-            for widget in descendants(root):
+            roots = root.editing_roots if isinstance(root, ResponsivePage) else (root,)
+            for widget in (widget for section in roots for widget in descendants(section)):
                 if widget not in self.excluded and isinstance(widget, (
                         ttk.Button, ttk.Entry, ttk.Combobox, ttk.Checkbutton, tk.Button, tk.Entry,
                         tk.Checkbutton, tk.Listbox, tk.Text)):
@@ -47,27 +50,7 @@ class WidgetLock:
                     widget.configure(state="disabled")
 
 
-def choose_action(parent, title, message, choices):
-    """Show the actual action names; closing a prompt always means returning."""
-    dialog = tk.Toplevel(parent)
-    dialog.title(title)
-    dialog.transient(parent.winfo_toplevel())
-    result = [None]
-    ttk.Label(dialog, text=message, wraplength=520, padding=16).pack(fill="x")
-    buttons = ttk.Frame(dialog, padding=12)
-    buttons.pack(fill="x")
-    def selected(value):
-        result[0] = value
-        dialog.destroy()
-    for label, value in choices:
-        ttk.Button(buttons, text=label, command=lambda item=value: selected(item)).pack(side="left", padx=4)
-    dialog.protocol("WM_DELETE_WINDOW", lambda: selected(None))
-    dialog.grab_set()
-    dialog.wait_window()
-    return result[0]
-
-
-class SaveExportPanel(ttk.Frame):
+class SaveExportPanel(ResponsivePage):
     def __init__(self, parent, data, status, *, has_drafts, prepare_drafts, lock_editing):
         super().__init__(parent, padding=8)
         self.data = data
@@ -94,44 +77,50 @@ class SaveExportPanel(ttk.Frame):
                        (("width", "1920"), ("height", "1080"), ("fps", "30"),
                         ("bitrate_mbps", "8"), ("audio_rate", "48000"))}
         self.fields["fps"].trace_add("write", self._fps_changed)
-        ttk.Label(self, textvariable=self.video_label, wraplength=520).pack(anchor="w")
-        ttk.Label(self, textvariable=self.project_label, wraplength=520).pack(anchor="w", pady=6)
-        ttk.Button(self, text="対応するAviUtl2プロジェクトを選ぶ", command=self.choose_project).pack(anchor="w")
-        ttk.Button(self, text="プロジェクトの保存フォルダを開く", command=self.open_project_folder).pack(anchor="w")
-        ttk.Label(self, text="過去の編集は projects 内の .aup2 をAviUtl2で直接開けます。\n"
+        operations = self.section('保存・書き出し')
+        project = self.section('対象プロジェクト')
+        settings = self.section('書き出し設定', '詳細設定')
+        results = self.section('処理結果', '結果')
+        PathLabel(project, self.video_label).pack(fill="x")
+        PathLabel(project, self.project_label).pack(fill="x", pady=6)
+        ttk.Button(project, text='対象の場所を確認', command=lambda: messagebox.showinfo(
+            '保存・書き出しの対象', self.video_label.get() + '\n' + self.project_label.get())).pack(anchor='w')
+        ttk.Button(project, text="対応するAviUtl2プロジェクトを選ぶ", command=self.choose_project).pack(anchor="w")
+        ttk.Button(project, text="プロジェクトの保存フォルダを開く", command=self.open_project_folder).pack(anchor="w")
+        WrappedLabel(settings, text="過去の編集は projects 内の .aup2 をAviUtl2で直接開けます。\n"
                   "字幕・補助素材配置は新しい編集へ自動移行しません。", wraplength=520).pack(anchor="w", pady=6)
-        ttk.Label(self, text="AviUtl2で開いている同じ編集のプロジェクトを保存します。\n"
+        WrappedLabel(operations, text="AviUtl2で開いている同じ編集のプロジェクトを保存します。\n"
                   "未適用の画面・字幕・補助素材の入力は「保存」で先に適用します。",
                   wraplength=520).pack(anchor="w", pady=8)
-        profile = ttk.Frame(self)
-        profile.pack(anchor="w")
-        ttk.Label(profile, text="完成動画の用途").pack(side="left")
+        profile = ActionRow(settings)
+        profile.pack(fill="x")
+        WrappedLabel(profile, text="完成動画の用途").pack(side="left")
         ttk.Combobox(profile, textvariable=self.kind, values=("横", "ショート"),
                      state="readonly", width=12).pack(side="left")
         ttk.Button(profile, text="用途の初期値を設定", command=self.reset_defaults).pack(side="left", padx=8)
         for caption, name in (("出力幅 px", "width"), ("出力高さ px", "height"),
                               ("固定fps（分数も可）", "fps"), ("映像 Mbps", "bitrate_mbps"),
                               ("音声 Hz", "audio_rate")):
-            line = ttk.Frame(self)
-            line.pack(anchor="w", pady=3)
-            ttk.Label(line, text=caption, width=24).pack(side="left")
+            line = ttk.Frame(settings)
+            line.pack(fill="x", pady=3)
+            WrappedLabel(line, text=caption, width=24).pack(side="left")
             ttk.Entry(line, textvariable=self.fields[name], width=16).pack(side="left")
-        ttk.Label(self, text="MP4 / H.264 / AAC-LC / SDR。映像の終了までを出力します。\n"
+        WrappedLabel(settings, text="MP4 / H.264 / AAC-LC / SDR。映像の終了までを出力します。\n"
                   "出力中はAviUtl2と本アプリで同じ編集の操作を待ってください。",
                   wraplength=520).pack(anchor="w", pady=10)
-        actions = ttk.Frame(self)
-        actions.pack(anchor="w")
+        actions = ActionRow(operations)
+        actions.pack(fill="x")
         ttk.Button(actions, text="保存", command=self.save).pack(side="left", padx=4)
         ttk.Button(actions, text="完成動画を書き出す", command=self.export).pack(side="left", padx=4)
         self.cancel_button = ttk.Button(actions, text="書き出しを中止", command=self.stop, state="disabled")
         self.cancel_button.pack(side="left", padx=4)
         self.force_button = ttk.Button(actions, text="強制停止…", command=self.force_stop, state="disabled")
         self.force_button.pack(side="left", padx=4)
-        self.widget_lock = WidgetLock((self,), excluded=(self.cancel_button, self.force_button))
+        self.widget_lock = WidgetLock((operations, project, settings), excluded=(self.cancel_button, self.force_button))
         self.process_summary = tk.StringVar(value="待機中 / 処理時間 0.0秒")
-        ttk.Label(self, textvariable=self.process_summary).pack(anchor="w", pady=6)
+        WrappedLabel(results, textvariable=self.process_summary).pack(anchor="w", pady=6)
         self.message = tk.StringVar()
-        ttk.Label(self, textvariable=self.message, wraplength=520).pack(anchor="w", pady=10)
+        VariableText(results, self.message).pack(fill='both', expand=True, pady=4)
 
     def _fps_changed(self, *_args):
         try:
@@ -170,6 +159,7 @@ class SaveExportPanel(ttk.Frame):
             settings = ExportSettings.defaults(short=self.kind.get() == "ショート",
                                                fps=Fraction(self.fields["fps"].get()))
         except (ValueError, ZeroDivisionError) as error:
+            self.show('書き出し設定')
             messagebox.showerror("出力設定", str(error))
             return
         for name, variable in self.fields.items():
@@ -185,18 +175,20 @@ class SaveExportPanel(ttk.Frame):
         return settings
 
     def open_project_folder(self):
-        if self.busy or self.data.running or self.video is None:
-            return
-        directory = self.data._root() / "projects" / self.video.parent.name
+        directory = None
         try:
+            directory = self.data._root() / "projects"
+            if self.video is not None:
+                directory /= self.video.parent.name
             directory.mkdir(parents=True, exist_ok=True)
             if os.name == "nt":
                 os.startfile(directory)
             else:
                 subprocess.Popen(["explorer.exe", windows_path(directory)],
                                  stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        except (OSError, subprocess.SubprocessError) as error:
-            messagebox.showerror("保存フォルダを開けません", f"{error}\n{directory}")
+        except (StorageError, OSError, subprocess.SubprocessError) as error:
+            messagebox.showerror("保存フォルダを開けません",
+                                 f"{error}" + (f"\n{directory}" if directory else ""))
 
     def choose_project(self):
         if self.busy or self.data.running or self.video is None:
@@ -282,7 +274,7 @@ class SaveExportPanel(ttk.Frame):
 
     def _report(self, result):
         self.message.set(result.detail)
-        self.status.set(result.detail)
+        self.status.set(result.detail + ('。次の操作: 保存先で結果を確認してください' if result.confirmed else ''))
         if not result.confirmed and result.state != "cancelled":
             messagebox.showerror("処理の完了を確認できません", result.detail)
 
@@ -366,8 +358,14 @@ class SaveExportPanel(ttk.Frame):
             return
         try:
             settings = self.settings()
+        except Exception as error:
+            self.show('書き出し設定')
+            messagebox.showerror("書き出せません", str(error))
+            return
+        try:
             state = self._state()
         except Exception as error:
+            self.show('対象プロジェクト')
             messagebox.showerror("書き出せません", str(error))
             return
         if self.kind.get() == "ショート" and not settings.short_eligible(state.duration):

@@ -8,7 +8,7 @@ import subprocess
 import tkinter as tk
 import threading
 from pathlib import Path
-from tkinter import filedialog, messagebox, ttk
+from tkinter import filedialog, ttk
 from tkinter import font
 
 from .download import DownloadSession, DownloadError
@@ -30,6 +30,10 @@ from .managed_process_ui import ProcessPanel
 from .management_ui import ManagementPanel
 from .operation_logs import record_operation, cleanup_logs
 from . import operation_tasks
+from .responsive_ui import WrappedLabel, ScrollListbox, ScrollText, Workbench, ResponsivePage, ActionRow, OperationStrip, PathLabel
+from .window_preferences import WindowPlacement, WindowPreferences
+from .dialogs import messagebox, show_image_preview
+from .ui_theme import configure_theme, apply_widget_roles
 
 
 def configure_japanese_fonts(window):
@@ -43,47 +47,84 @@ def configure_japanese_fonts(window):
     return None
 
 
-def build_app():
+def build_app(*, data=None, preferences=None, display=None):
     if os.name != "nt" and Path("/mnt/c/Windows/Fonts").is_dir() and "FONTCONFIG_FILE" not in os.environ:
         os.environ["FONTCONFIG_FILE"] = str(Path(__file__).with_name("fonts.conf"))
-    data = DataFolder()
+    data = data if data is not None else DataFolder()
     window = tk.Tk()
+    ui_callbacks = set()
+    def schedule_ui(callback):
+        def run():
+            ui_callbacks.discard(token)
+            callback()
+        token = window.after_idle(run)
+        ui_callbacks.add(token)
+    def cancel_ui_callbacks(event):
+        if event.widget is window:
+            for token in ui_callbacks:
+                window.after_cancel(token)
+            ui_callbacks.clear()
+    window.bind('<Destroy>', cancel_ui_callbacks, add='+')
     configure_japanese_fonts(window)
+    configure_theme(window)
     window.title("ClipChannelAPP — 保存済みデータ")
-    window.geometry("1180x720")
-    window.minsize(960, 600)
+    placement = WindowPlacement(window, WindowPreferences(preferences), display)
+    window.display_area = placement.display
     location = tk.StringVar(value="データ用フォルダを選択してください")
     status = tk.StringVar()
     unsaved = tk.BooleanVar()
     def mark_unsaved(*_args):
         unsaved.set(True)
     header = ttk.Frame(window, padding=10)
-    header.pack(fill="x")
-    tk.Button(header, text="フォルダを選択・切り替え", command=lambda: choose()).pack(side="left", padx=(0, 12))
-    ttk.Label(header, textvariable=location).pack(side="left", fill="x", expand=True)
-    panes = ttk.Panedwindow(window, orient="horizontal")
-    panes.pack(fill="both", expand=True, padx=10, pady=5)
-    saved_panel = ttk.Frame(panes, padding=8)
-    media_panel = ttk.Frame(panes, padding=8)
-    panes.add(saved_panel, weight=1)
-    panes.add(media_panel, weight=1)
-    saved_tabs = ttk.Notebook(saved_panel)
-    saved_tabs.pack(fill="both", expand=True)
-    results_tab = ttk.Frame(saved_tabs, padding=4)
-    people_tab = ttk.Frame(saved_tabs, padding=4)
+    window.columnconfigure(0, weight=1)
+    window.rowconfigure(1, weight=1)
+    header.grid(row=0, column=0, sticky="ew")
+    header.columnconfigure(1, weight=1)
+    tk.Button(header, text="フォルダを選択・切り替え", command=lambda: choose()).grid(row=0, column=0, padx=(0, 8))
+    PathLabel(header, location).grid(row=0, column=1, sticky="ew")
+    sizing = ttk.Frame(header)
+    sizing.grid(row=0, column=2)
+    ttk.Button(sizing, text='場所を確認', command=lambda: messagebox.showinfo('データ用フォルダ', location.get())).pack(side='left', padx=4)
+    for size in ("小", "中", "大"):
+        ttk.Button(sizing, text=size, width=3, command=lambda value=size: placement.set_size(value)).pack(side="left")
+    workbench = Workbench(window)
+    workbench.grid(row=1, column=0, sticky="nsew")
+    saved_tabs = workbench.notebook
+    media_panel = ResponsivePage(saved_tabs, padding=4)
+    saved_tabs.add(media_panel, text="取得・媒体操作")
+    media_input = media_panel.section('URL・取得')
+    media_settings = media_panel.section('形式・品質と取得設定', '詳細設定')
+    media_local = media_panel.section('ローカル動画')
+    media_downloads = media_panel.section('取得結果', '結果')
+    media_videos = media_panel.section('登録済み動画', '結果')
+    results_tab = ResponsivePage(saved_tabs, padding=4)
+    saved_listing = results_tab.section('保存済み一覧', '結果')
+    saved_detail = results_tab.section('CSV本文', '結果')
+    people_tab = ResponsivePage(saved_tabs, padding=4)
     saved_tabs.add(results_tab, text="保存済み情報")
     saved_tabs.add(people_tab, text="人物・参照音声")
-    words_tab = ttk.Frame(saved_tabs, padding=4)
+    words_tab = ResponsivePage(saved_tabs, padding=4)
+    word_settings = words_tab.section('集計条件')
+    word_dictionary = words_tab.section('登録語・除外語')
+    word_totals = words_tab.section('頻出語一覧', '結果')
+    word_occurrences = words_tab.section('発話一覧', '結果')
     saved_tabs.add(words_tab, text="頻出語")
-    segments_tab = ttk.Frame(saved_tabs, padding=4)
+    segments_tab = ResponsivePage(saved_tabs, padding=4)
+    segment_candidates = segments_tab.section('候補と保存版')
+    segment_modify = segments_tab.section('区間を修正・試聴')
+    segment_details = segments_tab.section('区間の境界・採否', '詳細設定')
+    segment_results = segments_tab.section('切り出し区間', '結果')
+    compose_results = segments_tab.section('編集用動画の順番', '結果')
+    compose_operations = segments_tab.section('編集用動画を作成')
+    frame_operations = segments_tab.section('フレーム境界を確認')
     saved_tabs.add(segments_tab, text="切り出し区間")
-    ttk.Label(results_tab, text="保存済み情報").pack(anchor="w")
-    listing = tk.Listbox(results_tab, height=10, exportselection=False)
+    WrappedLabel(saved_listing, text="保存済み情報").pack(anchor="w")
+    listing = ScrollListbox(saved_listing, height=1, exportselection=False)
     listing.pack(fill="both", expand=True)
-    ttk.Label(results_tab, text="選択したCSVの内容").pack(anchor="w", pady=(8, 0))
-    detail = tk.Text(results_tab, height=12, state="disabled")
+    WrappedLabel(saved_detail, text="選択したCSVの内容").pack(anchor="w", pady=(8, 0))
+    detail = ScrollText(saved_detail, height=1, width=1, state="disabled")
     detail.pack(fill="both", expand=True)
-    ttk.Label(media_panel, text="取得・媒体操作").pack(anchor="w")
+    WrappedLabel(media_input, text="取得・媒体操作").pack(anchor="w")
     url = tk.StringVar()
     media_format = tk.StringVar(value="bestvideo*+bestaudio/best")
     retries = tk.StringVar(value="3")
@@ -94,34 +135,41 @@ def build_app():
         field.trace_add("write", mark_unsaved)
     session: list[DownloadSession | None] = [None]
     pending = [False]
-    ttk.Label(media_panel, text="認証不要のURL").pack(anchor="w")
-    tk.Entry(media_panel, textvariable=url).pack(fill="x")
-    ttk.Label(media_panel, text="形式・品質 (yt-dlp format)").pack(anchor="w")
-    tk.Entry(media_panel, textvariable=media_format).pack(fill="x")
-    ttk.Label(media_panel, text="取得の再試行回数").pack(anchor="w")
-    tk.Entry(media_panel, textvariable=retries, width=10).pack(anchor="w")
-    ttk.Checkbutton(media_panel, text="音声のみ（音声成果物）", variable=audio_only).pack(anchor="w")
-    ttk.Checkbutton(media_panel, text="情報のみ", variable=info_only).pack(anchor="w")
-    ttk.Label(media_panel, text="追加引数（-f, --retries, --fragment-retries, --sub-langs）").pack(anchor="w")
-    tk.Entry(media_panel, textvariable=extra).pack(fill="x")
-    downloads = tk.Listbox(media_panel, height=5)
+    WrappedLabel(media_input, text="認証不要のURL").pack(anchor="w")
+    tk.Entry(media_input, textvariable=url).pack(fill="x")
+    WrappedLabel(media_settings, text="形式・品質 (yt-dlp format)").pack(anchor="w")
+    tk.Entry(media_settings, textvariable=media_format).pack(fill="x")
+    WrappedLabel(media_settings, text="取得の再試行回数").pack(anchor="w")
+    tk.Entry(media_settings, textvariable=retries, width=10).pack(anchor="w")
+    ttk.Checkbutton(media_input, text="音声のみ（音声成果物）", variable=audio_only).pack(anchor="w")
+    ttk.Checkbutton(media_input, text="情報のみ", variable=info_only).pack(anchor="w")
+    WrappedLabel(media_settings, text="追加引数（-f, --retries, --fragment-retries, --sub-langs）").pack(anchor="w")
+    tk.Entry(media_settings, textvariable=extra).pack(fill="x")
+    downloads = ScrollListbox(media_downloads, height=1, exportselection=False)
     downloads.pack(fill="both", expand=True, pady=(8, 0))
-    videos = tk.Listbox(media_panel, height=5)
+    videos = ScrollListbox(media_videos, height=1, exportselection=False)
     videos.pack(fill="both", expand=True, pady=(8, 0))
-    people_panel = ttk.LabelFrame(people_tab, text="人物と参照音声", padding=6)
-    people_panel.pack(fill="both", expand=True, pady=(8, 0))
-    people_list = tk.Listbox(people_panel, height=5)
+    people_panel = people_tab.section('人物と対象動画')
+    people_settings = people_tab.section('人物・参照音声の登録', '詳細設定')
+    people_results = people_tab.section('人物一覧', '結果')
+    review_results = people_tab.section('試聴区間・文字起こし', '結果')
+    review_operations = people_tab.section('試聴・判定・再表示')
+    review_edit = people_tab.section('発言の修正', '詳細設定')
+    review_asr = people_tab.section('対象話者の文字起こし')
+    people_list = ScrollListbox(people_results, height=1, exportselection=False)
     people_list.pack(fill="both", expand=True)
     selected_person = tk.StringVar(value="対象話者: 未選択")
-    ttk.Label(people_panel, textvariable=selected_person).pack(anchor="w")
+    PathLabel(people_panel, selected_person).pack(fill="x")
+    ttk.Button(people_panel, text='対象話者を確認', command=lambda: messagebox.showinfo(
+        '対象話者', selected_person.get())).pack(anchor='w')
     target_video = tk.StringVar()
-    ttk.Label(people_panel, text="対象動画（別動画にも同じ人物を指定できます）").pack(anchor="w")
+    WrappedLabel(people_panel, text="対象動画（別動画にも同じ人物を指定できます）").pack(anchor="w")
     target_video_box = ttk.Combobox(people_panel, textvariable=target_video, state="readonly")
     target_video_box.pack(fill="x")
     review_rows = [[]]
     review_source = [None]
     review_version: list[int | None] = [None]
-    review_list = tk.Listbox(people_panel, height=6)
+    review_list = ScrollListbox(review_results, height=1, exportselection=False)
     review_list.pack(fill="both", expand=True, pady=(6, 0))
     asr_model_path = tk.StringVar()
     review_dirty = [False]
@@ -213,6 +261,7 @@ def build_app():
                 candidate.sort(key=lambda item: item.start_ms)
             validate_intervals(candidate)
         except (ValueError, StorageError) as error:
+            people_tab.show('発言の修正')
             messagebox.showerror("区間を変更できません", str(error))
             return
         review_rows[0] = candidate
@@ -232,6 +281,7 @@ def build_app():
             if not row.start_ms < boundary < row.end_ms:
                 raise ValueError("分割時刻は選択区間の内側にしてください")
         except ValueError as error:
+            people_tab.show('発言の修正')
             messagebox.showerror("分割できません", str(error))
             return
         review_rows[0][index:index + 1] = [
@@ -314,7 +364,7 @@ def build_app():
         except (OSError, StorageError, ValueError) as error:
             messagebox.showerror("再表示できません", str(error))
 
-    review_actions = ttk.Frame(people_panel)
+    review_actions = ActionRow(review_operations)
     review_actions.pack(fill="x")
     for caption, action in (("試聴区間を作成", review_video), ("試聴", play_review),
                             ("対象発話", lambda: mark_review("target")),
@@ -322,16 +372,16 @@ def build_app():
                             ("不明", lambda: mark_review("unknown")),
                             ("保存を再試行", retry_review), ("保存版を再表示", reopen_review)):
         ttk.Button(review_actions, text=caption, command=action).pack(side="left")
-    ttk.Label(people_panel, text="ローカル Whisper モデル（対象発話の区間のみ認識）").pack(anchor="w")
-    ttk.Entry(people_panel, textvariable=asr_model_path).pack(fill="x")
-    ttk.Button(people_panel, text="対象発話を文字起こし・別版保存",
+    WrappedLabel(review_asr, text="ローカル Whisper モデル（対象発話の区間のみ認識）").pack(anchor="w")
+    ttk.Entry(review_asr, textvariable=asr_model_path).pack(fill="x")
+    ttk.Button(review_asr, text="対象発話を文字起こし・別版保存",
                command=lambda: save_review(True)).pack(anchor="w")
-    ttk.Button(people_panel, text="解析を中止", command=lambda: process_panel.stop()).pack(anchor="w")
-    edit_line = ttk.Frame(people_panel)
+    ttk.Button(review_asr, text="解析を中止", command=lambda: process_panel.stop()).pack(anchor="w")
+    edit_line = ActionRow(review_edit)
     edit_line.pack(fill="x")
     for caption, variable, width in (("開始秒", edit_start, 9), ("終了秒", edit_end, 9),
                                       ("本文", edit_text, 30)):
-        ttk.Label(edit_line, text=caption).pack(side="left")
+        WrappedLabel(edit_line, text=caption).pack(side="left")
         ttk.Entry(edit_line, textvariable=variable, width=width).pack(side="left")
     ttk.Combobox(edit_line, textvariable=edit_state,
                  values=("target", "non-target", "unknown"), state="readonly", width=12).pack(side="left")
@@ -348,25 +398,25 @@ def build_app():
     split = tk.StringVar(value="whole-reference")
     for field in (person_name, audio_path, model_path, start_time, end_time, threshold, split):
         field.trace_add("write", mark_unsaved)
-    ttk.Label(people_panel, text="名前").pack(anchor="w")
-    ttk.Entry(people_panel, textvariable=person_name).pack(fill="x")
-    ttk.Label(people_panel, text="参照音声ファイル（動画を使う場合は空欄）").pack(anchor="w")
-    ttk.Entry(people_panel, textvariable=audio_path).pack(fill="x")
-    ttk.Button(people_panel, text="音声ファイルを選択", command=lambda: audio_path.set(
+    WrappedLabel(people_settings, text="名前").pack(anchor="w")
+    ttk.Entry(people_settings, textvariable=person_name).pack(fill="x")
+    WrappedLabel(people_settings, text="参照音声ファイル（動画を使う場合は空欄）").pack(anchor="w")
+    ttk.Entry(people_settings, textvariable=audio_path).pack(fill="x")
+    ttk.Button(people_settings, text="音声ファイルを選択", command=lambda: audio_path.set(
         filedialog.askopenfilename(title="参照音声を選択") or audio_path.get())).pack(anchor="w")
-    ttk.Label(people_panel, text="動画を使う場合: 右側の登録済み動画を選び、開始・終了秒を指定").pack(anchor="w")
-    times = ttk.Frame(people_panel)
+    WrappedLabel(people_settings, text="動画を使う場合: 動画を準備の登録済み動画を選び、開始・終了秒を指定").pack(anchor="w")
+    times = ActionRow(people_settings)
     times.pack(fill="x")
     ttk.Entry(times, textvariable=start_time, width=9).pack(side="left")
-    ttk.Label(times, text=" 〜 ").pack(side="left")
+    WrappedLabel(times, text=" 〜 ").pack(side="left")
     ttk.Entry(times, textvariable=end_time, width=9).pack(side="left")
-    ttk.Label(people_panel, text="ローカル ECAPA モデルフォルダ").pack(anchor="w")
-    ttk.Entry(people_panel, textvariable=model_path).pack(fill="x")
-    ttk.Button(people_panel, text="モデルを選択", command=lambda: model_path.set(
+    WrappedLabel(people_settings, text="ローカル ECAPA モデルフォルダ").pack(anchor="w")
+    ttk.Entry(people_settings, textvariable=model_path).pack(fill="x")
+    ttk.Button(people_settings, text="モデルを選択", command=lambda: model_path.set(
         filedialog.askdirectory(title="ローカル ECAPA モデル") or model_path.get())).pack(anchor="w")
-    ttk.Label(people_panel, text="照合閾値（-1〜1、品質は別動画で確認）").pack(anchor="w")
-    ttk.Entry(people_panel, textvariable=threshold).pack(fill="x")
-    ttk.Combobox(people_panel, textvariable=split, values=sorted(SPLITS), state="readonly").pack(fill="x")
+    WrappedLabel(people_settings, text="照合閾値（-1〜1、品質は別動画で確認）").pack(anchor="w")
+    ttk.Entry(people_settings, textvariable=threshold).pack(fill="x")
+    ttk.Combobox(people_settings, textvariable=split, values=sorted(SPLITS), state="readonly").pack(fill="x")
     current_people = [()]
     player = [None]
 
@@ -380,13 +430,13 @@ def build_app():
     segment_start = tk.StringVar()
     segment_end = tk.StringVar()
     segment_selected = tk.BooleanVar(value=True)
-    segment_list = tk.Listbox(segments_tab, selectmode=tk.EXTENDED, exportselection=False)
+    segment_list = ScrollListbox(segment_results, height=1, selectmode=tk.EXTENDED, exportselection=False)
     compose_order = []
-    ttk.Label(segments_tab, text="対象動画は人物タブで選択。文字起こし版と前後余白（秒）").pack(anchor="w")
-    segment_settings = ttk.Frame(segments_tab)
+    WrappedLabel(segment_candidates, text="対象動画は人物タブで選択。文字起こし版と前後余白（秒）").pack(anchor="w")
+    segment_settings = ActionRow(segment_candidates)
     segment_settings.pack(fill="x")
     for label, variable in (("文字起こし版", segment_version), ("前", before_padding), ("後", after_padding)):
-        ttk.Label(segment_settings, text=label).pack(side="left")
+        WrappedLabel(segment_settings, text=label).pack(side="left")
         ttk.Entry(segment_settings, textvariable=variable, width=7).pack(side="left")
 
     def segment_video():
@@ -508,6 +558,7 @@ def build_app():
                 rows[indices[0]] = row
             validate_segments(rows, segment_duration[0])
         except (ValueError, StorageError) as error:
+            segments_tab.show('区間の境界・採否')
             messagebox.showerror("区間を変更できません", str(error))
             return
         segment_rows[0] = rows
@@ -524,6 +575,7 @@ def build_app():
                 raise ValueError("分割時刻は有限の数値にしてください")
             rows = split_segment(segment_rows[0], indices[0], round(boundary * 1000), segment_duration[0])
         except (ValueError, StorageError) as error:
+            segments_tab.show('区間の境界・採否')
             messagebox.showerror("分割できません", str(error))
             return
         segment_rows[0] = rows
@@ -569,28 +621,28 @@ def build_app():
                                       str(row.start_ms / 1000), "-t", str((row.end_ms - row.start_ms) / 1000),
                                       str(segment_source[0])], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
-    ttk.Button(segments_tab, text="候補を生成して別版保存", command=generate_segments).pack(anchor="w")
-    ttk.Button(segments_tab, text="解析なしで区間を手動作成", command=start_manual_segments).pack(anchor="w")
-    ttk.Button(segments_tab, text="選択した保存版を使用", command=reopen_segments).pack(anchor="w")
+    ttk.Button(segment_candidates, text="候補を生成して別版保存", command=generate_segments).pack(anchor="w")
+    ttk.Button(segment_candidates, text="解析なしで区間を手動作成", command=start_manual_segments).pack(anchor="w")
+    ttk.Button(segment_candidates, text="選択した保存版を使用", command=reopen_segments).pack(anchor="w")
     segment_list.pack(fill="both", expand=True)
     segment_list.bind("<<ListboxSelect>>", selected_segment)
-    segment_actions = ttk.Frame(segments_tab)
+    segment_actions = ActionRow(segment_modify)
     segment_actions.pack(fill="x")
     for caption, action in (("映像を再生", play_segment), ("境界を修正", change_segment),
                             ("終了秒で分割", split_selected_segment), ("区間結合", merge_selected_segments),
                             ("手動追加", lambda: change_segment(True)), ("採否を適用", set_segment_selection),
                             ("保存を再試行", persist_segments)):
         ttk.Button(segment_actions, text=caption, command=action).pack(side="left")
-    segment_edit = ttk.Frame(segments_tab)
+    segment_edit = ActionRow(segment_details)
     segment_edit.pack(fill="x")
     for caption, variable in (("開始秒", segment_start), ("終了秒", segment_end)):
-        ttk.Label(segment_edit, text=caption).pack(side="left")
+        WrappedLabel(segment_edit, text=caption).pack(side="left")
         ttk.Entry(segment_edit, textvariable=variable, width=10).pack(side="left")
     ttk.Checkbutton(segment_edit, text="採用", variable=segment_selected).pack(side="left")
 
-    compose_list = tk.Listbox(segments_tab, height=5, exportselection=False)
-    ttk.Label(segments_tab, text="編集用動画の順番（同じ区間を複数回追加できます）").pack(anchor="w")
-    compose_list.pack(fill="x")
+    compose_list = ScrollListbox(compose_results, height=1, exportselection=False)
+    WrappedLabel(compose_results, text="編集用動画の順番（同じ区間を複数回追加できます）").pack(anchor="w")
+    compose_list.pack(fill="both", expand=True)
     compose_fps = tk.StringVar()
     frame_status = tk.StringVar()
     composed_path: list[Path | None] = [None]
@@ -652,6 +704,7 @@ def build_app():
             width, height = video_dimensions()
             path = save_layout(data, composed_path[0], current_layout(), width, height)
         except (OSError, ValueError, StorageError) as error:
+            layout_tab.show('画面・字幕の配置')
             messagebox.showerror("画面設定を保存できません", str(error))
             return
         layout_path[0] = path
@@ -673,12 +726,10 @@ def build_app():
         if not preview.is_file():
             messagebox.showerror("プレビューを開けません", "AviUtl2で画面設定を適用してから開いてください")
             return
-        popup = tk.Toplevel(window)
-        popup.title("AviUtl2プレビュー")
-        picture = tk.PhotoImage(file=str(preview))
-        label = ttk.Label(popup, image=picture)
-        label.image = picture
-        label.pack()
+        try:
+            show_image_preview(window, preview, 'AviUtl2プレビュー')
+        except (OSError, tk.TclError) as error:
+            messagebox.showerror('プレビューを開けません', str(error))
 
     def refresh_compose_order():
         compose_list.delete(0, tk.END)
@@ -889,8 +940,10 @@ def build_app():
         status.set(f"編集用字幕を別版保存しました: {path.name}")
         apply_subtitle_version(path)
 
-    compose_actions = ttk.Frame(segments_tab)
+    compose_actions = ActionRow(compose_operations)
     compose_actions.pack(fill="x")
+    frame_actions = ActionRow(frame_operations)
+    frame_actions.pack(fill="x")
     for caption, action in (("区間を追加", add_compose_segment), ("上へ", lambda: move_compose_segment(-1)),
                             ("下へ", lambda: move_compose_segment(1)), ("外す", remove_compose_segment),
                             ("フレーム境界へ合わせる", inspect_frame),
@@ -901,48 +954,53 @@ def build_app():
                             ("新しい編集を作成", render_compose),
                             ("字幕をAviUtl2へ追加", export_subtitles),
                             ("編集用動画を再生", play_composed)):
-        ttk.Button(compose_actions, text=caption, command=action).pack(side="left")
-    ttk.Label(segments_tab, text="固定fps（可変fpsでは必須。空欄なら元動画優先）").pack(anchor="w")
-    ttk.Entry(segments_tab, textvariable=compose_fps, width=10).pack(anchor="w")
-    ttk.Label(segments_tab, textvariable=frame_status).pack(anchor="w")
+        parent = frame_actions if caption in ('フレーム境界へ合わせる', '開始-1F', '開始+1F', '終了-1F', '終了+1F') else compose_actions
+        ttk.Button(parent, text=caption, command=action).pack(side="left")
+    WrappedLabel(compose_operations, text="固定fps（可変fpsでは必須。空欄なら元動画優先）").pack(anchor="w")
+    ttk.Entry(compose_operations, textvariable=compose_fps, width=10).pack(anchor="w")
+    WrappedLabel(frame_operations, textvariable=frame_status).pack(anchor="w")
 
-    layout_tab = ttk.Frame(saved_tabs, padding=4)
+    layout_tab = ResponsivePage(saved_tabs, padding=4)
     saved_tabs.add(layout_tab, text="画面・字幕")
-    ttk.Label(layout_tab, text="編集用動画の画面設定（切替時に配置は保持）").pack(anchor="w")
-    layout_buttons = ttk.Frame(layout_tab)
+    layout_operations = layout_tab.section('画面設定とプレビュー')
+    layout_details = layout_tab.section('画面・字幕の配置', '詳細設定')
+    subtitle_results = layout_tab.section('編集用字幕', '結果')
+    subtitle_operations = layout_tab.section('字幕を修正')
+    WrappedLabel(layout_operations, text="編集用動画の画面設定（切替時に配置は保持）").pack(anchor="w")
+    layout_buttons = ActionRow(layout_operations)
     layout_buttons.pack(anchor="w")
     for kind in ("横", "ショート"):
         ttk.Button(layout_buttons, text=kind, command=lambda selected=kind: choose_screen(selected)).pack(side="left")
-    ttk.Label(layout_buttons, textvariable=screen_kind).pack(side="left", padx=10)
+    WrappedLabel(layout_buttons, textvariable=screen_kind).pack(side="left", padx=10)
     for caption, name in (("画面幅", "width"), ("画面高さ", "height"),
                           ("動画拡大率 %", "scale"), ("動画 X", "x"), ("動画 Y", "y"),
                           ("左切り取り px", "crop_left"), ("上切り取り px", "crop_top"),
                           ("右切り取り px", "crop_right"), ("下切り取り px", "crop_bottom"),
                           ("字幕 X", "subtitle_x"), ("字幕 Y", "subtitle_y"),
                           ("字幕サイズ", "subtitle_size"), ("プレビューフレーム", "preview_frame")):
-        line = ttk.Frame(layout_tab)
+        line = ttk.Frame(layout_details)
         line.pack(anchor="w")
-        ttk.Label(line, text=caption, width=18).pack(side="left")
+        WrappedLabel(line, text=caption, width=18).pack(side="left")
         ttk.Entry(line, textvariable=screen[name], width=12).pack(side="left")
-    ttk.Button(layout_tab, text="画面設定をAviUtl2へ渡す", command=prepare_layout).pack(anchor="w", pady=8)
-    ttk.Button(layout_tab, text="AviUtl2結果のプレビューを開く", command=show_layout_preview).pack(anchor="w")
-    ttk.Label(layout_tab, text="編集用字幕（変更時は別版を追加）").pack(anchor="w")
-    subtitle_list = tk.Listbox(layout_tab, height=5, exportselection=False)
-    subtitle_list.pack(fill="x")
+    ttk.Button(layout_operations, text="画面設定をAviUtl2へ渡す", command=prepare_layout).pack(anchor="w", pady=8)
+    ttk.Button(layout_operations, text="AviUtl2結果のプレビューを開く", command=show_layout_preview).pack(anchor="w")
+    WrappedLabel(subtitle_results, text="編集用字幕（変更時は別版を追加）").pack(anchor="w")
+    subtitle_list = ScrollListbox(subtitle_results, height=1, exportselection=False)
+    subtitle_list.pack(fill="both", expand=True)
     subtitle_list.bind("<<ListboxSelect>>", select_subtitle)
-    subtitle_line = ttk.Frame(layout_tab)
+    subtitle_line = ActionRow(subtitle_operations)
     subtitle_line.pack(anchor="w")
     for caption, variable in (("開始F", subtitle_first), ("終了F", subtitle_last)):
-        ttk.Label(subtitle_line, text=caption).pack(side="left")
+        WrappedLabel(subtitle_line, text=caption).pack(side="left")
         ttk.Entry(subtitle_line, textvariable=variable, width=7).pack(side="left")
-    subtitle_text = tk.Text(layout_tab, height=3, width=32)
+    subtitle_text = ScrollText(subtitle_operations, height=3, width=20)
     subtitle_text.pack(fill="x")
     def text_modified(_event=None):
         if subtitle_text.edit_modified():
             mark_subtitle_dirty()
             subtitle_text.edit_modified(False)
     subtitle_text.bind("<<Modified>>", text_modified)
-    ttk.Button(layout_tab, text="選択字幕を別版保存", command=save_subtitle_edit).pack(anchor="w")
+    ttk.Button(subtitle_operations, text="選択字幕を別版保存", command=save_subtitle_edit).pack(anchor="w")
 
     supporting_panel = SupportingMediaPanel(saved_tabs, data, status)
     saved_tabs.add(supporting_panel, text="補助素材")
@@ -1067,6 +1125,7 @@ def build_app():
             return
         use_video = not audio_path.get().strip()
         if use_video and not videos.curselection():
+            people_tab.show('人物・参照音声の登録')
             messagebox.showerror("登録できません", "音声ファイルか登録済み動画を選んでください")
             return
         video = data.list_videos()[videos.curselection()[0]] if use_video else None
@@ -1088,14 +1147,17 @@ def build_app():
                 window.after(0, finish)
             except Exception as error:
                 reason = str(error)
-                window.after(0, lambda: messagebox.showerror("登録できません", reason))
+                def failed(reason=reason):
+                    people_tab.show('人物・参照音声の登録')
+                    messagebox.showerror("登録できません", reason)
+                window.after(0, failed)
             finally:
                 data.running = False
                 window.after(0, lambda: pending.__setitem__(0, False))
 
         threading.Thread(target=worker, daemon=True).start()
 
-    person_actions = ttk.Frame(people_panel)
+    person_actions = ActionRow(people_panel)
     person_actions.pack(fill="x", pady=4)
     ttk.Button(person_actions, text="人物を登録", command=enroll_person).pack(side="left")
     ttk.Button(person_actions, text="参照音声を試聴", command=preview_person).pack(side="left", padx=6)
@@ -1106,15 +1168,15 @@ def build_app():
     word_version = tk.StringVar(value="1")
     include_verbs = tk.BooleanVar()
     include_adjectives = tk.BooleanVar()
-    word_entries = tk.Listbox(words_tab, height=9, exportselection=False)
-    word_hits = tk.Listbox(words_tab, height=9, exportselection=False)
+    word_entries = ScrollListbox(word_totals, height=1, exportselection=False)
+    word_hits = ScrollListbox(word_occurrences, height=1, exportselection=False)
     word_rows = [[]]
     word_source = [None]
     word_choice = tk.StringVar()
-    ttk.Label(words_tab, text="対象動画は人物タブで選択。修正済み文字起こしの版番号").pack(anchor="w")
-    ttk.Entry(words_tab, textvariable=word_version, width=8).pack(anchor="w")
-    ttk.Checkbutton(words_tab, text="動詞を含める", variable=include_verbs).pack(anchor="w")
-    ttk.Checkbutton(words_tab, text="形容詞を含める", variable=include_adjectives).pack(anchor="w")
+    WrappedLabel(word_settings, text="対象動画は人物タブで選択。修正済み文字起こしの版番号").pack(anchor="w")
+    ttk.Entry(word_settings, textvariable=word_version, width=8).pack(anchor="w")
+    ttk.Checkbutton(word_settings, text="動詞を含める", variable=include_verbs).pack(anchor="w")
+    ttk.Checkbutton(word_settings, text="形容詞を含める", variable=include_adjectives).pack(anchor="w")
 
     def update_words(kind, remove=False):
         if data.path is None:
@@ -1136,8 +1198,8 @@ def build_app():
         except (OSError, StorageError) as error:
             messagebox.showerror("登録できません", str(error))
 
-    ttk.Entry(words_tab, textvariable=word_choice).pack(fill="x")
-    word_actions = ttk.Frame(words_tab)
+    ttk.Entry(word_dictionary, textvariable=word_choice).pack(fill="x")
+    word_actions = ActionRow(word_dictionary)
     word_actions.pack(fill="x")
     ttk.Button(word_actions, text="登録語に追加", command=lambda: update_words("registered-words")).pack(side="left")
     ttk.Button(word_actions, text="除外語に追加", command=lambda: update_words("excluded-words")).pack(side="left")
@@ -1184,8 +1246,8 @@ def build_app():
         except (OSError, StorageError, ValueError, StopIteration) as error:
             messagebox.showerror("表示できません", str(error))
 
-    ttk.Button(words_tab, text="再集計して別版保存", command=recount_words).pack(anchor="w")
-    ttk.Button(words_tab, text="選択した保存版を表示", command=reopen_words).pack(anchor="w")
+    ttk.Button(word_settings, text="再集計して別版保存", command=recount_words).pack(anchor="w")
+    ttk.Button(word_settings, text="選択した保存版を表示", command=reopen_words).pack(anchor="w")
     word_entries.pack(fill="both", expand=True)
     word_hits.pack(fill="both", expand=True)
 
@@ -1246,6 +1308,7 @@ def build_app():
                 session[0].configure_retry(format=media_format.get(), retries=int(retries.get()),
                                            extra=extra.get())
         except (DownloadError, ValueError) as error:
+            media_panel.show('形式・品質と取得設定')
             messagebox.showerror("取得できません", str(error))
             return
         current = session[0]
@@ -1276,7 +1339,7 @@ def build_app():
                             operation_tasks.download, (current, selected),
                             on_result=update, on_progress=update, on_finished=stopped)
 
-    download_actions = ttk.Frame(media_panel)
+    download_actions = ActionRow(media_input)
     download_actions.pack(fill="x", pady=5)
     tk.Button(download_actions, text="取得・情報表示", command=run_download).pack(side="left", padx=(0, 4))
     tk.Button(download_actions, text="失敗項目を再試行", command=lambda: run_download(True)).pack(side="left", padx=4)
@@ -1394,7 +1457,7 @@ def build_app():
             detail.insert(tk.END, f"{row}\n")
         detail.configure(state="disabled")
 
-    media_actions = ttk.Frame(media_panel)
+    media_actions = ActionRow(media_local)
     media_actions.pack(fill="x", pady=5)
     tk.Button(media_actions, text="ローカル動画を登録", command=register).pack(side="left", padx=(0, 4))
     tk.Button(media_actions, text="選択した動画を媒体確認・変換（再試行）", command=prepare_selected).pack(side="left", padx=4)
@@ -1418,6 +1481,11 @@ def build_app():
         if player[0] and player[0].poll() is None:
             player[0].terminate()
         supporting_panel.stop_audio()
+        try:
+            placement.save(workbench.work, saved_tabs.tab(saved_tabs.select(), 'text'))
+        except OSError as error:
+            messagebox.showerror("ウィンドウ設定を保存できません", str(error))
+            return
         window.destroy()
 
     def refresh_managed_lists():
@@ -1432,9 +1500,15 @@ def build_app():
         start_operation=lambda *args, **kwargs: process_panel.start(*args, **kwargs),
         has_drafts=lambda: pending[0] or unsaved.get() or review_dirty[0] or segment_dirty[0] or has_editor_drafts())
     saved_tabs.add(management_panel, text="管理・保管")
-    saved_tabs.bind("<<NotebookTabChanged>>", lambda _event: management_panel.refresh())
+    workbench.select_work(placement.normal.work)
+    for tab in saved_tabs.tabs():
+        if saved_tabs.tab(tab, 'text') == placement.normal.tab:
+            saved_tabs.select(tab)
+    saved_tabs.bind("<<NotebookTabChanged>>", lambda _event: management_panel.refresh()
+                    if saved_tabs.select() == str(management_panel) else None)
 
-    operation_lock = WidgetLock((header, saved_panel, media_panel))
+    operation_lock = WidgetLock((results_tab, people_tab, words_tab, segments_tab, layout_tab,
+                                 supporting_panel, save_export_panel, management_panel, media_panel))
 
     def lock_operation(locked):
         pending[0] = data.running = locked
@@ -1446,14 +1520,33 @@ def build_app():
             cleanup_logs(data)
         except (OSError, StorageError) as error:
             messagebox.showerror("処理ログを保存・整理できません", str(error))
+        if operation.state == '失敗':
+            if operation.label in ('動画の情報取得', '動画・音声の取得'):
+                media_panel.show('形式・品質と取得設定')
+            elif operation.label == '対象話者の照合':
+                people_tab.show('人物・参照音声の登録')
+            elif operation.label == '対象話者の文字起こし':
+                people_tab.show('対象話者の文字起こし')
+            elif 'フレーム境界' in operation.label:
+                segments_tab.show('区間の境界・採否')
+            elif operation.label == '編集用動画の作成':
+                segments_tab.show('編集用動画を作成')
+        if operation.state == '完了':
+            next_work = ('解析・切り出し' if operation.label in ('動画の情報取得', '動画・音声の取得', '媒体確認・編集互換変換')
+                         else '編集・書き出し' if '編集用動画' in operation.label else '保存結果を確認')
+            schedule_ui(lambda: status.set(status.get() + '。次の作業: ' + next_work + '（手動で切替）'))
 
     process_panel = ProcessPanel(window, status, lock_operation, on_finished=record_finished_operation)
-    process_panel.pack(fill="x", padx=10, pady=4)
+    operation_strip = OperationStrip(window, status, process_panel, save_export_panel)
+    operation_strip.grid(row=2, column=0, sticky="ew", padx=6)
 
     window.protocol("WM_DELETE_WINDOW", close)
     listing.bind("<<ListboxSelect>>", show)
     videos.bind("<<ListboxSelect>>", select_video)
-    ttk.Label(window, textvariable=status, padding=(12, 5)).pack(fill="x")
+    apply_widget_roles(window)
+    if data.path is not None:
+        location.set(str(data.path))
+        refresh_managed_lists()
     return window
 
 

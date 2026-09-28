@@ -1,20 +1,21 @@
 """Supporting-media controls for the current editing video."""
 
-import math
 import os
 import shutil
 import subprocess
 import threading
 import tkinter as tk
 from dataclasses import replace
-from tkinter import filedialog, messagebox, ttk
+from tkinter import filedialog, ttk
 
 from .editor_bridge import apply_supporting_media
 from .storage import StorageError
 from .supporting_media import MediaPlacement, import_supporting_media, save_supporting_media
+from .responsive_ui import WrappedLabel, ScrollListbox, ResponsivePage, ActionRow, PathLabel
+from .dialogs import messagebox, show_image_preview
 
 
-class SupportingMediaPanel(ttk.Frame):
+class SupportingMediaPanel(ResponsivePage):
     def __init__(self, parent, data, status):
         super().__init__(parent, padding=4)
         self.data = data
@@ -27,13 +28,18 @@ class SupportingMediaPanel(ttk.Frame):
         self.filling_form = False
         self.preview = None
         self.player = None
+        operations = self.section('追加・適用・プレビュー')
+        results = self.section('補助素材一覧', '結果')
+        settings = self.section('素材の配置・音声設定', '詳細設定')
         self.video_label = tk.StringVar(value="切り出し区間タブで編集用動画を作成してください")
-        ttk.Label(self, textvariable=self.video_label, wraplength=500).pack(anchor="w")
-        buttons = ttk.Frame(self)
+        PathLabel(operations, self.video_label).pack(fill="x")
+        ttk.Button(operations, text='対象動画の場所を確認',
+                   command=lambda: messagebox.showinfo('編集用動画', self.video_label.get())).pack(anchor='w')
+        buttons = ActionRow(operations)
         buttons.pack(anchor="w", pady=6)
         for label, kind in (("画像を追加", "image"), ("BGMを追加", "bgm"), ("効果音を追加", "sound")):
             ttk.Button(buttons, text=label, command=lambda value=kind: self.add(value)).pack(side="left")
-        self.listing = tk.Listbox(self, height=6, exportselection=False)
+        self.listing = ScrollListbox(results, height=1, exportselection=False)
         self.listing.pack(fill="both", expand=True)
         self.listing.bind("<<ListboxSelect>>", self.select)
         self.fields = {name: tk.StringVar(value=value) for name, value in
@@ -42,18 +48,19 @@ class SupportingMediaPanel(ttk.Frame):
         for name, variable in self.fields.items():
             if name != "preview_frame":
                 variable.trace_add("write", self.mark_dirty)
-        form = ttk.Frame(self)
-        form.pack(anchor="w", pady=6)
+        form = ttk.Frame(settings)
+        form.pack(fill="x", pady=6)
+        form.columnconfigure(1, weight=1)
         for index, (label, name) in enumerate((("開始F (0始まり)", "first"), ("長さF", "length"),
                 ("素材の開始秒（音声）", "offset"), ("音量 %", "volume"), ("画像 X", "x"),
                 ("画像 Y", "y"), ("画像拡大率 %", "scale"), ("プレビュー開始F", "preview_frame"))):
-            ttk.Label(form, text=label).grid(row=index, column=0, sticky="w")
-            ttk.Entry(form, textvariable=self.fields[name], width=14).grid(row=index, column=1, sticky="w")
-        ttk.Label(self, text="BGMは元の長さで追加します。必要な長さは手動で調整してください。\n"
+            WrappedLabel(form, text=label).grid(row=index, column=0, sticky="w")
+            ttk.Entry(form, textvariable=self.fields[name], width=14).grid(row=index, column=1, sticky="ew")
+        WrappedLabel(settings, text="BGMは元の長さで追加します。必要な長さは手動で調整してください。\n"
                   "プレビュー音声は開始Fから最大5秒、映像終端までです。", wraplength=500).pack(anchor="w")
-        ttk.Button(self, text="配置をAviUtl2へ適用・プレビュー", command=self.apply).pack(anchor="w", pady=6)
-        ttk.Button(self, text="直前のプレビューを開く", command=self.show_preview).pack(anchor="w")
-        ttk.Button(self, text="未適用入力を破棄", command=self.discard).pack(anchor="w")
+        ttk.Button(operations, text="配置をAviUtl2へ適用・プレビュー", command=self.apply).pack(anchor="w", pady=6)
+        ttk.Button(operations, text="直前のプレビューを開く", command=self.show_preview).pack(anchor="w")
+        ttk.Button(operations, text="未適用入力を破棄", command=self.discard).pack(anchor="w")
 
     @property
     def has_unsaved(self):
@@ -170,6 +177,7 @@ class SupportingMediaPanel(ttk.Frame):
             placement = replace(self.placements[index], **values)
             path = save_supporting_media(self.data, placement, preview_frame=preview_frame)
         except (OSError, ValueError, StorageError) as error:
+            self.show('素材の配置・音声設定')
             messagebox.showerror("配置を適用できません", str(error))
             return
         self.placements[index] = placement
@@ -223,21 +231,12 @@ class SupportingMediaPanel(ttk.Frame):
             messagebox.showinfo("プレビュー", "先に配置を適用してください")
             return
         try:
-            picture = tk.PhotoImage(file=str(self.preview.with_suffix(".ppm")))
-            factor = max(1, math.ceil(picture.width() / 700), math.ceil(picture.height() / 450))
-            picture = picture.subsample(factor)
+            sound = self.preview.with_suffix('.wav')
+            show_image_preview(self, self.preview.with_suffix('.ppm'), 'AviUtl2 補助素材プレビュー',
+                actions=(('この位置から音声を試聴（最大5秒）', lambda: self.play_audio(sound)),
+                         ('試聴を停止', self.stop_audio)), on_close=self.stop_audio)
         except (OSError, tk.TclError) as error:
             messagebox.showerror("プレビュー", str(error))
-            return
-        popup = tk.Toplevel(self)
-        popup.title("AviUtl2 補助素材プレビュー")
-        label = ttk.Label(popup, image=picture)
-        setattr(label, "picture", picture)
-        label.pack()
-        sound = self.preview.with_suffix(".wav")
-        ttk.Button(popup, text="この位置から音声を試聴（最大5秒）", command=lambda: self.play_audio(sound)).pack()
-        ttk.Button(popup, text="試聴を停止", command=self.stop_audio).pack()
-        popup.protocol("WM_DELETE_WINDOW", lambda: (self.stop_audio(), popup.destroy()))
 
     def play_audio(self, sound):
         self.stop_audio()

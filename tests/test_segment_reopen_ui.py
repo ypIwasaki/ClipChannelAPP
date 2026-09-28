@@ -46,10 +46,12 @@ class SegmentReopenUiTests(unittest.TestCase):
                 button('フォルダを選択・切り替え').invoke()
             listing = next(w for w in widgets if w.winfo_class() == 'Listbox'
                            and saved.relative_to(root).as_posix() in w.get(0, tk.END))
-            segments_tab = button('選択した保存版を使用').master
+            notebook = next(w for w in widgets if w.winfo_class() == 'TNotebook')
+            segments_tab = window.nametowidget(next(t for t in notebook.tabs()
+                if notebook.tab(t, 'text') == '切り出し区間'))
             retry = next(w for w in descendants(segments_tab) if w.winfo_class() == 'TButton'
                          and w.cget('text') == '保存を再試行')
-            with patch('tkinter.messagebox.showerror') as errors:
+            with patch('clipchannel.dialogs.messagebox.showerror') as errors:
                 retry.invoke()
                 errors.reset_mock()
                 listing.selection_set(listing.get(0, tk.END).index(saved.relative_to(root).as_posix()))
@@ -60,7 +62,7 @@ class SegmentReopenUiTests(unittest.TestCase):
                                 and any('0.000–10.000' in row for row in w.get(0, tk.END))
                                 for w in widgets))
             with patch('clipchannel.app.save_segments', side_effect=StorageError('disk failure')), \
-                    patch('tkinter.messagebox.showerror') as errors:
+                    patch('clipchannel.dialogs.messagebox.showerror') as errors:
                 retry.invoke()
                 errors.reset_mock()
                 button('選択した保存版を使用').invoke()

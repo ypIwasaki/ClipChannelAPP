@@ -44,12 +44,12 @@ class ManagementUiTests(unittest.TestCase):
             button("再表示").invoke()
             self.assertEqual(panel.data.list_videos(), [registered])
             panel.listing.selection_set(0)
-            with patch("tkinter.messagebox.askyesno", return_value=True):
+            with patch("clipchannel.dialogs.messagebox.askyesno", return_value=True):
                 button("登録情報を削除…").invoke()
             self.assertEqual(panel.data.list_videos(), [])
             self.assertTrue(registered.is_file())
             with patch("tkinter.filedialog.askopenfilename", return_value=str(registered)), \
-                    patch("tkinter.messagebox.askyesno", return_value=False):
+                    patch("clipchannel.dialogs.messagebox.askyesno", return_value=False):
                 button("実ファイルを選んで削除…").invoke()
             self.assertTrue(registered.is_file())
 

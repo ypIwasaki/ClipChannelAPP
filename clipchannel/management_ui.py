@@ -2,19 +2,21 @@
 
 import tkinter as tk
 from pathlib import Path
-from tkinter import filedialog, messagebox, ttk
+from tkinter import filedialog, ttk
 
 from . import operation_tasks
 from .operation_logs import cleanup_logs
 from .registrations import RegistrationManager
+from .dialogs import messagebox
 from .storage import StorageError
+from .responsive_ui import WrappedLabel, ScrollListbox, ResponsivePage, ActionRow
 
 
 KIND_NAMES = {"people": "人物", "registered-words": "登録語", "excluded-words": "除外語",
               "results": "保存済み結果", "videos": "動画"}
 
 
-class ManagementPanel(ttk.Frame):
+class ManagementPanel(ResponsivePage):
     def __init__(self, parent, data, status, *, refresh_lists, start_operation, has_drafts):
         super().__init__(parent, padding=8)
         self.data = data
@@ -24,49 +26,49 @@ class ManagementPanel(ttk.Frame):
         self.has_drafts = has_drafts
         self.entries = []
         self.show_hidden = tk.BooleanVar()
-        self.scroll_canvas = tk.Canvas(self, highlightthickness=0)
-        scrollbar = ttk.Scrollbar(self, orient="vertical", command=self.scroll_canvas.yview)
-        self.scroll_canvas.configure(yscrollcommand=scrollbar.set)
-        scrollbar.pack(side="right", fill="y")
-        self.scroll_canvas.pack(side="left", fill="both", expand=True)
-        body = ttk.Frame(self.scroll_canvas)
-        body_id = self.scroll_canvas.create_window((0, 0), window=body, anchor="nw")
-        body.bind("<Configure>", lambda _event: self.scroll_canvas.configure(
-            scrollregion=self.scroll_canvas.bbox("all")))
-        self.scroll_canvas.bind("<Configure>", lambda event: self.scroll_canvas.itemconfigure(
-            body_id, width=event.width))
-        ttk.Label(body, text="非表示にしても保存済み結果と辞書の内容は保持します。",
+        body = self.section('登録情報を管理')
+        results = self.section('登録一覧', '結果')
+        archive = self.section('動画を保管・展開')
+        logs = self.section('ログの整理')
+        details = self.section('保管・展開結果', '詳細設定')
+        WrappedLabel(body, text="非表示にしても保存済み結果と辞書の内容は保持します。",
                   wraplength=440).pack(anchor="w")
         ttk.Checkbutton(body, text="非表示の項目も表示", variable=self.show_hidden,
                         command=self.refresh).pack(anchor="w")
-        self.listing = tk.Listbox(body, height=9, exportselection=False)
+        self.listing = ScrollListbox(results, height=1, exportselection=False)
         self.listing.pack(fill="both", expand=True)
-        actions = ttk.Frame(body)
+        actions = ActionRow(body)
         actions.pack(fill="x", pady=4)
         ttk.Button(actions, text="非表示", command=lambda: self.set_hidden(True)).pack(side="left")
         ttk.Button(actions, text="再表示", command=lambda: self.set_hidden(False)).pack(side="left", padx=4)
         ttk.Button(actions, text="登録情報を削除…", command=self.delete_registration).pack(side="left")
-        ttk.Label(body, text="登録情報の削除では実ファイルを残します。参照中の情報は削除できません。",
+        WrappedLabel(body, text="登録情報の削除では実ファイルを残します。参照中の情報は削除できません。",
                   wraplength=440).pack(anchor="w")
         ttk.Button(body, text="実ファイルを選んで削除…", command=self.delete_file).pack(anchor="w", pady=6)
-        archive_actions = ttk.LabelFrame(body, text="動画の可逆保管", padding=6)
+        archive_actions = ttk.LabelFrame(archive, text="動画の可逆保管", padding=6)
         archive_actions.pack(fill="x", pady=4)
-        ttk.Label(archive_actions, text="元動画・保管物は保持し、展開先は毎回別フォルダにします。",
+        WrappedLabel(archive_actions, text="元動画・保管物は保持し、展開先は毎回別フォルダにします。",
                   wraplength=420).pack(anchor="w")
         ttk.Button(archive_actions, text="動画を保管…", command=self.archive).pack(side="left", pady=4)
         ttk.Button(archive_actions, text="保管物を展開…", command=self.restore).pack(side="left", padx=4)
         self.result_text = tk.StringVar()
-        ttk.Label(body, textvariable=self.result_text, wraplength=440).pack(anchor="w", fill="x", pady=4)
-        ttk.Button(body, text="30日経過した通常ログを整理", command=self.clean_logs).pack(anchor="w", pady=4)
-        ttk.Label(body, text="復旧待ちの情報がある間はログを保持します。",
+        WrappedLabel(details, textvariable=self.result_text, wraplength=440).pack(anchor="w", fill="x", pady=4)
+        ttk.Button(logs, text="30日経過した通常ログを整理", command=self.clean_logs).pack(anchor="w", pady=4)
+        WrappedLabel(logs, text="復旧待ちの情報がある間はログを保持します。",
                   wraplength=440).pack(anchor="w")
 
     def refresh(self):
+        selected = {(self.entries[i].kind, self.entries[i].key) for i in self.listing.curselection()
+                    if i < len(self.entries)}
+        position = self.listing.yview()[0]
         self.listing.delete(0, tk.END)
         self.entries = (RegistrationManager(self.data).list_entries(include_hidden=self.show_hidden.get())
                         if self.data.path else [])
-        for entry in self.entries:
+        for index, entry in enumerate(self.entries):
             self.listing.insert(tk.END, f"{'非表示 | ' if entry.hidden else ''}{KIND_NAMES[entry.kind]} | {entry.label}")
+            if (entry.kind, entry.key) in selected:
+                self.listing.selection_set(index)
+        self.listing.yview_moveto(position)
 
     def reset(self):
         self.result_text.set("")

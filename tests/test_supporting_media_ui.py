@@ -54,7 +54,7 @@ class SupportingMediaInputTest(unittest.TestCase):
             window.after(20, wait_for_import)
             window.mainloop()
             self.assertFalse(panel.data.running)
-            with patch("tkinter.filedialog.askdirectory", return_value=str(second)), patch("tkinter.messagebox.showerror") as error:
+            with patch("tkinter.filedialog.askdirectory", return_value=str(second)), patch("clipchannel.dialogs.messagebox.showerror") as error:
                 choose.invoke()
             self.assertEqual(panel.data.path, first)
             error.assert_called_once()

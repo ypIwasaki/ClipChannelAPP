@@ -1,8 +1,9 @@
 """Tk controls for a single owned operation and its confirmed stop."""
 
 import tkinter as tk
-from tkinter import messagebox, ttk
+from tkinter import ttk
 
+from .dialogs import messagebox
 from .managed_process import ManagedOperation
 
 
@@ -13,12 +14,19 @@ class ProcessPanel(ttk.LabelFrame):
         self.lock = lock
         self.on_finished = on_finished
         self.operation = None
+        self._tick_id = None
+        self.bind('<Destroy>', self._destroy, add='+')
         self.message = tk.StringVar(value="実行中の処理はありません")
         ttk.Label(self, textvariable=self.message, wraplength=900).pack(side="left", fill="x", expand=True)
         self.cancel_button = ttk.Button(self, text="通常中止", command=self.stop, state="disabled")
         self.cancel_button.pack(side="left", padx=4)
         self.force_button = ttk.Button(self, text="強制停止…", command=self.force, state="disabled")
         self.force_button.pack(side="left", padx=4)
+
+    def _destroy(self, event):
+        if event.widget is self and self._tick_id is not None:
+            self.after_cancel(self._tick_id)
+            self._tick_id = None
 
     @property
     def active(self):
@@ -41,6 +49,7 @@ class ProcessPanel(ttk.LabelFrame):
 
         def tick():
             nonlocal last_progress
+            self._tick_id = None
             operation.poll()
             if operation.progress is not last_progress:
                 last_progress = operation.progress
@@ -54,7 +63,7 @@ class ProcessPanel(ttk.LabelFrame):
             self.status.set(summary)
             self.force_button.configure(state="normal" if operation.can_force else "disabled")
             if operation.active:
-                self.after(100, tick)
+                self._tick_id = self.after(100, tick)
                 return
             self.cancel_button.configure(state="disabled")
             self.force_button.configure(state="disabled")
@@ -68,6 +77,7 @@ class ProcessPanel(ttk.LabelFrame):
                     on_result(operation.result)
             elif operation.state == "失敗":
                 self.message.set(f"{summary} — {operation.error}")
+                self.status.set(self.message.get())
                 retry = ("取得を再試行できます。" if label in ("動画・音声の取得", "動画の情報取得")
                          else "保存は再試行できます。")
                 messagebox.showerror("処理できません", operation.error + "\n未保存の入力は保持しています。" + retry)
