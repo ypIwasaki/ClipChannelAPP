@@ -35,12 +35,15 @@ def probe_frames(source, *, stop_requested=None):
         raise SegmentError("フレーム情報が不正です") from error
 
 
-def is_variable_fps(source, *, stop_requested=None):
+def is_variable_fps(source, *, start_ms=None, end_ms=None, stop_requested=None):
     """Inspect actual presentation intervals; stream averages alone can hide VFR."""
     probe = shutil.which("ffprobe")
     if not probe:
         raise SegmentError("ffprobe が必要です")
-    result = run_process([probe, "-v", "error", "-select_streams", "v:0",
+    command = [probe, "-v", "error", "-select_streams", "v:0"]
+    if start_ms is not None and end_ms is not None:
+        command += ["-read_intervals", f"{max(0, start_ms / 1000 - 1)}%{end_ms / 1000 + 1}"]
+    result = run_process(command + [
                              "-show_entries", "frame=best_effort_timestamp_time", "-of", "csv=p=0",
                              str(source)], stop=stop_requested)
     if result.returncode:
@@ -64,6 +67,7 @@ def _nearby_frames(source, requested_ms, *, stop_requested=None):
     if not probe or not math.isfinite(requested_ms) or requested_ms < 0:
         raise SegmentError("時刻または ffprobe が不正です")
     result = run_process([probe, "-v", "error", "-select_streams", "v:0",
+                             "-read_intervals", f"{max(0, requested_ms / 1000 - 1)}%{requested_ms / 1000 + 1}",
                              "-show_entries",
                              "frame=best_effort_timestamp_time", "-of", "csv=p=0", str(source)],
                             stop=stop_requested)
@@ -119,7 +123,9 @@ def compose_video(data, source, segments, order, duration_ms, *, fps=None, short
     ffmpeg = shutil.which("ffmpeg")
     if not ffmpeg:
         raise SegmentError("ffmpeg が必要です")
-    if fps is None and is_variable_fps(source, stop_requested=stop_requested):
+    if fps is None and any(is_variable_fps(source, start_ms=segments[i].start_ms,
+                                          end_ms=segments[i].end_ms, stop_requested=stop_requested)
+                           for i in set(order)):
         raise SegmentError("可変fpsの動画です。固定fpsを指定してください")
     average_fps, _, width, height = probe_frames(source, stop_requested=stop_requested)
     # Even dimensions are required by yuv420p and keep the source size where possible.
@@ -140,7 +146,9 @@ def compose_video(data, source, segments, order, duration_ms, *, fps=None, short
     streams = json.loads(probe.stdout)["streams"]
     video_stream = next(stream for stream in streams if stream["codec_type"] == "video")
     audio_stream = next((stream for stream in streams if stream["codec_type"] == "audio"), None)
-    source_frames = _nearby_frames(source, 0, stop_requested=stop_requested)
+    boundaries = {value for i in order for value in (segments[i].start_ms, segments[i].end_ms)}
+    snapped = {value: _closest(_nearby_frames(source, value, stop_requested=stop_requested), value)
+               for value in sorted(boundaries)}
     spans = []
     frame_counts = []
     rate = Fraction(str(fps)) if fps is not None else average_fps
@@ -149,11 +157,12 @@ def compose_video(data, source, segments, order, duration_ms, *, fps=None, short
         staged.mkdir()
         output = staged / f"{name}_v1.mp4"
         filters = []
+        inputs_command = []
         for position, index in enumerate(order):
             check_cancelled(stop_requested)
             row = segments[index]
-            start_ms = _closest(source_frames, row.start_ms)
-            end_ms = _closest(source_frames, row.end_ms)
+            start_ms = snapped[row.start_ms]
+            end_ms = snapped[row.end_ms]
             if end_ms <= start_ms:
                 raise SegmentError("フレーム境界に合わせると区間の長さが0になります")
             spans.append((start_ms, end_ms))
@@ -163,13 +172,14 @@ def compose_video(data, source, segments, order, duration_ms, *, fps=None, short
             frame_counts.append(frames)
             duration = float(Fraction(frames, 1) / rate)
             start, end = start_ms / 1000, end_ms / 1000
-            video_filter = f"[0:v]trim=start={start}:end={end},setpts=PTS-STARTPTS,scale={width}:{height},format=yuv420p"
+            inputs_command += ["-ss", str(start), "-t", str(end - start), "-i", str(source)]
+            video_filter = f"[{position}:v]trim=start=0:end={end - start},setpts=PTS-STARTPTS,scale={width}:{height},format=yuv420p"
             video_filter += (f",fps={rate.numerator}/{rate.denominator},"
                              f"tpad=stop_mode=clone:stop_duration={duration},"
                              f"trim=end_frame={frames},setpts=PTS-STARTPTS")
             filters.append(video_filter + f"[v{position}]")
             if info.audio:
-                filters.append(f"[0:a]atrim=start={start}:end={end},asetpts=PTS-STARTPTS,"
+                filters.append(f"[{position}:a]atrim=start=0:end={end - start},asetpts=PTS-STARTPTS,"
                                f"aresample=async=1:first_pts=0,apad,atrim=duration={duration}[a{position}]")
         if info.audio:
             inputs = "".join(f"[v{i}][a{i}]" for i in range(len(order)))
@@ -177,7 +187,7 @@ def compose_video(data, source, segments, order, duration_ms, *, fps=None, short
         else:
             inputs = "".join(f"[v{i}]" for i in range(len(order)))
             filters.append(f"{inputs}concat=n={len(order)}:v=1:a=0[v]")
-        command = [ffmpeg, "-v", "error", "-i", str(source), "-filter_complex", ";".join(filters),
+        command = [ffmpeg, "-v", "error", *inputs_command, "-filter_complex", ";".join(filters),
                    "-map", "[v]"]
         if info.audio:
             command += ["-map", "[a]"]

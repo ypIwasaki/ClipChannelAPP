@@ -7,6 +7,9 @@ import wave
 from array import array
 from pathlib import Path
 from types import SimpleNamespace
+from unittest.mock import patch
+
+from clipchannel.process_control import run_process
 
 from clipchannel.compose import adjacent_frame, compose_video, is_variable_fps, nearest_frame, probe_frames
 from clipchannel.media import _probe
@@ -15,6 +18,35 @@ from clipchannel.segments import Segment
 
 @unittest.skipUnless(shutil.which("ffmpeg") and shutil.which("ffprobe"), "ffmpeg required")
 class ComposeTest(unittest.TestCase):
+    def test_short_edit_near_end_reads_only_selected_ranges(self):
+        with tempfile.TemporaryDirectory() as root:
+            root = Path(root)
+            original = root / "media" / "originals"
+            original.mkdir(parents=True)
+            (root / "work").mkdir()
+            source = original / "long.mp4"
+            subprocess.run(["ffmpeg", "-nostdin", "-v", "error", "-f", "lavfi", "-i",
+                            "testsrc2=size=64x64:rate=10:duration=30", "-c:v", "libx264",
+                            "-g", "100", "-sc_threshold", "0", str(source)], check=True)
+            with patch("clipchannel.compose.run_process", wraps=run_process) as processes:
+                output = compose_video(SimpleNamespace(path=root), source,
+                                       [Segment(18200, 18700, "manual")], [0], 30000)
+            self.assertAlmostEqual(float(_probe(output).duration), 0.5, delta=0.02)
+            self.assertEqual(json.loads(output.with_suffix(".json").read_text())["spans_ms"],
+                             [[18200, 18700]])
+            commands = [call.args[0] for call in processes.call_args_list]
+            frame_probes = [cmd for cmd in commands if "frame=best_effort_timestamp_time" in cmd]
+            self.assertTrue(frame_probes)
+            for cmd in frame_probes:
+                self.assertIn("-read_intervals", cmd)
+                interval = cmd[cmd.index("-read_intervals") + 1]
+                start, end = map(float, interval.split("%"))
+                self.assertGreaterEqual(start, 17)
+                self.assertLessEqual(end, 20)
+            render = next(cmd for cmd in commands if "-filter_complex" in cmd)
+            self.assertEqual(float(render[render.index("-ss") + 1]), 18.2)
+            self.assertEqual(float(render[render.index("-t") + 1]), 0.5)
+
     def test_repeat_order_and_versioned_output(self):
         with tempfile.TemporaryDirectory() as root:
             root = Path(root)
