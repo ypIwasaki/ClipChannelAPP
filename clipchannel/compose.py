@@ -55,6 +55,10 @@ def is_variable_fps(source, *, start_ms=None, end_ms=None, stop_requested=None):
         raise SegmentError("フレーム時刻が不正です") from error
     if len(stamps) < 3:
         return False
+    if start_ms is not None and end_ms is not None:
+        stamps = [stamp for stamp in stamps if start_ms <= stamp * 1000 <= end_ms]
+        if len(stamps) < 3:
+            return False
     intervals = [right - left for left, right in zip(stamps, stamps[1:])]
     if any(interval <= 0 for interval in intervals):
         raise SegmentError("フレーム時刻が不正です")
@@ -66,21 +70,31 @@ def _nearby_frames(source, requested_ms, *, stop_requested=None):
     probe = shutil.which("ffprobe")
     if not probe or not math.isfinite(requested_ms) or requested_ms < 0:
         raise SegmentError("時刻または ffprobe が不正です")
-    result = run_process([probe, "-v", "error", "-select_streams", "v:0",
-                             "-read_intervals", f"{max(0, requested_ms / 1000 - 1)}%{requested_ms / 1000 + 1}",
-                             "-show_entries",
+    from .media import _probe
+    duration = float(_probe(source, stop_requested=stop_requested).duration)
+    radius = 1.0
+    while True:
+        start = max(0, min(requested_ms / 1000, duration) - radius)
+        end = min(duration + 1, requested_ms / 1000 + radius)
+        result = run_process([probe, "-v", "error", "-select_streams", "v:0",
+                             "-read_intervals", f"{start}%{end}", "-show_entries",
                              "frame=best_effort_timestamp_time", "-of", "csv=p=0", str(source)],
                             stop=stop_requested)
-    if result.returncode:
-        raise SegmentError("フレーム境界を読み取れません")
-    try:
-        stamps = sorted({round(float(line.strip().rstrip(",")) * 1000)
-                         for line in result.stdout.splitlines() if line.strip().rstrip(",")})
-        if not stamps:
-            raise ValueError("フレームがありません")
-    except ValueError as error:
-        raise SegmentError("フレーム境界を読み取れません") from error
-    return stamps
+        if result.returncode:
+            raise SegmentError("フレーム境界を読み取れません")
+        try:
+            stamps = sorted({round(float(line.strip().rstrip(",")) * 1000)
+                             for line in result.stdout.splitlines() if line.strip().rstrip(",")})
+        except ValueError as error:
+            raise SegmentError("フレーム境界を読み取れません") from error
+        # Seeking may begin at an earlier keyframe. Expand only when sparse
+        # frames do not bracket the requested time; stop at the real file ends.
+        if stamps and (stamps[0] <= requested_ms or start == 0) and (
+                stamps[-1] > requested_ms or end >= duration):
+            return stamps
+        if start == 0 and end >= duration:
+            raise SegmentError("フレーム境界を読み取れません")
+        radius *= 2
 
 
 def nearest_frame(source, requested_ms, *, stop_requested=None):

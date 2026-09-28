@@ -138,3 +138,13 @@ class ComposeTest(unittest.TestCase):
             frame, difference = nearest_frame(source, 18220)
             self.assertEqual(frame, 18200)
             self.assertEqual(difference, -20)
+
+    def test_sparse_frames_expand_boundary_search(self):
+        with tempfile.TemporaryDirectory() as root:
+            source = Path(root) / "sparse.mp4"
+            subprocess.run(["ffmpeg", "-nostdin", "-v", "error", "-f", "lavfi", "-i",
+                            "testsrc2=size=64x64:rate=1/5:duration=15", "-c:v", "libx264",
+                            str(source)], check=True)
+            self.assertEqual(nearest_frame(source, 4000), (5000, 1000))
+            self.assertEqual(adjacent_frame(source, 0, 1), 5000)
+            self.assertEqual(nearest_frame(source, 14000), (10000, -4000))
