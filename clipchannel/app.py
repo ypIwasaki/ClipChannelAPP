@@ -78,7 +78,7 @@ def build_app():
     segments_tab = ttk.Frame(saved_tabs, padding=4)
     saved_tabs.add(segments_tab, text="切り出し区間")
     ttk.Label(results_tab, text="保存済み情報").pack(anchor="w")
-    listing = tk.Listbox(results_tab, height=10)
+    listing = tk.Listbox(results_tab, height=10, exportselection=False)
     listing.pack(fill="both", expand=True)
     ttk.Label(results_tab, text="選択したCSVの内容").pack(anchor="w", pady=(8, 0))
     detail = tk.Text(results_tab, height=12, state="disabled")
@@ -286,7 +286,14 @@ def build_app():
             persist_review()
 
     def reopen_review():
-        if not listing.curselection() or not target_video.get() or pending[0]:
+        if pending[0] or data.running:
+            messagebox.showerror("再表示できません", "処理完了を待ってください")
+            return
+        if not target_video.get():
+            messagebox.showerror("再表示できません", "対象動画を選んでください")
+            return
+        if not listing.curselection():
+            messagebox.showerror("再表示できません", "「保存済み情報」タブで対象動画の文字起こしCSVを選んでください")
             return
         if review_dirty[0]:
             messagebox.showerror("再表示できません", "未保存の入力を保存してから再表示してください")
