@@ -77,6 +77,9 @@ def load_intervals(data, video, version):
 
 
 def _pcm(video, destination, stop):
+    from .media import _probe
+    if _probe(video, stop_requested=stop).audio is None:
+        raise TranscriptionError("この動画には音声トラックがないため文字起こしできません")
     ffmpeg = shutil.which("ffmpeg")
     if not ffmpeg:
         raise TranscriptionError("音声解析に ffmpeg が必要です")

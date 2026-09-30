@@ -27,6 +27,7 @@ from .editor_bridge import apply_layout, apply_subtitles
 from .supporting_media_ui import SupportingMediaPanel
 from .save_export_ui import SaveExportPanel, WidgetLock
 from .managed_process_ui import ProcessPanel
+from .trimming_ui import TrimmingPanel
 from .management_ui import ManagementPanel
 from .operation_logs import record_operation, cleanup_logs
 from . import operation_tasks
@@ -92,6 +93,10 @@ def build_app(*, data=None, preferences=None, display=None):
     saved_tabs = workbench.notebook
     media_panel = ResponsivePage(saved_tabs, padding=4)
     saved_tabs.add(media_panel, text="取得・媒体操作")
+    trim_tab = ResponsivePage(saved_tabs, padding=4)
+    trim_section = trim_tab.section("範囲を指定して書き出す")
+    saved_tabs.add(trim_tab, text="動画をトリミング")
+    trimming_panel = [None]
     media_input = media_panel.section('URL・取得')
     media_settings = media_panel.section('形式・品質と取得設定', '詳細設定')
     media_local = media_panel.section('ローカル動画')
@@ -1396,6 +1401,8 @@ def build_app(*, data=None, preferences=None, display=None):
             target_video.set(registered[0].name if registered else "")
         if registered:
             show_target()
+        if trimming_panel[0] is not None:
+            trimming_panel[0].refresh()
 
     def register():
         if data.path is None:
@@ -1508,7 +1515,7 @@ def build_app(*, data=None, preferences=None, display=None):
                     if saved_tabs.select() == str(management_panel) else None)
 
     operation_lock = WidgetLock((results_tab, people_tab, words_tab, segments_tab, layout_tab,
-                                 supporting_panel, save_export_panel, management_panel, media_panel))
+                                 supporting_panel, save_export_panel, management_panel, media_panel, trim_tab))
 
     def lock_operation(locked):
         pending[0] = data.running = locked
@@ -1537,6 +1544,8 @@ def build_app(*, data=None, preferences=None, display=None):
             schedule_ui(lambda: status.set(status.get() + '。次の作業: ' + next_work + '（手動で切替）'))
 
     process_panel = ProcessPanel(window, status, lock_operation, on_finished=record_finished_operation)
+    trimming_panel[0] = TrimmingPanel(trim_section, data, process_panel, refresh_videos)
+    trimming_panel[0].pack(fill="both", expand=True)
     operation_strip = OperationStrip(window, status, process_panel, save_export_panel)
     operation_strip.grid(row=2, column=0, sticky="ew", padx=6)
 
