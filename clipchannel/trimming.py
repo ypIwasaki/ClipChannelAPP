@@ -120,12 +120,18 @@ def publish_trim(data, staged):
     if not output.is_file() or not metadata.is_file():
         raise StorageError("検証済みの成果物がありません")
     sidecar = target.parent / f".{target.name}.trim.json"
+    metadata_published = False
+    video_published = False
     try:
         _publish_new(metadata, sidecar)
+        metadata_published = True
         _publish_new(output, target)
+        video_published = True
     except BaseException:
-        target.unlink(missing_ok=True)
-        sidecar.unlink(missing_ok=True)
+        if video_published:
+            target.unlink(missing_ok=True)
+        if metadata_published:
+            sidecar.unlink(missing_ok=True)
         raise
     finally:
         try:

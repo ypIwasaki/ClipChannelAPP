@@ -3,7 +3,9 @@ import subprocess
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
+from clipchannel import trimming
 from clipchannel.media import _probe
 from clipchannel.storage import DataFolder, VideoNameConflict
 from clipchannel.trimming import boundaries, destination, history, trim_video, publish_trim, cleanup_staged
@@ -164,3 +166,25 @@ class TrimmingTests(unittest.TestCase):
             self.assertGreaterEqual(end, 1500)
             result = publish_trim(data, trim_video(Control(), data, original, "variable_trim.mp4", start, end))
             self.assertGreater(float(_probe(result).duration), .4)
+
+    def test_publish_collision_keeps_other_video(self):
+        with tempfile.TemporaryDirectory() as root:
+            data = DataFolder()
+            data.select(root)
+            work = Path(root) / "work" / "trim-owned"
+            work.mkdir()
+            (work / "result.mp4").write_bytes(b"staged")
+            (work / "trim.json").write_text("{}")
+            target = Path(root) / "media" / "originals" / "new.mp4"
+            target.parent.mkdir()
+            original_publish = trimming._publish_new
+            def collision(staged, destination):
+                if destination == target:
+                    target.write_bytes(b"other-instance")
+                    raise FileExistsError("collision")
+                return original_publish(staged, destination)
+            with patch("clipchannel.trimming._publish_new", side_effect=collision):
+                with self.assertRaises(FileExistsError):
+                    publish_trim(data, {"work": str(work), "name": "new.mp4"})
+            self.assertEqual(target.read_bytes(), b"other-instance")
+            self.assertFalse((target.parent / ".new.mp4.trim.json").exists())
