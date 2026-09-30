@@ -6,7 +6,8 @@ from pathlib import Path
 
 from clipchannel.media import _probe
 from clipchannel.storage import DataFolder, VideoNameConflict
-from clipchannel.trimming import boundaries, destination, history, trim_video
+from clipchannel.trimming import boundaries, destination, history, trim_video, publish_trim
+from clipchannel.trimming_ui import TrimmingPanel
 
 
 class Control:
@@ -22,6 +23,34 @@ class Control:
 
 @unittest.skipUnless(shutil.which("ffmpeg") and shutil.which("ffprobe"), "ffmpeg required")
 class TrimmingTests(unittest.TestCase):
+    def test_embedded_preview_advances_in_app(self):
+        import tkinter as tk
+        with tempfile.TemporaryDirectory() as root:
+            data = DataFolder()
+            data.select(root)
+            source = Path(root) / "preview.mp4"
+            subprocess.run(["ffmpeg", "-v", "error", "-f", "lavfi", "-i",
+                            "testsrc2=size=64x64:rate=10:duration=2", "-c:v", "libx264",
+                            str(source)], check=True)
+            data.register_video(source)
+            window = tk.Tk()
+            try:
+                panel = TrimmingPanel(window, data, None, lambda: None)
+                panel.pack()
+                panel.refresh()
+                window.after(1200, window.quit)
+                window.mainloop()
+                self.assertIsNotNone(panel.image, "静止画プレビュー")
+                still = panel.image
+                panel._play(0, 2)
+                window.after(1200, window.quit)
+                window.mainloop()
+                self.assertIsNotNone(panel.image, f"position={panel.position.get()} playing={panel.playing} process={panel.video_process}")
+                self.assertIsNot(panel.image, still)
+                self.assertGreater(panel.position.get(), 0)
+            finally:
+                window.destroy()
+
     def test_video_audio_history_and_conflict(self):
         with tempfile.TemporaryDirectory() as root:
             data = DataFolder()
@@ -34,13 +63,16 @@ class TrimmingTests(unittest.TestCase):
             original = data.register_video(source)
             start, end = boundaries(data, original, 0.9, 2.1)
             self.assertEqual((start, end), (900, 2100))
-            first = trim_video(Control(), data, original, "first.mp4", start, end)
+            staged = trim_video(Control(), data, original, "first.mp4", start, end)
+            self.assertNotIn("first.mp4", [path.name for path in data.list_videos()])
+            first = publish_trim(data, staged)
             self.assertTrue(first in data.list_videos())
             self.assertAlmostEqual(float(_probe(first).duration), 1.2, delta=0.15)
             self.assertIsNotNone(_probe(first).audio)
             with self.assertRaises(VideoNameConflict):
                 destination(data, "first.mp4")
-            second = trim_video(Control(), data, first, "second.mp4", *boundaries(data, first, .2, .8))
+            second = publish_trim(data, trim_video(Control(), data, first, "second.mp4",
+                                                  *boundaries(data, first, .2, .8)))
             self.assertEqual([row["parent"] for row in history(data, second)], ["first.mp4", "source.mp4"])
 
     def test_silent_video_and_cancel_do_not_register(self):
@@ -56,5 +88,48 @@ class TrimmingTests(unittest.TestCase):
             with self.assertRaises(Exception):
                 trim_video(Control(True), data, original, "cancelled.mp4", start, end)
             self.assertNotIn("cancelled.mp4", [path.name for path in data.list_videos()])
-            result = trim_video(Control(), data, original, "silent_trim.mp4", start, end)
+            result = publish_trim(data, trim_video(Control(), data, original, "silent_trim.mp4", start, end))
             self.assertIsNone(_probe(result).audio)
+
+    def test_nonzero_video_start_uses_relative_input_seconds(self):
+        with tempfile.TemporaryDirectory() as root:
+            data = DataFolder()
+            data.select(root)
+            source = Path(root) / "offset.mp4"
+            subprocess.run(["ffmpeg", "-v", "error", "-f", "lavfi", "-i",
+                            "testsrc2=size=64x64:rate=10:duration=2", "-vf", "setpts=PTS+5/TB",
+                            "-copyts", "-c:v", "libx264", str(source)], check=True)
+            original = data.register_video(source)
+            self.assertGreater(float(_probe(original).video.start), 4)
+            start, end = boundaries(data, original, .2, 1.2)
+            self.assertGreater(start, 5000)
+            result = publish_trim(data, trim_video(Control(), data, original, "offset_trim.mp4", start, end))
+            self.assertAlmostEqual(float(_probe(result).duration), 1, delta=.15)
+
+    def test_late_audio_retains_silence_before_it_starts(self):
+        with tempfile.TemporaryDirectory() as root:
+            data = DataFolder()
+            data.select(root)
+            source = Path(root) / "late_audio.mp4"
+            subprocess.run(["ffmpeg", "-v", "error", "-f", "lavfi", "-i",
+                            "testsrc2=size=64x64:rate=10:duration=2", "-itsoffset", "0.5",
+                            "-f", "lavfi", "-i", "sine=frequency=440:duration=1.5",
+                            "-c:v", "libx264", "-c:a", "aac", str(source)], check=True)
+            original = data.register_video(source)
+            self.assertGreater(float(_probe(original).audio.start), .4)
+            start, end = boundaries(data, original, 0, 1.2)
+            result = publish_trim(data, trim_video(Control(), data, original, "late_trim.mp4", start, end))
+            self.assertIsNotNone(_probe(result).audio)
+            self.assertAlmostEqual(float(_probe(result).duration), 1.2, delta=.15)
+            def amplitude(at):
+                process = subprocess.run(["ffmpeg", "-v", "error", "-ss", str(at), "-i", str(result),
+                                          "-t", "0.2", "-vn", "-c:a", "pcm_s16le", "-f", "s16le", "-ac", "1", "-ar", "16000", "pipe:1"],
+                                         capture_output=True)
+                self.assertEqual(process.returncode, 0, process.stderr.decode())
+                pcm = process.stdout
+                from array import array
+                samples = array("h")
+                samples.frombytes(pcm)
+                return sum(abs(sample) for sample in samples) / max(1, len(samples))
+            self.assertLess(amplitude(.1), 30)
+            self.assertGreater(amplitude(.7), 500)

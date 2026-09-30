@@ -32,10 +32,34 @@ def destination(data, name):
     return target
 
 
+def video_duration(source, *, stop_requested=None):
+    """Playable video length, independent of the container's starting PTS."""
+    probe = shutil.which("ffprobe")
+    if not probe:
+        raise StorageError("ffprobe が必要です")
+    result = run_process([probe, "-v", "error", "-select_streams", "v:0", "-show_entries",
+                          "stream=duration,start_time:format=duration", "-of", "json", str(source)],
+                         stop=stop_requested)
+    if result.returncode:
+        raise StorageError("動画の長さを読み取れません")
+    try:
+        metadata = json.loads(result.stdout)
+        stream = metadata["streams"][0]
+        length = stream.get("duration")
+        if length is None or length == "N/A":
+            length = float(metadata["format"]["duration"]) - float(stream.get("start_time") or 0)
+        length = float(length)
+        if not math.isfinite(length) or length <= 0:
+            raise ValueError()
+        return length
+    except (KeyError, IndexError, ValueError, TypeError) as error:
+        raise StorageError("動画の長さを読み取れません") from error
+
+
 def boundaries(data, source, start_seconds, end_seconds, *, stop_requested=None):
     source = _registered_source(data, source)
     info = _probe(source, stop_requested=stop_requested)
-    duration = float(info.duration or 0)
+    duration = video_duration(source, stop_requested=stop_requested)
     start, end = float(start_seconds), float(end_seconds)
     if not all(math.isfinite(value) for value in (start, end, duration)) or duration <= 0:
         raise StorageError("動画の長さまたは指定時刻が不正です")
@@ -85,27 +109,63 @@ def history(data, source):
     return rows
 
 
+def publish_trim(data, staged):
+    """Publish only after the managed worker has exited successfully."""
+    work = Path(staged["work"]).resolve()
+    root = (data._root() / "work").resolve()
+    if work.parent != root or not work.name.startswith("trim-"):
+        raise StorageError("トリミング一時領域が不正です")
+    target = destination(data, staged["name"])
+    output, metadata = work / "result.mp4", work / "trim.json"
+    if not output.is_file() or not metadata.is_file():
+        raise StorageError("検証済みの成果物がありません")
+    sidecar = target.parent / f".{target.name}.trim.json"
+    try:
+        _publish_new(metadata, sidecar)
+        _publish_new(output, target)
+    except BaseException:
+        target.unlink(missing_ok=True)
+        sidecar.unlink(missing_ok=True)
+        raise
+    finally:
+        shutil.rmtree(work)
+    return target
+
+
+def cleanup_staged(data):
+    """Remove abandoned staging after the managed operation has fully stopped."""
+    root = (data._root() / "work").resolve()
+    for entry in root.glob("trim-*"):
+        if entry.is_dir() and entry.resolve().parent == root:
+            shutil.rmtree(entry)
+
+
 def trim_video(control, data, source, name, start_ms, end_ms):
     """Run in a managed worker. Boundaries are already shown in the UI."""
     source = _registered_source(data, source)
     target = destination(data, name)
     info = _probe(source, stop_requested=control.cancelled)
     video_start_ms = round(float(info.video.start) * 1000)
-    if not video_start_ms <= start_ms < end_ms <= video_start_ms + round(float(info.duration or 0) * 1000):
+    if not video_start_ms <= start_ms < end_ms <= video_start_ms + round(video_duration(source, stop_requested=control.cancelled) * 1000):
         raise StorageError("採用範囲が動画外です")
     ffmpeg = shutil.which("ffmpeg")
     if not ffmpeg:
         raise StorageError("ffmpeg が必要です")
     control.report("MP4を書き出しています")
-    with tempfile.TemporaryDirectory(dir=data._root() / "work", prefix="trim-") as work:
-        output = Path(work) / "result.mp4"
+    work = Path(tempfile.mkdtemp(dir=data._root() / "work", prefix="trim-"))
+    try:
+        output = work / "result.mp4"
         # Decode from the source timeline. Avoid input seeking so nonzero stream
         # start times and variable frame rates retain their presentation times.
         start, end = start_ms / 1000, end_ms / 1000
         video_filter = f"trim=start={start}:end={end},setpts=PTS-STARTPTS"
-        command = [ffmpeg, "-v", "error", "-i", str(source), "-filter_complex",
-                   f"[0:v:0]{video_filter}[v]" +
-                   (f";[0:a:0]atrim=start={start}:end={end},asetpts=PTS-STARTPTS[a]" if info.audio else ""),
+        audio_filter = ""
+        if info.audio:
+            delay = max(0, round((float(info.audio.start) - start) * 1000))
+            audio_filter = (f";[0:a:0]atrim=start={start}:end={end},asetpts=PTS-STARTPTS,"
+                            f"adelay={delay}:all=1,apad,atrim=duration={end-start}[a]")
+        command = [ffmpeg, "-v", "error", "-copyts", "-i", str(source), "-filter_complex",
+                   f"[0:v:0]{video_filter}[v]" + audio_filter,
                    "-map", "[v]"]
         if info.audio:
             command += ["-map", "[a]"]
@@ -121,6 +181,15 @@ def trim_video(control, data, source, name, start_ms, end_ms):
         expected = (end_ms - start_ms) / 1000
         if not actual.duration or abs(float(actual.duration) - expected) > max(.25, expected * .02):
             raise StorageError("書き出した動画の長さが採用範囲と一致しません")
+        if actual.audio:
+            audio_length = run_process([shutil.which("ffprobe"), "-v", "error", "-select_streams", "a:0",
+                                        "-show_entries", "stream=duration", "-of", "default=nw=1:nk=1",
+                                        str(output)], stop=control.cancelled)
+            try:
+                if audio_length.returncode or abs(float(audio_length.stdout.strip()) - expected) > .3:
+                    raise ValueError()
+            except ValueError as error:
+                raise StorageError("書き出した音声の長さが採用範囲と一致しません") from error
         decode = run_process([ffmpeg, "-v", "error", "-xerror", "-i", str(output),
                               "-f", "null", "-"], stop=control.cancelled)
         if decode.returncode:
@@ -129,13 +198,10 @@ def trim_video(control, data, source, name, start_ms, end_ms):
         destination(data, name)
         record = {"schema_version": 1, "parent": source.name,
                   "start_ms": start_ms, "end_ms": end_ms}
-        sidecar = target.parent / f".{target.name}.trim.json"
-        metadata = Path(work) / "trim.json"
+        metadata = work / "trim.json"
         metadata.write_text(json.dumps(record, ensure_ascii=False), encoding="utf-8")
-        _publish_new(output, target)
-        try:
-            _publish_new(metadata, sidecar)
-        except BaseException:
-            target.unlink(missing_ok=True)
-            raise
-    return target
+        check_cancelled(control.cancelled)
+        return {"work": str(work), "name": target.name}
+    except BaseException:
+        shutil.rmtree(work)
+        raise

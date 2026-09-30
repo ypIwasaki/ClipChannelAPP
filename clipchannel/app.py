@@ -28,6 +28,7 @@ from .supporting_media_ui import SupportingMediaPanel
 from .save_export_ui import SaveExportPanel, WidgetLock
 from .managed_process_ui import ProcessPanel
 from .trimming_ui import TrimmingPanel
+from .trimming import history, publish_trim, cleanup_staged
 from .management_ui import ManagementPanel
 from .operation_logs import record_operation, cleanup_logs
 from . import operation_tasks
@@ -154,6 +155,8 @@ def build_app(*, data=None, preferences=None, display=None):
     downloads.pack(fill="both", expand=True, pady=(8, 0))
     videos = ScrollListbox(media_videos, height=1, exportselection=False)
     videos.pack(fill="both", expand=True, pady=(8, 0))
+    video_detail = tk.StringVar(value="動画を選ぶと詳細を表示します")
+    WrappedLabel(media_videos, textvariable=video_detail).pack(fill="x")
     people_panel = people_tab.section('人物と対象動画')
     people_settings = people_tab.section('人物・参照音声の登録', '詳細設定')
     people_results = people_tab.section('人物一覧', '結果')
@@ -1436,7 +1439,14 @@ def build_app(*, data=None, preferences=None, display=None):
 
     def select_video(_event=None):
         if videos.curselection():
-            status.set(f"選択中の動画: {videos.get(videos.curselection()[0])}")
+            name = videos.get(videos.curselection()[0])
+            status.set(f"選択中の動画: {name}")
+            try:
+                rows = history(data, data._root() / "media" / "originals" / name)
+                video_detail.set(" / ".join(f"元動画 {row['parent']} / 採用 {row['start_ms'] / 1000:.3f}–{row['end_ms'] / 1000:.3f} 秒"
+                                            for row in rows) if rows else "元動画")
+            except (OSError, StorageError, ValueError, KeyError) as error:
+                video_detail.set(f"履歴を読めません: {error}")
 
     def show(_event=None):
         if not listing.curselection():
@@ -1522,6 +1532,15 @@ def build_app(*, data=None, preferences=None, display=None):
         operation_lock.set_locked(locked)
 
     def record_finished_operation(operation):
+        if operation.label == "動画のトリミング":
+            try:
+                if operation.state == "完了":
+                    operation.result = publish_trim(data, operation.result)
+                    refresh_videos()
+                cleanup_staged(data)
+            except (OSError, StorageError) as error:
+                operation.state = "失敗"
+                operation.error = str(error)
         try:
             record_operation(data, operation.label, operation.state, operation.elapsed)
             cleanup_logs(data)
