@@ -6,7 +6,7 @@ from pathlib import Path
 
 from clipchannel.media import _probe
 from clipchannel.storage import DataFolder, VideoNameConflict
-from clipchannel.trimming import boundaries, destination, history, trim_video, publish_trim
+from clipchannel.trimming import boundaries, destination, history, trim_video, publish_trim, cleanup_staged
 from clipchannel.trimming_ui import TrimmingPanel
 
 
@@ -88,6 +88,13 @@ class TrimmingTests(unittest.TestCase):
             with self.assertRaises(Exception):
                 trim_video(Control(True), data, original, "cancelled.mp4", start, end)
             self.assertNotIn("cancelled.mp4", [path.name for path in data.list_videos()])
+            staged = trim_video(Control(), data, original, "abandoned.mp4", start, end)
+            other = Path(root) / "work" / "trim-other-instance"
+            other.mkdir()
+            cleanup_staged(data, staged["work"])
+            self.assertFalse(Path(staged["work"]).exists())
+            self.assertTrue(other.is_dir())
+            self.assertNotIn("abandoned.mp4", [path.name for path in data.list_videos()])
             result = publish_trim(data, trim_video(Control(), data, original, "silent_trim.mp4", start, end))
             self.assertIsNone(_probe(result).audio)
 

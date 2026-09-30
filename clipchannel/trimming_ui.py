@@ -5,12 +5,13 @@ import subprocess
 import threading
 import time
 import tkinter as tk
+import uuid
 from tkinter import ttk
 
 from .dialogs import messagebox
 from .media import _probe
 from .storage import StorageError
-from .trimming import boundaries, destination, history, trim_video, video_duration
+from .trimming import boundaries, cleanup_staged, destination, history, trim_video, video_duration
 
 
 class TrimmingPanel(ttk.Frame):
@@ -34,6 +35,7 @@ class TrimmingPanel(ttk.Frame):
         self._preview_condition = threading.Condition()
         self._preview_request = None
         self._preview_stop = False
+        self._preview_process = None
         threading.Thread(target=self._preview_worker, daemon=True).start()
         self._clock = None
         self._base = 0.0
@@ -129,6 +131,8 @@ class TrimmingPanel(ttk.Frame):
             return
         with self._preview_condition:
             self._preview_request = (self.generation, ffmpeg, self._path(), seconds)
+            if self._preview_process is not None and self._preview_process.poll() is None:
+                self._preview_process.terminate()
             self._preview_condition.notify()
 
     def _preview_worker(self):
@@ -140,14 +144,23 @@ class TrimmingPanel(ttk.Frame):
                     return
                 generation, ffmpeg, path, seconds = self._preview_request
                 self._preview_request = None
-            result = subprocess.run([ffmpeg, "-v", "error", "-ss", str(max(0, seconds)), "-i", str(path),
-                                     "-frames:v", "1", "-vf", "scale=640:-2", "-f", "image2pipe",
-                                     "-vcodec", "png", "-"], capture_output=True)
-            if result.returncode == 0 and result.stdout:
+            process = subprocess.Popen([ffmpeg, "-v", "error", "-ss", str(max(0, seconds)), "-i", str(path),
+                                        "-frames:v", "1", "-vf", "scale=640:-2", "-f", "image2pipe",
+                                        "-vcodec", "png", "pipe:1"], stdout=subprocess.PIPE,
+                                       stderr=subprocess.DEVNULL)
+            with self._preview_condition:
+                self._preview_process = process
+                if self._preview_stop or generation != self.generation:
+                    process.terminate()
+            image_bytes, _ = process.communicate()
+            with self._preview_condition:
+                if self._preview_process is process:
+                    self._preview_process = None
+            if process.returncode == 0 and image_bytes:
                 def display():
                     if generation == self.generation and self.winfo_exists():
                         import base64
-                        self.image = tk.PhotoImage(data=base64.b64encode(result.stdout).decode("ascii"))
+                        self.image = tk.PhotoImage(data=base64.b64encode(image_bytes).decode("ascii"))
                         self.screen.configure(image=self.image, text="")
                 try:
                     self.after(0, display)
@@ -291,11 +304,18 @@ class TrimmingPanel(ttk.Frame):
         if self.adopted is None:
             self.confirm()
             return
-        source, name, _, _, first, last = self.adopted
+        _, name, _, _, first, last = self.adopted
+        work_name = f"trim-{uuid.uuid4().hex}"
+        def finished(_operation):
+            try:
+                cleanup_staged(self.data, work_name)
+            except (OSError, StorageError) as error:
+                messagebox.showerror("一時ファイルを整理できません", str(error))
+            self.refresh()
         self.process_panel.start("動画のトリミング", trim_video,
-                                 (self.data, self._path(), name, first, last),
+                                 (self.data, self._path(), name, first, last, work_name),
                                  on_result=lambda _result: self.refresh_videos(),
-                                 on_finished=lambda _operation: self.refresh())
+                                 on_finished=finished)
 
     def show_history(self):
         try:
@@ -310,4 +330,6 @@ class TrimmingPanel(ttk.Frame):
             self.pause()
             with self._preview_condition:
                 self._preview_stop = True
+                if self._preview_process is not None and self._preview_process.poll() is None:
+                    self._preview_process.terminate()
                 self._preview_condition.notify()

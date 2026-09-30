@@ -128,19 +128,26 @@ def publish_trim(data, staged):
         sidecar.unlink(missing_ok=True)
         raise
     finally:
-        shutil.rmtree(work)
+        try:
+            shutil.rmtree(work)
+        except OSError:
+            # Registration has already committed or rolled back. A temporary
+            # cleanup error must not change the operation's recorded result.
+            pass
     return target
 
 
-def cleanup_staged(data):
-    """Remove abandoned staging after the managed operation has fully stopped."""
+def cleanup_staged(data, work_name):
+    """Remove only this operation's staging after its worker has fully stopped."""
     root = (data._root() / "work").resolve()
-    for entry in root.glob("trim-*"):
-        if entry.is_dir() and entry.resolve().parent == root:
-            shutil.rmtree(entry)
+    entry = root / Path(work_name).name
+    if not entry.name.startswith("trim-") or entry.resolve().parent != root:
+        raise StorageError("トリミング一時領域が不正です")
+    if entry.is_dir():
+        shutil.rmtree(entry)
 
 
-def trim_video(control, data, source, name, start_ms, end_ms):
+def trim_video(control, data, source, name, start_ms, end_ms, work_name=None):
     """Run in a managed worker. Boundaries are already shown in the UI."""
     source = _registered_source(data, source)
     target = destination(data, name)
@@ -152,7 +159,13 @@ def trim_video(control, data, source, name, start_ms, end_ms):
     if not ffmpeg:
         raise StorageError("ffmpeg が必要です")
     control.report("MP4を書き出しています")
-    work = Path(tempfile.mkdtemp(dir=data._root() / "work", prefix="trim-"))
+    if work_name is None:
+        work = Path(tempfile.mkdtemp(dir=data._root() / "work", prefix="trim-"))
+    else:
+        if Path(work_name).name != work_name or not work_name.startswith("trim-"):
+            raise StorageError("トリミング一時領域が不正です")
+        work = data._root() / "work" / work_name
+        work.mkdir()
     try:
         output = work / "result.mp4"
         # Decode from the source timeline. Avoid input seeking so nonzero stream

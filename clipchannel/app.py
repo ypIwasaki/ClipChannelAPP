@@ -28,7 +28,7 @@ from .supporting_media_ui import SupportingMediaPanel
 from .save_export_ui import SaveExportPanel, WidgetLock
 from .managed_process_ui import ProcessPanel
 from .trimming_ui import TrimmingPanel
-from .trimming import history, publish_trim, cleanup_staged
+from .trimming import history, publish_trim
 from .management_ui import ManagementPanel
 from .operation_logs import record_operation, cleanup_logs
 from . import operation_tasks
@@ -1537,7 +1537,6 @@ def build_app(*, data=None, preferences=None, display=None):
                 if operation.state == "完了":
                     operation.result = publish_trim(data, operation.result)
                     refresh_videos()
-                cleanup_staged(data)
             except (OSError, StorageError) as error:
                 operation.state = "失敗"
                 operation.error = str(error)
