@@ -69,6 +69,14 @@ class TrimmingTests(unittest.TestCase):
             self.assertTrue(first in data.list_videos())
             self.assertAlmostEqual(float(_probe(first).duration), 1.2, delta=0.15)
             self.assertIsNotNone(_probe(first).audio)
+            def frame(path, at):
+                return subprocess.run(["ffmpeg", "-v", "error", "-ss", str(at), "-i", str(path),
+                                       "-frames:v", "1", "-f", "rawvideo", "-pix_fmt", "rgb24", "pipe:1"],
+                                      capture_output=True, check=True).stdout
+            expected = frame(original, .9)
+            actual = frame(first, 0)
+            self.assertEqual(len(actual), len(expected))
+            self.assertLess(sum(abs(a - b) for a, b in zip(actual, expected)) / len(actual), 20)
             with self.assertRaises(VideoNameConflict):
                 destination(data, "first.mp4")
             second = publish_trim(data, trim_video(Control(), data, first, "second.mp4",
@@ -140,3 +148,19 @@ class TrimmingTests(unittest.TestCase):
                 return sum(abs(sample) for sample in samples) / max(1, len(samples))
             self.assertLess(amplitude(.1), 30)
             self.assertGreater(amplitude(.7), 500)
+
+    def test_variable_frame_rate_uses_presented_frame_times(self):
+        with tempfile.TemporaryDirectory() as root:
+            data = DataFolder()
+            data.select(root)
+            source = Path(root) / "variable.mp4"
+            subprocess.run(["ffmpeg", "-v", "error", "-f", "lavfi", "-i",
+                            "testsrc2=size=64x64:rate=10:duration=2",
+                            "-vf", "setpts=PTS+if(gte(N\\,10)\\,0.3/TB\\,0)",
+                            "-fps_mode", "vfr", "-c:v", "libx264", str(source)], check=True)
+            original = data.register_video(source)
+            start, end = boundaries(data, original, 1.05, 1.55)
+            self.assertEqual(start, 900)
+            self.assertGreaterEqual(end, 1500)
+            result = publish_trim(data, trim_video(Control(), data, original, "variable_trim.mp4", start, end))
+            self.assertGreater(float(_probe(result).duration), .4)
