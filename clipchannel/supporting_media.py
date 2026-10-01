@@ -10,6 +10,7 @@ from dataclasses import dataclass
 from fractions import Fraction
 from pathlib import Path
 
+from .process_launch import hidden_console_kwargs
 from .storage import StorageError
 
 
@@ -54,7 +55,8 @@ def import_supporting_media(data, video, source, kind):
     if not probe:
         raise StorageError("補助素材の確認に ffprobe が必要です")
     result = subprocess.run([probe, "-v", "error", "-show_streams", "-show_format",
-                             "-of", "json", str(source)], capture_output=True, encoding="utf-8")
+                             "-of", "json", str(source)], capture_output=True, encoding="utf-8",
+                            **hidden_console_kwargs())
     try:
         metadata = json.loads(result.stdout)
         streams = metadata["streams"]

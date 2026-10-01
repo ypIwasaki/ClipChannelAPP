@@ -10,6 +10,7 @@ from tkinter import ttk
 
 from .dialogs import messagebox
 from .media import _probe
+from .process_launch import hidden_console_kwargs
 from .storage import StorageError
 from .trimming import boundaries, cleanup_staged, destination, history, trim_video, video_duration
 
@@ -41,6 +42,7 @@ class TrimmingPanel(ttk.Frame):
         self._base = 0.0
         self._play_start = 0.0
         self._play_end = 0.0
+        self._tick_id = None
         self._updating_position = False
         self.columnconfigure(0, weight=1)
         line = ttk.Frame(self)
@@ -51,8 +53,11 @@ class TrimmingPanel(ttk.Frame):
         self.sources.bind("<<ComboboxSelected>>", self._select)
         ttk.Button(line, text="一覧を更新", command=self.refresh).pack(side="left")
         ttk.Button(line, text="履歴を表示", command=self.show_history).pack(side="left", padx=6)
-        self.screen = ttk.Label(self, text="動画を選んでください", anchor="center")
+        self.screen = tk.Canvas(self, width=640, height=360, background="black", highlightthickness=0)
         self.screen.grid(row=1, column=0, sticky="nsew", pady=6)
+        self.screen.create_text(320, 180, text="動画を選んでください", fill="white", tags="placeholder")
+        self._resize_id = None
+        self.screen.bind("<Configure>", self._resize_preview)
         self.rowconfigure(1, weight=1)
         scale = ttk.Scale(self, from_=0, to=1, variable=self.position, command=self._seek_drag)
         scale.grid(row=2, column=0, sticky="ew")
@@ -121,6 +126,27 @@ class TrimmingPanel(ttk.Frame):
     def _seek_release(self, _event):
         self._frame(self.position.get())
 
+    def _viewport(self):
+        width, height = self.screen.winfo_width(), self.screen.winfo_height()
+        if width < 32 or height < 32:
+            width, height = 640, 360
+        return min(width, 1280), min(height, 900)
+
+    def _resize_preview(self, event):
+        self.screen.coords("video", event.width // 2, event.height // 2)
+        self.screen.coords("placeholder", event.width // 2, event.height // 2)
+        if self._resize_id is not None:
+            self.after_cancel(self._resize_id)
+        if self.source.get() and not self.playing:
+            self._resize_id = self.after(120, lambda: self._frame(self.position.get()))
+
+    def _display_image(self, data):
+        self.image = tk.PhotoImage(data=data)
+        self.screen.delete("placeholder")
+        self.screen.delete("video")
+        self.screen.create_image(self.screen.winfo_width() // 2, self.screen.winfo_height() // 2,
+                                 image=self.image, tags="video")
+
     def _frame(self, seconds):
         if not self.source.get():
             return
@@ -130,7 +156,7 @@ class TrimmingPanel(ttk.Frame):
             self.details.set("プレビューに ffmpeg が必要です")
             return
         with self._preview_condition:
-            self._preview_request = (self.generation, ffmpeg, self._path(), seconds)
+            self._preview_request = (self.generation, ffmpeg, self._path(), seconds, self._viewport())
             if self._preview_process is not None and self._preview_process.poll() is None:
                 self._preview_process.terminate()
             self._preview_condition.notify()
@@ -142,12 +168,13 @@ class TrimmingPanel(ttk.Frame):
                     self._preview_condition.wait()
                 if self._preview_stop:
                     return
-                generation, ffmpeg, path, seconds = self._preview_request
+                generation, ffmpeg, path, seconds, (width, height) = self._preview_request
                 self._preview_request = None
+            fit = f"scale={width}:{height}:force_original_aspect_ratio=decrease"
             process = subprocess.Popen([ffmpeg, "-v", "error", "-ss", str(max(0, seconds)), "-i", str(path),
-                                        "-frames:v", "1", "-vf", "scale=640:-2", "-f", "image2pipe",
+                                        "-frames:v", "1", "-vf", fit, "-f", "image2pipe",
                                         "-vcodec", "png", "pipe:1"], stdout=subprocess.PIPE,
-                                       stderr=subprocess.DEVNULL)
+                                       stderr=subprocess.DEVNULL, **hidden_console_kwargs())
             with self._preview_condition:
                 self._preview_process = process
                 if self._preview_stop or generation != self.generation:
@@ -160,14 +187,16 @@ class TrimmingPanel(ttk.Frame):
                 def display():
                     if generation == self.generation and self.winfo_exists():
                         import base64
-                        self.image = tk.PhotoImage(data=base64.b64encode(image_bytes).decode("ascii"))
-                        self.screen.configure(image=self.image, text="")
+                        self._display_image(base64.b64encode(image_bytes).decode("ascii"))
                 try:
                     self.after(0, display)
                 except RuntimeError:
                     pass
 
     def pause(self):
+        if self._tick_id is not None:
+            self.after_cancel(self._tick_id)
+            self._tick_id = None
         if self.playing:
             self._set_position(min(self._play_end, self._base + time.monotonic() - self._clock))
         self.playing = False
@@ -212,8 +241,9 @@ class TrimmingPanel(ttk.Frame):
         ffplay = shutil.which("ffplay")
         if ffplay:
             self.audio = subprocess.Popen([ffplay, "-nodisp", "-autoexit", "-loglevel", "error",
-                                           "-ss", str(start), "-t", str(end - start), str(self._path())],
-                                          stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                                          "-ss", str(start), "-t", str(end - start), str(self._path())],
+                                          stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+                                          **hidden_console_kwargs())
         self._start_video_stream(start, end)
         self._tick()
 
@@ -222,10 +252,13 @@ class TrimmingPanel(ttk.Frame):
         if not ffmpeg:
             return
         generation = self.generation
+        width, height = self._viewport()
+        fit = f"fps=10,scale={width}:{height}:force_original_aspect_ratio=decrease"
         process = subprocess.Popen([ffmpeg, "-v", "error", "-ss", str(start), "-i", str(self._path()),
-                                    "-t", str(end - start), "-an", "-vf", "fps=10,scale=640:-2",
+                                    "-t", str(end - start), "-an", "-vf", fit,
                                     "-f", "image2pipe", "-vcodec", "png", "pipe:1"],
-                                   stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+                                   stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
+                                   **hidden_console_kwargs())
         self.video_process = process
 
         def read_exact(length):
@@ -268,8 +301,7 @@ class TrimmingPanel(ttk.Frame):
                     frame_number += 1
                     def display(image_data=encoded):
                         if self.playing and generation == self.generation and self.winfo_exists():
-                            self.image = tk.PhotoImage(data=image_data)
-                            self.screen.configure(image=self.image, text="")
+                            self._display_image(image_data)
                     try:
                         self.after(0, display)
                     except RuntimeError:
@@ -281,6 +313,7 @@ class TrimmingPanel(ttk.Frame):
         threading.Thread(target=reader, daemon=True).start()
 
     def _tick(self):
+        self._tick_id = None
         if not self.playing or not self.winfo_exists():
             return
         now = min(self._play_end, self._base + time.monotonic() - self._clock)
@@ -288,7 +321,7 @@ class TrimmingPanel(ttk.Frame):
         if now >= self._play_end:
             self.pause()
         else:
-            self.after(200, self._tick)
+            self._tick_id = self.after(200, self._tick)
 
     def confirm(self):
         self.pause()
@@ -327,6 +360,8 @@ class TrimmingPanel(ttk.Frame):
 
     def _destroy(self, event):
         if event.widget is self:
+            if self._resize_id is not None:
+                self.after_cancel(self._resize_id)
             self.pause()
             with self._preview_condition:
                 self._preview_stop = True

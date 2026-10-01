@@ -25,6 +25,36 @@ class Control:
 
 @unittest.skipUnless(shutil.which("ffmpeg") and shutil.which("ffprobe"), "ffmpeg required")
 class TrimmingTests(unittest.TestCase):
+    def test_portrait_preview_fits_viewer_without_cropping(self):
+        import tkinter as tk
+        with tempfile.TemporaryDirectory() as root:
+            data = DataFolder()
+            data.select(root)
+            source = Path(root) / "portrait.mp4"
+            subprocess.run(["ffmpeg", "-v", "error", "-f", "lavfi", "-i",
+                            "testsrc2=size=180x320:rate=10:duration=1", "-c:v", "libx264",
+                            str(source)], check=True)
+            data.register_video(source)
+            window = tk.Tk()
+            window.geometry("900x600")
+            try:
+                panel = TrimmingPanel(window, data, None, lambda: None)
+                panel.pack(fill="both", expand=True)
+                panel.refresh()
+                window.after(1200, window.quit)
+                window.mainloop()
+                self.assertIsNotNone(panel.image)
+                self.assertLessEqual(panel.image.height(), panel.screen.winfo_height())
+                self.assertLessEqual(panel.image.width(), panel.screen.winfo_width())
+                self.assertAlmostEqual(panel.image.width() / panel.image.height(), 180 / 320, delta=.02)
+                panel._play(0, .8)
+                window.after(500, window.quit)
+                window.mainloop()
+                self.assertLessEqual(panel.image.height(), panel.screen.winfo_height())
+                self.assertAlmostEqual(panel.image.width() / panel.image.height(), 180 / 320, delta=.02)
+            finally:
+                window.destroy()
+
     def test_embedded_preview_advances_in_app(self):
         import tkinter as tk
         with tempfile.TemporaryDirectory() as root:

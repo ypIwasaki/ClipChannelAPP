@@ -4,6 +4,7 @@ import subprocess
 import tempfile
 
 from .storage import StorageError
+from .process_launch import hidden_console_kwargs
 
 
 class ProcessCancelled(StorageError):
@@ -25,7 +26,7 @@ def run_process(command, *, stop=None, ffmpeg=False):
     check_cancelled(stop)
     with tempfile.TemporaryFile() as stdout, tempfile.TemporaryFile() as stderr:
         process = subprocess.Popen(command, stdin=subprocess.PIPE if ffmpeg else subprocess.DEVNULL,
-                                   stdout=stdout, stderr=stderr)
+                                   stdout=stdout, stderr=stderr, **hidden_console_kwargs())
         requested = False
         try:
             while process.poll() is None:

@@ -15,6 +15,7 @@ import uuid
 from dataclasses import dataclass
 from pathlib import Path
 
+from .process_launch import hidden_console_kwargs
 from .storage import StorageError
 
 
@@ -70,7 +71,7 @@ def _convert_audio(source, output, start, end):
     if end is not None:
         command += ["-t", str(end - start)]
     command += ["-vn", "-ac", "1", "-ar", "16000", "-c:a", "pcm_s16le", str(output)]
-    result = subprocess.run(command, capture_output=True, text=True)
+    result = subprocess.run(command, capture_output=True, text=True, **hidden_console_kwargs())
     if result.returncode or not output.is_file() or output.stat().st_size <= 44:
         raise PersonError("参照音声を読み取れません。音声トラックと指定区間を確認してください")
 

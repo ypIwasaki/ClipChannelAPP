@@ -27,6 +27,7 @@ from .editor_bridge import apply_layout, apply_subtitles
 from .supporting_media_ui import SupportingMediaPanel
 from .save_export_ui import SaveExportPanel, WidgetLock
 from .managed_process_ui import ProcessPanel
+from .process_launch import hidden_console_kwargs
 from .trimming_ui import TrimmingPanel
 from .trimming import history, publish_trim
 from .management_ui import ManagementPanel
@@ -315,7 +316,8 @@ def build_app(*, data=None, preferences=None, display=None):
         player[0] = subprocess.Popen([ffplay, "-nodisp", "-autoexit", "-loglevel", "error",
                                       "-ss", str(row.start_ms / 1000), "-t",
                                       str((row.end_ms - row.start_ms) / 1000), str(video)],
-                                     stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                                     stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+                                     **hidden_console_kwargs())
 
     def save_review(recognize=False):
         if not review_rows[0] or pending[0] or data.running:
@@ -627,7 +629,8 @@ def build_app(*, data=None, preferences=None, display=None):
             player[0].terminate()
         player[0] = subprocess.Popen([ffplay, "-autoexit", "-loglevel", "error", "-ss",
                                       str(row.start_ms / 1000), "-t", str((row.end_ms - row.start_ms) / 1000),
-                                      str(segment_source[0])], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                                      str(segment_source[0])], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+                                     **hidden_console_kwargs())
 
     ttk.Button(segment_candidates, text="候補を生成して別版保存", command=generate_segments).pack(anchor="w")
     ttk.Button(segment_candidates, text="解析なしで区間を手動作成", command=start_manual_segments).pack(anchor="w")
@@ -805,7 +808,8 @@ def build_app(*, data=None, preferences=None, display=None):
             messagebox.showerror("再生できません", "ffplay が必要です")
             return
         subprocess.Popen([ffplay, "-autoexit", str(composed_path[0])],
-                         stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                         stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+                         **hidden_console_kwargs())
 
     def render_compose():
         if save_export_panel.has_unsaved_project():
@@ -1094,7 +1098,7 @@ def build_app(*, data=None, preferences=None, display=None):
         try:
             player[0] = subprocess.Popen([ffplay, "-nodisp", "-autoexit", "-loglevel", "error",
                                           str(person.reference_audio)], stdout=subprocess.DEVNULL,
-                                         stderr=subprocess.DEVNULL)
+                                         stderr=subprocess.DEVNULL, **hidden_console_kwargs())
         except OSError as error:
             messagebox.showerror("試聴できません", str(error))
 
@@ -1283,7 +1287,8 @@ def build_app(*, data=None, preferences=None, display=None):
         player[0] = subprocess.Popen([ffplay, "-autoexit", "-loglevel", "error", "-ss",
                                       str(int(row["start_ms"]) / 1000), "-t",
                                       str((int(row["end_ms"]) - int(row["start_ms"])) / 1000),
-                                      str(word_source[0])], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                                      str(word_source[0])], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+                                     **hidden_console_kwargs())
 
     word_entries.bind("<<ListboxSelect>>", choose_word)
     word_hits.bind("<Double-Button-1>", play_word)
