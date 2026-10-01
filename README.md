@@ -11,6 +11,18 @@ python -m pip install -r requirements.txt
 python -m clipchannel.app
 ```
 
+### Windows用フォルダ版
+
+WindowsのPython 3.12と、Windows版の `ffmpeg.exe`・`ffprobe.exe`・`ffplay.exe` を用意し、PowerShellで次を実行します。`FFmpegBin` は3つの実行ファイルが入ったフォルダです。
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\build-windows.ps1 -FFmpegBin 'C:\path\to\ffmpeg\bin'
+```
+
+生成された `dist\ClipChannelAPP\` フォルダ全体をWindows上の任意の場所へコピーし、`ClipChannelAPP.exe` を起動します。PythonのインストールやFFmpegのPATH設定は起動先では不要です。取得機能でJavaScript処理が必要な場合は、ビルド時に `-DenoExe 'C:\path\to\deno.exe'` を追加します。ビルドには固定版の `yt-dlp-ejs` も含めます。ツールの配布条件とライセンス文書は、利用するビルドに合わせて確認して同梱してください。
+
+`-EcapaModel 'C:\path\to\ecapa-model'` を指定してビルドすると、ECAPA話者照合モデルとCPU推論用のTorch・SpeechBrainも同梱し、モデル欄に初期設定します。AviUtl2本体と専用プラグイン、文字起こし用のWhisperモデルと追加Python依存は含めません。
+
 媒体の確認と編集互換変換には、別途 `ffprobe` と `ffmpeg` を実行パス上に用意してください。取得した元ファイルは `media/downloaded/` に保持し、登録した動画は `media/originals/` に置きます。変換が必要な場合のMP4は `media/prepared/<元ファイル名>/editing-<識別子>.mp4` に保存し、同名のJSONに映像・音声の開始時刻と元動画との対応を記録します。変換に失敗した場合も元動画を保持し、動画を選択して「媒体確認・変換（再試行）」を実行できます。音声のみの結果は `media/audio/` に保存します。
 
 「切り出し区間」タブで区間と使用順を選び「新しい編集を作成」を押すと、横／ショートを選んで編集用MP4と対応するAviUtl2プロジェクトを作成します。MP4は `media/edits/<編集フォルダ>/`、プロジェクトは `projects/<編集フォルダ>/` に保存し、動画と元音声だけを配置します。同じ順番で再生成しても別フォルダに保存します。「保存・書き出し」の「プロジェクトの保存フォルダを開く」から、新しい `.aup2` をAviUtl2で開いてください。

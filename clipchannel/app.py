@@ -5,6 +5,7 @@ import json
 import math
 import shutil
 import subprocess
+import sys
 import tkinter as tk
 import threading
 from pathlib import Path
@@ -37,6 +38,14 @@ from .responsive_ui import WrappedLabel, ScrollListbox, ScrollText, Workbench, R
 from .window_preferences import WindowPlacement, WindowPreferences
 from .dialogs import messagebox, show_image_preview
 from .ui_theme import configure_theme, apply_widget_roles
+
+
+def bundled_ecapa_model():
+    if getattr(sys, "frozen", False):
+        path = Path(sys.executable).resolve().parent / "models" / "ecapa"
+        if (path / "hyperparams.yaml").is_file():
+            return str(path)
+    return ""
 
 
 def configure_japanese_fonts(window):
@@ -401,7 +410,7 @@ def build_app(*, data=None, preferences=None, display=None):
     review_list.bind("<<ListboxSelect>>", select_review)
     person_name = tk.StringVar()
     audio_path = tk.StringVar()
-    model_path = tk.StringVar()
+    model_path = tk.StringVar(value=bundled_ecapa_model())
     start_time = tk.StringVar()
     end_time = tk.StringVar()
     threshold = tk.StringVar()
