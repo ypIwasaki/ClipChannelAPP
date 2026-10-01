@@ -6,6 +6,7 @@ import threading
 import time
 import tkinter as tk
 import uuid
+from fractions import Fraction
 from tkinter import ttk
 
 from .dialogs import messagebox
@@ -27,6 +28,7 @@ class TrimmingPanel(ttk.Frame):
         self.details = tk.StringVar()
         self.boundary_text = tk.StringVar()
         self.duration = 0.0
+        self.frame_rate = 30.0
         self.adopted = None
         self.playing = False
         self.audio = None
@@ -97,6 +99,20 @@ class TrimmingPanel(ttk.Frame):
         self.pause()
         try:
             info = _probe(self._path())
+            self.frame_rate = 30.0
+            probe = shutil.which("ffprobe")
+            if probe:
+                result = subprocess.run([probe, "-v", "error", "-select_streams", "v:0",
+                                         "-show_entries", "stream=avg_frame_rate",
+                                         "-of", "default=nw=1:nk=1", str(self._path())],
+                                        capture_output=True, text=True, **hidden_console_kwargs())
+                if result.returncode == 0:
+                    try:
+                        rate = Fraction(result.stdout.strip())
+                        if rate > 0:
+                            self.frame_rate = float(rate)
+                    except (ValueError, ZeroDivisionError):
+                        pass
             self.duration = video_duration(self._path())
             self.scale.configure(to=self.duration)
             self.position.set(0)
@@ -141,7 +157,7 @@ class TrimmingPanel(ttk.Frame):
             self._resize_id = self.after(120, lambda: self._frame(self.position.get()))
 
     def _display_image(self, data):
-        self.image = tk.PhotoImage(data=data)
+        self.image = tk.PhotoImage(data=data, format="PPM" if isinstance(data, bytes) else "PNG")
         self.screen.delete("placeholder")
         self.screen.delete("video")
         self.screen.create_image(self.screen.winfo_width() // 2, self.screen.winfo_height() // 2,
@@ -253,53 +269,53 @@ class TrimmingPanel(ttk.Frame):
             return
         generation = self.generation
         width, height = self._viewport()
-        fit = f"fps=10,scale={width}:{height}:force_original_aspect_ratio=decrease"
+        # Tk renders every frame on the UI thread. Keep the preview within its
+        # real-time throughput while retaining every source frame.
+        width, height = min(width, 800), min(height, 450)
+        fit = f"scale={width}:{height}:force_original_aspect_ratio=decrease"
         process = subprocess.Popen([ffmpeg, "-v", "error", "-ss", str(start), "-i", str(self._path()),
                                     "-t", str(end - start), "-an", "-vf", fit,
-                                    "-f", "image2pipe", "-vcodec", "png", "pipe:1"],
-                                   stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
+                                    "-fps_mode", "passthrough", "-f", "image2pipe", "-vcodec", "ppm", "pipe:1"],
+                                   stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, bufsize=1024 * 1024,
                                    **hidden_console_kwargs())
         self.video_process = process
 
         def read_exact(length):
-            chunks = bytearray()
-            while len(chunks) < length:
-                part = process.stdout.read(length - len(chunks))
-                if not part:
+            frame = bytearray(length)
+            view = memoryview(frame)
+            received = 0
+            while received < length:
+                count = process.stdout.readinto(view[received:])
+                if not count:
                     return None
-                chunks.extend(part)
-            return bytes(chunks)
+                received += count
+            return frame
 
         def reader():
-            import base64
-            signature = b"\x89PNG\r\n\x1a\n"
             frame_number = 0
             try:
                 while self.playing and generation == self.generation:
-                    header = read_exact(8)
-                    if header != signature:
+                    magic = process.stdout.readline()
+                    if magic != b"P6\n":
                         break
-                    frame = bytearray(header)
-                    while True:
-                        chunk = read_exact(8)
-                        if chunk is None:
-                            return
-                        length = int.from_bytes(chunk[:4], "big")
-                        if length > 4_000_000:
-                            return
-                        payload = read_exact(length + 4)
-                        if payload is None:
-                            return
-                        frame.extend(chunk)
-                        frame.extend(payload)
-                        if chunk[4:] == b"IEND":
-                            break
-                    encoded = base64.b64encode(frame).decode("ascii")
-                    until = self._clock + frame_number / 10
+                    dimensions = process.stdout.readline()
+                    depth = process.stdout.readline()
+                    try:
+                        frame_width, frame_height = map(int, dimensions.split())
+                    except ValueError:
+                        break
+                    if (depth != b"255\n" or not 0 < frame_width <= width or
+                            not 0 < frame_height <= height):
+                        break
+                    pixels = read_exact(frame_width * frame_height * 3)
+                    if pixels is None:
+                        break
+                    frame = magic + dimensions + depth + bytes(pixels)
+                    until = self._clock + frame_number / self.frame_rate
                     if until > time.monotonic():
                         time.sleep(until - time.monotonic())
                     frame_number += 1
-                    def display(image_data=encoded):
+                    def display(image_data=frame):
                         if self.playing and generation == self.generation and self.winfo_exists():
                             self._display_image(image_data)
                     try:
