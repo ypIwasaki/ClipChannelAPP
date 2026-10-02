@@ -66,25 +66,9 @@ def boundaries(data, source, start_seconds, end_seconds, *, stop_requested=None)
     if start < 0 or end > duration or start >= end:
         raise StorageError("開始・終了を動画内の有効な順序で指定してください")
     video_start = float(info.video.start)
-    requested = (round((video_start + start) * 1000), round((video_start + end) * 1000))
-    probe = shutil.which("ffprobe")
-    if not probe:
-        raise StorageError("ffprobe が必要です")
-    result = run_process([probe, "-v", "error", "-select_streams", "v:0", "-show_entries",
-                          "frame=best_effort_timestamp_time", "-of", "csv=p=0", str(source)],
-                         stop=stop_requested)
-    if result.returncode:
-        raise StorageError("実フレーム時刻を読み取れません")
-    try:
-        frames = sorted({round(float(line.strip().rstrip(",")) * 1000)
-                         for line in result.stdout.splitlines() if line.strip().rstrip(",")})
-    except ValueError as error:
-        raise StorageError("実フレーム時刻が不正です") from error
-    if not frames:
-        raise StorageError("映像フレームがありません")
-    first, last = (min(frames, key=lambda frame: abs(frame - value)) for value in requested)
+    first, last = (round((video_start + value) * 1000) for value in (start, end))
     if first >= last:
-        raise StorageError("採用フレーム境界で長さが0になります")
+        raise StorageError("指定した範囲が短すぎます")
     return first, last
 
 

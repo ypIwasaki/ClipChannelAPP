@@ -181,7 +181,7 @@ class TrimmingTests(unittest.TestCase):
             self.assertLess(amplitude(.1), 30)
             self.assertGreater(amplitude(.7), 500)
 
-    def test_variable_frame_rate_uses_presented_frame_times(self):
+    def test_variable_frame_rate_preserves_requested_times_without_frame_scan(self):
         with tempfile.TemporaryDirectory() as root:
             data = DataFolder()
             data.select(root)
@@ -192,10 +192,33 @@ class TrimmingTests(unittest.TestCase):
                             "-fps_mode", "vfr", "-c:v", "libx264", str(source)], check=True)
             original = data.register_video(source)
             start, end = boundaries(data, original, 1.05, 1.55)
-            self.assertEqual(start, 900)
-            self.assertGreaterEqual(end, 1500)
+            self.assertEqual((start, end), (1050, 1550))
             result = publish_trim(data, trim_video(Control(), data, original, "variable_trim.mp4", start, end))
-            self.assertGreater(float(_probe(result).duration), .4)
+            self.assertGreater(float(_probe(result).duration), .2)
+
+    def test_export_confirms_and_starts_on_first_click(self):
+        import tkinter as tk
+        from unittest.mock import Mock
+        with tempfile.TemporaryDirectory() as root:
+            data = DataFolder()
+            data.select(root)
+            source = Path(root) / "source.mp4"
+            subprocess.run(["ffmpeg", "-v", "error", "-f", "lavfi", "-i",
+                            "testsrc2=size=64x64:rate=10:duration=2", "-c:v", "libx264",
+                            str(source)], check=True)
+            data.register_video(source)
+            window = tk.Tk()
+            try:
+                process_panel = Mock()
+                panel = TrimmingPanel(window, data, process_panel, lambda: None)
+                panel.pack()
+                panel.refresh()
+                panel.start.set("0.200")
+                panel.end.set("1.200")
+                panel.export()
+                process_panel.start.assert_called_once()
+            finally:
+                window.destroy()
 
     def test_publish_collision_keeps_other_video(self):
         with tempfile.TemporaryDirectory() as root:

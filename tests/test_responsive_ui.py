@@ -54,6 +54,30 @@ def failed_work(control):
 
 
 class ResponsiveAppTests(unittest.TestCase):
+    def test_closing_view_dropdown_without_selection_keeps_previous_view(self):
+        from clipchannel.responsive_ui import ResponsivePage
+        window = tk.Tk()
+        self.addCleanup(window.destroy)
+        page = ResponsivePage(window)
+        page.pack(fill='both', expand=True)
+        page.section('入力')
+        page.section('一覧', '結果')
+        window.update()
+        selector = next(w for w in descendants(page) if w.winfo_class() == 'TCombobox'
+                        and tuple(w.cget('values')) == ('操作', '結果', '詳細設定', '自動'))
+        selector.set('')
+        window.tk.call('ttk::combobox::Unpost', selector)
+        window.update()
+        self.assertEqual(selector.get(), '自動')
+        selector.set('結果')
+        selector.event_generate('<<ComboboxSelected>>')
+        window.update()
+        selector.set('')
+        window.tk.call('ttk::combobox::Unpost', selector)
+        window.update()
+        self.assertEqual(selector.get(), '結果')
+        self.assertEqual(page.view.get(), '結果')
+
     def test_project_folder_opens_after_restart_without_edit_video(self):
         import os
         data = DataFolder()

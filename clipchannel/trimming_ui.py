@@ -76,7 +76,7 @@ class TrimmingPanel(ttk.Frame):
         for label, var in (("開始 秒", self.start), ("終了 秒", self.end), ("保存名", self.name)):
             ttk.Label(fields, text=label).pack(side="left", padx=(8, 2))
             ttk.Entry(fields, textvariable=var, width=24 if label == "保存名" else 10).pack(side="left")
-        ttk.Button(fields, text="境界を確認", command=self.confirm).pack(side="left", padx=6)
+        ttk.Button(fields, text="範囲を確認", command=self.confirm).pack(side="left", padx=6)
         ttk.Button(fields, text="MP4を書き出す", command=self.export).pack(side="left")
         ttk.Label(self, textvariable=self.details, wraplength=800).grid(row=5, column=0, sticky="ew")
         ttk.Label(self, textvariable=self.boundary_text, wraplength=800).grid(row=6, column=0, sticky="ew")
@@ -126,7 +126,7 @@ class TrimmingPanel(ttk.Frame):
 
     def _invalidate(self, *_args):
         self.adopted = None
-        self.boundary_text.set("境界を確認してください")
+        self.boundary_text.set("範囲を確認してください")
 
     def _seek_drag(self, _value):
         if self.playing and not self._updating_position:
@@ -345,14 +345,15 @@ class TrimmingPanel(ttk.Frame):
             destination(self.data, self.name.get())
             first, last = boundaries(self.data, self._path(), self.start.get(), self.end.get())
             self.adopted = (self.source.get(), self.name.get(), self.start.get(), self.end.get(), first, last)
-            self.boundary_text.set(f"指定: {self.start.get()}–{self.end.get()} 秒 / 採用: {first / 1000:.3f}–{last / 1000:.3f} 秒")
+            self.boundary_text.set(f"書き出し範囲: {self.start.get()}–{self.end.get()} 秒")
         except (OSError, StorageError, ValueError) as error:
             self.boundary_text.set(str(error))
 
     def export(self):
         if self.adopted is None:
             self.confirm()
-            return
+            if self.adopted is None:
+                return
         _, name, _, _, first, last = self.adopted
         work_name = f"trim-{uuid.uuid4().hex}"
         def finished(_operation):

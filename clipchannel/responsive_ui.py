@@ -162,6 +162,8 @@ class ResponsivePage(ttk.Frame):
         super().__init__(parent, **kwargs)
         self.sections = {'操作': {}, '結果': {}, '詳細設定': {}}
         self.view = tk.StringVar(value='自動')
+        self._selected_view = self.view.get()
+        self.view.trace_add('write', self._keep_selected_view)
         self.choice = {role: tk.StringVar() for role in self.sections}
         self.columnconfigure(0, weight=1)
         self.rowconfigure(2, weight=1)
@@ -196,6 +198,13 @@ class ResponsivePage(ttk.Frame):
             slot.rowconfigure(0, weight=1)
         self.body.bind('<Configure>', lambda e: self._render())
         self._rendering = False
+
+    def _keep_selected_view(self, *_args):
+        value = self.view.get()
+        if value in self.sections or value == '自動':
+            self._selected_view = value
+        else:
+            self.view.set(self._selected_view)
 
     def section(self, title, role='操作'):
         if role == '詳細設定':
