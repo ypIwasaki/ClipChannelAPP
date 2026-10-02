@@ -1,0 +1,1219 @@
+{
+  "controls": {
+    "overview-button-01": {
+      "label": "フォルダを選択・切り替え",
+      "description": "解析結果・人物・動画などを保存するデータ用フォルダを選択します。処理中は切り替えできません。"
+    },
+    "overview-button-02": {
+      "label": "場所を確認",
+      "description": "省略されているデータ用フォルダの絶対パスを確認します。"
+    },
+    "overview-button-03": {
+      "label": "小",
+      "description": "ウィンドウを小サイズにします。実際の大きさは表示可能な画面領域に合わせて調整します。"
+    },
+    "overview-button-04": {
+      "label": "中",
+      "description": "ウィンドウを中サイズにします。"
+    },
+    "overview-button-05": {
+      "label": "大",
+      "description": "ウィンドウを大サイズにします。"
+    },
+    "overview-button-06": {
+      "label": "動画を準備",
+      "description": "取得・媒体操作タブを表示します。URL取得やローカル動画登録を行います。"
+    },
+    "overview-button-07": {
+      "label": "動画をトリミング",
+      "description": "動画をトリミングタブを表示します。連続した一範囲を新しい登録動画に書き出します。"
+    },
+    "overview-button-08": {
+      "label": "解析・切り出し",
+      "description": "人物・参照音声、頻出語、切り出し区間のタブを表示します。"
+    },
+    "overview-button-09": {
+      "label": "編集・書き出し",
+      "description": "画面・字幕、補助素材、保存・書き出しのタブを表示します。"
+    },
+    "overview-button-10": {
+      "label": "保存結果を確認",
+      "description": "保存済み情報タブを表示します。結果CSVと使用する版を選択します。"
+    },
+    "overview-button-11": {
+      "label": "データを管理",
+      "description": "管理・保管タブを表示します。登録情報の整理・動画の保管・ログの整理を行います。"
+    },
+    "overview-button-12": {
+      "label": "実行中の処理を中止",
+      "description": "共通の管理対象処理に通常中止を要求します。実際の終了を確認するまで処理中の状態を維持します。"
+    },
+    "overview-button-13": {
+      "label": "実行中の処理を強制停止…",
+      "description": "通常中止要求から3秒後も終了しない場合に、対象処理とその子プロセスを確認して強制停止します。"
+    },
+    "overview-view": {
+      "label": "表示",
+      "description": "自動・操作・結果・詳細設定を切り替えます。自動では幅に応じて操作と結果を配置します。"
+    },
+    "overview-item-step-01": {
+      "label": "◁",
+      "description": "現在の表示区分の前の項目へ移動します。"
+    },
+    "overview-item-step-02": {
+      "label": "▷",
+      "description": "現在の表示区分の次の項目へ移動します。"
+    },
+    "download-url-selector": {
+      "label": "表示項目",
+      "description": "表示「操作」内の項目を選びます。この画像は「URL・取得」を選択した状態です。"
+    },
+    "download-url-entry-01": {
+      "label": "認証不要のURL",
+      "description": "ログイン・Cookieを使わず取得できる動画URLを入力します。"
+    },
+    "download-url-check-01": {
+      "label": "音声のみ（音声成果物）",
+      "description": "動画の代わりに音声成果物を取得します。音声成果物は登録済み動画として扱いません。"
+    },
+    "download-url-check-02": {
+      "label": "情報のみ",
+      "description": "メディアを取得せず、URLの情報を表示します。"
+    },
+    "download-url-button-01": {
+      "label": "取得・情報表示",
+      "description": "現在のURLと設定で取得または情報表示を開始します。完了した項目を結果一覧で確認してください。"
+    },
+    "download-url-button-02": {
+      "label": "失敗項目を再試行",
+      "description": "直前の取得で失敗した項目だけを再試行します。"
+    },
+    "download-url-button-03": {
+      "label": "通常中止",
+      "description": "管理対象の取得処理に中止を要求します。実際の終了を確認するまでは操作を再開しません。"
+    },
+    "download-url-button-04": {
+      "label": "機能案内",
+      "description": "取得機能で対応する範囲と、認証などの対象外の機能を表示します。"
+    },
+    "download-local-selector": {
+      "label": "表示項目",
+      "description": "表示「操作」内の項目を選びます。この画像は「ローカル動画」を選択した状態です。"
+    },
+    "download-local-button-01": {
+      "label": "ローカル動画を登録",
+      "description": "動画ファイルを選び、媒体を確認してデータ用フォルダへ取り込みます。元ファイルは保持します。"
+    },
+    "download-local-button-02": {
+      "label": "選択した動画を媒体確認・変換（再試行）",
+      "description": "登録済み動画一覧で選択した動画を再確認し、必要な媒体変換を再試行します。"
+    },
+    "download-results-selector": {
+      "label": "表示項目",
+      "description": "表示「結果」内の項目を選びます。この画像は「取得結果」を選択した状態です。"
+    },
+    "download-results-list-01": {
+      "label": "取得結果一覧",
+      "description": "取得項目ごとの状態・保存先・失敗理由などを確認します。失敗項目は再試行できます。"
+    },
+    "download-results-scrollbar-01": {
+      "label": "取得結果：縦スクロール",
+      "description": "この一覧または詳細設定の内部を縦にスクロールします。"
+    },
+    "download-results-scrollbar-02": {
+      "label": "取得結果：横スクロール",
+      "description": "一覧の内部を横にスクロールし、長い行の続きを確認します。"
+    },
+    "registered-videos-selector": {
+      "label": "表示項目",
+      "description": "表示「結果」内の項目を選びます。この画像は「登録済み動画」を選択した状態です。"
+    },
+    "registered-videos-list-01": {
+      "label": "登録済み動画一覧",
+      "description": "制作に使う登録動画を選び、媒体の詳細を確認します。動画からの参照音声登録も、ここで選んだ動画を使います。"
+    },
+    "registered-videos-scrollbar-01": {
+      "label": "登録済み動画：縦スクロール",
+      "description": "この一覧または詳細設定の内部を縦にスクロールします。"
+    },
+    "registered-videos-scrollbar-02": {
+      "label": "登録済み動画：横スクロール",
+      "description": "一覧の内部を横にスクロールし、長い行の続きを確認します。"
+    },
+    "download-settings-selector": {
+      "label": "表示項目",
+      "description": "表示「詳細設定」内の項目を選びます。この画像は「形式・品質と取得設定」を選択した状態です。"
+    },
+    "download-settings-entry-01": {
+      "label": "形式・品質 (yt-dlp format)",
+      "description": "yt-dlpの形式指定を入力します。初期値は bestvideo*+bestaudio/best です。"
+    },
+    "download-settings-entry-02": {
+      "label": "取得の再試行回数",
+      "description": "取得処理の再試行回数を整数で指定します。"
+    },
+    "download-settings-entry-03": {
+      "label": "追加引数（-f, --retries, --fragment-retries, --sub-langs）",
+      "description": "対応するyt-dlp追加引数を指定します。認証用や任意の引数を渡す欄ではありません。"
+    },
+    "download-settings-scrollbar-01": {
+      "label": "形式・品質と取得設定：縦スクロール",
+      "description": "この一覧または詳細設定の内部を縦にスクロールします。"
+    },
+    "trimming-range-selector": {
+      "label": "表示項目",
+      "description": "表示「操作」内の項目を選びます。この画像は「範囲を指定して書き出す」を選択した状態です。"
+    },
+    "trimming-range-choice-01": {
+      "label": "登録済み動画",
+      "description": "トリミングする登録済み動画を選びます。切り替えると範囲と保存名が選択動画の初期値になります。"
+    },
+    "trimming-range-button-01": {
+      "label": "一覧を更新",
+      "description": "登録済み動画の候補を読み直します。"
+    },
+    "trimming-range-button-02": {
+      "label": "履歴を表示",
+      "description": "選択動画のトリミング元と範囲を表示します。元動画にはトリミング履歴がありません。"
+    },
+    "trimming-range-preview-01": {
+      "label": "動画プレビュー",
+      "description": "選択動画の映像を表示します。原寸の出力確認ではありません。範囲を決めるためのプレビューです。"
+    },
+    "trimming-range-slider-01": {
+      "label": "再生位置",
+      "description": "つまみを動かし、離してその位置の映像を表示します。ここから開始・終了位置を設定できます。"
+    },
+    "trimming-range-button-03": {
+      "label": "再生／一時停止",
+      "description": "現在位置から動画を再生、または一時停止します。音声の試聴にはffplayが必要です。"
+    },
+    "trimming-range-button-04": {
+      "label": "現在位置を開始に",
+      "description": "現在の再生位置を「開始 秒」へ設定します。"
+    },
+    "trimming-range-button-05": {
+      "label": "現在位置を終了に",
+      "description": "現在の再生位置を「終了 秒」へ設定します。"
+    },
+    "trimming-range-button-06": {
+      "label": "選択範囲を再生",
+      "description": "入力した開始秒から終了秒まで再生し、残す範囲を確認します。"
+    },
+    "trimming-range-entry-01": {
+      "label": "開始 秒",
+      "description": "残す範囲の開始位置を秒で入力します。0以上、終了より前にしてください。"
+    },
+    "trimming-range-entry-02": {
+      "label": "終了 秒",
+      "description": "残す範囲の終了位置を秒で入力します。開始より後、動画の長さ以内にしてください。"
+    },
+    "trimming-range-entry-03": {
+      "label": "保存名",
+      "description": "新しいMP4ファイル名を.mp4付きで入力します（例：scene_trim.mp4）。既存ファイルと同名・同じ保存名は使えません。"
+    },
+    "trimming-range-button-07": {
+      "label": "範囲を確認",
+      "description": "開始・終了と保存名を検査して書き出し範囲を確定します。入力を変えると確定は解除されます。"
+    },
+    "trimming-range-button-08": {
+      "label": "MP4を書き出す",
+      "description": "確定した範囲を新しい登録済みMP4にします。未確定なら先に範囲を確認します。元動画は保持します。"
+    },
+    "speaker-target-selector": {
+      "label": "表示項目",
+      "description": "表示「操作」内の項目を選びます。この画像は「人物と対象動画」を選択した状態です。"
+    },
+    "speaker-target-button-01": {
+      "label": "対象話者を確認",
+      "description": "選択中の人物・閾値・分割方法を確認します。"
+    },
+    "speaker-target-choice-01": {
+      "label": "対象動画（別動画にも同じ人物を指定できます）",
+      "description": "照合・文字起こし・頻出語・切り出しに使う登録済み動画を選びます。参照音声の切り出し元は取得タブの動画一覧で選びます。"
+    },
+    "speaker-target-button-02": {
+      "label": "人物を登録",
+      "description": "詳細設定の名前・参照音声・ECAPAモデル・閾値・分割方法で人物を登録します。この処理は共通の強制停止の対象ではありません。"
+    },
+    "speaker-target-button-03": {
+      "label": "参照音声を試聴",
+      "description": "人物一覧で選んだ人物のreference.wavをffplayで試聴します。"
+    },
+    "speaker-target-button-04": {
+      "label": "動画の対象話者に設定",
+      "description": "人物一覧で選んだ人物を、対象動画の対象話者として保存します。"
+    },
+    "review-actions-selector": {
+      "label": "表示項目",
+      "description": "表示「操作」内の項目を選びます。この画像は「試聴・判定・再表示」を選択した状態です。"
+    },
+    "review-actions-button-01": {
+      "label": "試聴区間を作成",
+      "description": "対象動画を5秒ごとの確認区間に分け、参照人物との類似度を計算します。判定はすべてunknownで始まります。"
+    },
+    "review-actions-button-02": {
+      "label": "試聴",
+      "description": "試聴区間一覧で選択した区間の音声をffplayで再生します。"
+    },
+    "review-actions-button-03": {
+      "label": "対象発話",
+      "description": "選択区間をtargetにして保存します。文字起こしの対象になります。"
+    },
+    "review-actions-button-04": {
+      "label": "対象話者の非発話",
+      "description": "選択区間をnon-targetにして保存します。その区間の本文は空にします。"
+    },
+    "review-actions-button-05": {
+      "label": "不明",
+      "description": "選択区間をunknownにして保存します。その区間の本文は空にします。"
+    },
+    "review-actions-button-06": {
+      "label": "保存を再試行",
+      "description": "未保存の試聴区間・判定・修正内容を再度保存します。"
+    },
+    "review-actions-button-07": {
+      "label": "保存版を再表示",
+      "description": "保存済み情報で選択したtranscripts版を試聴区間一覧に読み込みます。"
+    },
+    "speaker-transcribe-selector": {
+      "label": "表示項目",
+      "description": "表示「操作」内の項目を選びます。この画像は「対象話者の文字起こし」を選択した状態です。"
+    },
+    "speaker-transcribe-entry-01": {
+      "label": "ローカル Whisper モデル（対象発話の区間のみ認識）",
+      "description": "config.jsonを含むfaster-whisper用ローカルモデルフォルダを指定します。Whisperの単独.ptファイルは使えません。"
+    },
+    "speaker-transcribe-button-01": {
+      "label": "対象発話を文字起こし・別版保存",
+      "description": "targetと確認済みの区間だけを認識し、全区間を新しいtranscripts版に保存します。旧版は残ります。"
+    },
+    "speaker-transcribe-button-02": {
+      "label": "解析を中止",
+      "description": "共通の管理対象処理に中止を要求します。中止の完了は画面下部で確認します。"
+    },
+    "registered-people-selector": {
+      "label": "表示項目",
+      "description": "表示「結果」内の項目を選びます。この画像は「人物一覧」を選択した状態です。"
+    },
+    "registered-people-list-01": {
+      "label": "人物一覧",
+      "description": "人物を選択します。参照音声の試聴、対象話者の設定は操作表示から実行します。"
+    },
+    "registered-people-scrollbar-01": {
+      "label": "人物一覧：縦スクロール",
+      "description": "この一覧または詳細設定の内部を縦にスクロールします。"
+    },
+    "registered-people-scrollbar-02": {
+      "label": "人物一覧：横スクロール",
+      "description": "一覧の内部を横にスクロールし、長い行の続きを確認します。"
+    },
+    "review-results-selector": {
+      "label": "表示項目",
+      "description": "表示「結果」内の項目を選びます。この画像は「試聴区間・文字起こし」を選択した状態です。"
+    },
+    "review-results-list-01": {
+      "label": "試聴区間・文字起こし一覧",
+      "description": "時刻・判定・類似度・本文を確認し、判定や修正の対象行を選択します。保存CSVからの再表示では類似度は保存されていません。"
+    },
+    "review-results-scrollbar-01": {
+      "label": "試聴区間・文字起こし：縦スクロール",
+      "description": "この一覧または詳細設定の内部を縦にスクロールします。"
+    },
+    "review-results-scrollbar-02": {
+      "label": "試聴区間・文字起こし：横スクロール",
+      "description": "一覧の内部を横にスクロールし、長い行の続きを確認します。"
+    },
+    "speaker-registration-selector": {
+      "label": "表示項目",
+      "description": "表示「詳細設定」内の項目を選びます。この画像は「人物・参照音声の登録」を選択した状態です。"
+    },
+    "speaker-registration-entry-01": {
+      "label": "名前",
+      "description": "人物を識別する表示名を入力します。同じ名前で再登録しても別の人物IDになります。"
+    },
+    "speaker-registration-entry-02": {
+      "label": "参照音声ファイル（動画を使う場合は空欄）",
+      "description": "外部の音声ファイルのパスを入力します。登録済み動画から切り出す場合は空欄にします。"
+    },
+    "speaker-registration-button-01": {
+      "label": "音声ファイルを選択",
+      "description": "参照音声にする音声ファイルを選びます。動画を使う場合はこの欄を空にしてください。"
+    },
+    "speaker-registration-entry-03": {
+      "label": "参照区間の開始秒",
+      "description": "取得・媒体操作の登録済み動画一覧で選んだ動画から、参照音声にする区間の開始秒を指定します。外部音声ファイルを使うときは使用しません。"
+    },
+    "speaker-registration-entry-04": {
+      "label": "参照区間の終了秒",
+      "description": "動画から参照音声にする区間の終了秒を指定します。開始より後にしてください。参照音声は1秒以上必要です。"
+    },
+    "speaker-registration-entry-05": {
+      "label": "ローカル ECAPA モデルフォルダ",
+      "description": "hyperparams.yamlを含むECAPAモデル一式のフォルダを指定します。話者照合でも登録時と同じモデルが必要です。"
+    },
+    "speaker-registration-button-02": {
+      "label": "モデルを選択",
+      "description": "ローカルのECAPAモデルフォルダを選びます。モデルをネット取得する操作ではありません。"
+    },
+    "speaker-registration-entry-06": {
+      "label": "照合閾値（-1〜1、品質は別動画で確認）",
+      "description": "-1から1の閾値を登録情報として保存します。現行の試聴区間生成はこの値による自動分類を行いません。"
+    },
+    "speaker-registration-choice-01": {
+      "label": "参照音声の分割方法",
+      "description": "whole-referenceは全音声を1区間として特徴化し、five-second-windowsは5秒窓の特徴を平均します。末尾の1秒未満は除きます。"
+    },
+    "speaker-registration-scrollbar-01": {
+      "label": "人物・参照音声の登録：縦スクロール",
+      "description": "この一覧または詳細設定の内部を縦にスクロールします。"
+    },
+    "review-edit-selector": {
+      "label": "表示項目",
+      "description": "表示「詳細設定」内の項目を選びます。この画像は「発言の修正」を選択した状態です。"
+    },
+    "review-edit-entry-01": {
+      "label": "開始秒",
+      "description": "発言の開始位置を秒で入力します。保存時はミリ秒へ変換します。"
+    },
+    "review-edit-entry-02": {
+      "label": "終了秒",
+      "description": "発言の終了位置を秒で入力します。「終了秒で分割」ではこの時刻を分割点にします。"
+    },
+    "review-edit-entry-03": {
+      "label": "本文",
+      "description": "対象発話の文字起こし本文を入力します。non-target・unknownには本文を保存できません。"
+    },
+    "review-edit-choice-01": {
+      "label": "発話の判定",
+      "description": "target（対象発話）、non-target（対象話者の非発話）、unknown（不明）を選び、修正または追加します。"
+    },
+    "review-edit-button-01": {
+      "label": "選択行を修正",
+      "description": "選択した発言の開始・終了・判定・本文を修正し、別版に保存します。"
+    },
+    "review-edit-button-02": {
+      "label": "終了秒で分割",
+      "description": "選択発言を入力した終了秒で分割して別版に保存します。分割後の2行はunknown・本文空欄になるため、判定と本文を再設定してください。"
+    },
+    "review-edit-button-03": {
+      "label": "発言を追加",
+      "description": "入力した時刻・判定・本文で発言を追加します。既存区間との重複は保存できません。"
+    },
+    "review-edit-scrollbar-01": {
+      "label": "発言の修正：縦スクロール",
+      "description": "この一覧または詳細設定の内部を縦にスクロールします。"
+    },
+    "word-settings-selector": {
+      "label": "表示項目",
+      "description": "表示「操作」内の項目を選びます。この画像は「集計条件」を選択した状態です。"
+    },
+    "word-settings-entry-01": {
+      "label": "文字起こしの版番号",
+      "description": "集計する対象動画のtranscripts版番号を指定します。最新版本を自動選択する欄ではありません。"
+    },
+    "word-settings-check-01": {
+      "label": "動詞を含める",
+      "description": "名詞に加えて動詞を頻出語の集計対象にします。"
+    },
+    "word-settings-check-02": {
+      "label": "形容詞を含める",
+      "description": "名詞に加えて形容詞を頻出語の集計対象にします。"
+    },
+    "word-settings-button-01": {
+      "label": "再集計して別版保存",
+      "description": "指定transcripts版と現在の辞書・品詞設定で集計し、新しいword-counts版に保存します。"
+    },
+    "word-settings-button-02": {
+      "label": "選択した保存版を表示",
+      "description": "保存済み情報で選択したword-counts版の頻出語と該当発言を表示します。"
+    },
+    "word-dictionary-selector": {
+      "label": "表示項目",
+      "description": "表示「操作」内の項目を選びます。この画像は「登録語・除外語」を選択した状態です。"
+    },
+    "word-dictionary-entry-01": {
+      "label": "登録・除外する語",
+      "description": "辞書へ追加、または辞書から削除する語を入力します。辞書を変更した後は再集計してください。"
+    },
+    "word-dictionary-button-01": {
+      "label": "登録語に追加",
+      "description": "入力語を登録語辞書へ追加します。複合語を一語として数えるために使います。"
+    },
+    "word-dictionary-button-02": {
+      "label": "除外語に追加",
+      "description": "入力語を除外語辞書へ追加します。再集計で対象語を除きます。"
+    },
+    "word-dictionary-button-03": {
+      "label": "登録語から削除",
+      "description": "入力語の登録を登録語辞書から外します。保存済み集計は変わりません。"
+    },
+    "word-dictionary-button-04": {
+      "label": "除外語から削除",
+      "description": "入力語の登録を除外語辞書から外します。保存済み集計は変わりません。"
+    },
+    "word-totals-selector": {
+      "label": "表示項目",
+      "description": "表示「結果」内の項目を選びます。この画像は「頻出語一覧」を選択した状態です。"
+    },
+    "word-totals-list-01": {
+      "label": "頻出語一覧",
+      "description": "語ごとの出現回数・発話数を確認し、語を選択します。該当発話は「発話一覧」に表示されます。"
+    },
+    "word-totals-scrollbar-01": {
+      "label": "頻出語一覧：縦スクロール",
+      "description": "この一覧または詳細設定の内部を縦にスクロールします。"
+    },
+    "word-totals-scrollbar-02": {
+      "label": "頻出語一覧：横スクロール",
+      "description": "一覧の内部を横にスクロールし、長い行の続きを確認します。"
+    },
+    "word-utterances-selector": {
+      "label": "表示項目",
+      "description": "表示「結果」内の項目を選びます。この画像は「発話一覧」を選択した状態です。"
+    },
+    "word-utterances-list-01": {
+      "label": "選択語を含む発話一覧",
+      "description": "頻出語一覧で選んだ語を含む発話の時刻と本文を確認します。"
+    },
+    "word-utterances-scrollbar-01": {
+      "label": "発話一覧：縦スクロール",
+      "description": "この一覧または詳細設定の内部を縦にスクロールします。"
+    },
+    "word-utterances-scrollbar-02": {
+      "label": "発話一覧：横スクロール",
+      "description": "一覧の内部を横にスクロールし、長い行の続きを確認します。"
+    },
+    "segment-candidates-selector": {
+      "label": "表示項目",
+      "description": "表示「操作」内の項目を選びます。この画像は「候補と保存版」を選択した状態です。"
+    },
+    "segment-candidates-entry-01": {
+      "label": "文字起こし版",
+      "description": "切り出し候補の元にするtranscriptsの版番号を指定します。"
+    },
+    "segment-candidates-entry-02": {
+      "label": "前",
+      "description": "候補の開始に付ける余白を秒で入力します。動画の先頭より前には広げません。"
+    },
+    "segment-candidates-entry-03": {
+      "label": "後",
+      "description": "候補の終了に付ける余白を秒で入力します。動画の末尾より後には広げません。"
+    },
+    "segment-candidates-button-01": {
+      "label": "候補を生成して別版保存",
+      "description": "指定した文字起こし版のtarget区間に前後余白を付け、切り出し候補をsegments別版に保存します。"
+    },
+    "segment-candidates-button-02": {
+      "label": "解析なしで区間を手動作成",
+      "description": "対象動画から文字起こしを使わずに手動で切り出し区間を作ります。"
+    },
+    "segment-candidates-button-03": {
+      "label": "選択した保存版を使用",
+      "description": "保存済み情報で選択したsegments版を切り出し一覧に読み込みます。"
+    },
+    "segment-actions-selector": {
+      "label": "表示項目",
+      "description": "表示「操作」内の項目を選びます。この画像は「区間を修正・試聴」を選択した状態です。"
+    },
+    "segment-actions-button-01": {
+      "label": "映像を再生",
+      "description": "選択した切り出し区間の映像と音声をffplayで再生します。"
+    },
+    "segment-actions-button-02": {
+      "label": "境界を修正",
+      "description": "開始秒・終了秒で選択区間の境界を修正し、別版に保存します。"
+    },
+    "segment-actions-button-03": {
+      "label": "終了秒で分割",
+      "description": "選択区間を入力した終了秒で2つに分割して別版に保存します。開始と元の終了の間の時刻を指定してください。"
+    },
+    "segment-actions-button-04": {
+      "label": "区間結合",
+      "description": "2件以上の選択行を結合して別版に保存します。最初と最後の選択行の間の未選択区間も結合に含まれます。"
+    },
+    "segment-actions-button-05": {
+      "label": "手動追加",
+      "description": "開始秒・終了秒の区間を手動で追加し、別版に保存します。"
+    },
+    "segment-actions-button-06": {
+      "label": "採否を適用",
+      "description": "「採用」のチェックを選択区間へ適用して別版に保存します。"
+    },
+    "segment-actions-button-07": {
+      "label": "保存を再試行",
+      "description": "未保存の切り出し区間の修正内容を再度別版へ保存します。"
+    },
+    "compose-actions-selector": {
+      "label": "表示項目",
+      "description": "表示「操作」内の項目を選びます。この画像は「編集用動画を作成」を選択した状態です。"
+    },
+    "compose-actions-button-01": {
+      "label": "区間を追加",
+      "description": "選択した採用区間を編集順に追加します。同じ区間を複数回追加できます。"
+    },
+    "compose-actions-button-02": {
+      "label": "上へ",
+      "description": "編集順で選択した区間を一つ上へ移動します。"
+    },
+    "compose-actions-button-03": {
+      "label": "下へ",
+      "description": "編集順で選択した区間を一つ下へ移動します。"
+    },
+    "compose-actions-button-04": {
+      "label": "外す",
+      "description": "編集順で選択した区間を順番一覧から外します。元の切り出し区間は削除しません。"
+    },
+    "compose-actions-button-05": {
+      "label": "新しい編集を作成",
+      "description": "現在の編集順と固定fpsで区間を連結し、新しい編集用MP4とAviUtl2プロジェクトを作成します。"
+    },
+    "compose-actions-button-06": {
+      "label": "字幕をAviUtl2へ追加",
+      "description": "保存済み情報で選択した元動画のtranscripts版から編集用字幕を生成し、対応するAviUtl2へ追加します。再実行すると全字幕を追加し、既存字幕は置換しません。"
+    },
+    "compose-actions-button-07": {
+      "label": "編集用動画を再生",
+      "description": "直前に作成した編集用MP4をffplayで再生します。AviUtl2で追加した字幕や補助素材はこのMP4には反映されません。"
+    },
+    "compose-actions-entry-01": {
+      "label": "固定fps（可変fpsでは必須。空欄なら元動画優先）",
+      "description": "編集用動画の固定fpsを指定します。可変fpsの元動画では指定が必要です。"
+    },
+    "frame-boundaries-selector": {
+      "label": "表示項目",
+      "description": "表示「操作」内の項目を選びます。この画像は「フレーム境界を確認」を選択した状態です。"
+    },
+    "frame-boundaries-button-01": {
+      "label": "フレーム境界へ合わせる",
+      "description": "入力した開始秒・終了秒を近い実フレーム境界へ更新します。変更を保存するには「境界を修正」を押します。"
+    },
+    "frame-boundaries-button-02": {
+      "label": "開始-1F",
+      "description": "開始位置を元動画の実際のフレーム境界で1フレーム前へ移動します。"
+    },
+    "frame-boundaries-button-03": {
+      "label": "開始+1F",
+      "description": "開始位置を元動画の実際のフレーム境界で1フレーム後へ移動します。"
+    },
+    "frame-boundaries-button-04": {
+      "label": "終了-1F",
+      "description": "終了位置を元動画の実際のフレーム境界で1フレーム前へ移動します。"
+    },
+    "frame-boundaries-button-05": {
+      "label": "終了+1F",
+      "description": "終了位置を元動画の実際のフレーム境界で1フレーム後へ移動します。"
+    },
+    "segment-results-selector": {
+      "label": "表示項目",
+      "description": "表示「結果」内の項目を選びます。この画像は「切り出し区間」を選択した状態です。"
+    },
+    "segment-results-list-01": {
+      "label": "切り出し区間一覧",
+      "description": "開始・終了・種類・採否を確認して操作対象を選びます。複数選択して区間結合もできます。"
+    },
+    "segment-results-scrollbar-01": {
+      "label": "切り出し区間：縦スクロール",
+      "description": "この一覧または詳細設定の内部を縦にスクロールします。"
+    },
+    "segment-results-scrollbar-02": {
+      "label": "切り出し区間：横スクロール",
+      "description": "一覧の内部を横にスクロールし、長い行の続きを確認します。"
+    },
+    "compose-order-selector": {
+      "label": "表示項目",
+      "description": "表示「結果」内の項目を選びます。この画像は「編集用動画の順番」を選択した状態です。"
+    },
+    "compose-order-list-01": {
+      "label": "編集用動画の順番",
+      "description": "連結する順番を確認し、並べ替え・除外の対象行を選びます。元の切り出し区間は保持します。"
+    },
+    "compose-order-scrollbar-01": {
+      "label": "編集用動画の順番：縦スクロール",
+      "description": "この一覧または詳細設定の内部を縦にスクロールします。"
+    },
+    "compose-order-scrollbar-02": {
+      "label": "編集用動画の順番：横スクロール",
+      "description": "一覧の内部を横にスクロールし、長い行の続きを確認します。"
+    },
+    "segment-settings-selector": {
+      "label": "表示項目",
+      "description": "表示「詳細設定」内の項目を選びます。この画像は「区間の境界・採否」を選択した状態です。"
+    },
+    "segment-settings-entry-01": {
+      "label": "開始秒",
+      "description": "切り出し区間の開始位置を秒で入力します。フレーム調整後も「境界を修正」で保存してください。"
+    },
+    "segment-settings-entry-02": {
+      "label": "終了秒",
+      "description": "切り出し区間の終了位置を秒で入力します。「終了秒で分割」ではこの時刻を分割点にします。"
+    },
+    "segment-settings-check-01": {
+      "label": "採用",
+      "description": "選択区間を編集用動画の候補として採用するかを指定します。"
+    },
+    "segment-settings-scrollbar-01": {
+      "label": "区間の境界・採否：縦スクロール",
+      "description": "この一覧または詳細設定の内部を縦にスクロールします。"
+    },
+    "layout-actions-selector": {
+      "label": "表示項目",
+      "description": "表示「操作」内の項目を選びます。この画像は「画面設定とプレビュー」を選択した状態です。"
+    },
+    "layout-actions-button-01": {
+      "label": "横",
+      "description": "キャンバスを元動画の幅・高さに設定します。縦長元動画では横長になりません。配置の値は保持します。"
+    },
+    "layout-actions-button-02": {
+      "label": "ショート",
+      "description": "キャンバスを元動画の高さ・幅に設定します。縦長元動画では横長になるため、必要なら幅・高さを直接入力してください。"
+    },
+    "layout-actions-button-03": {
+      "label": "画面設定をAviUtl2へ渡す",
+      "description": "設定を保存して、対応する編集用動画があるAviUtl2へ適用します。字幕は保存された開始・終了・本文と一致するものが対象です。"
+    },
+    "layout-actions-button-04": {
+      "label": "AviUtl2結果のプレビューを開く",
+      "description": "直前にAviUtl2で生成したプレビュー画像を開きます。"
+    },
+    "subtitle-actions-selector": {
+      "label": "表示項目",
+      "description": "表示「操作」内の項目を選びます。この画像は「字幕を修正」を選択した状態です。"
+    },
+    "subtitle-actions-entry-01": {
+      "label": "開始F",
+      "description": "字幕の開始フレームを0始まりで入力します。"
+    },
+    "subtitle-actions-entry-02": {
+      "label": "終了F",
+      "description": "字幕の最後に表示するフレームを0始まりで入力します。このフレームも表示範囲に含み、開始Fと同じ値なら1フレームの字幕です。"
+    },
+    "subtitle-actions-text-01": {
+      "label": "字幕本文",
+      "description": "選択した編集用字幕の本文を修正します。元の文字起こしCSVは変更しません。"
+    },
+    "subtitle-actions-scrollbar-01": {
+      "label": "字幕を修正：縦スクロール",
+      "description": "この一覧または詳細設定の内部を縦にスクロールします。"
+    },
+    "subtitle-actions-button-01": {
+      "label": "選択字幕を別版保存",
+      "description": "選択字幕の開始F・終了F・本文を新しい編集用字幕版へ保存します。AviUtl2への適用は別操作です。"
+    },
+    "subtitle-results-selector": {
+      "label": "表示項目",
+      "description": "表示「結果」内の項目を選びます。この画像は「編集用字幕」を選択した状態です。"
+    },
+    "subtitle-results-list-01": {
+      "label": "編集用字幕一覧",
+      "description": "編集用動画のフレーム時刻と字幕本文を確認し、修正する字幕を選びます。"
+    },
+    "subtitle-results-scrollbar-01": {
+      "label": "編集用字幕：縦スクロール",
+      "description": "この一覧または詳細設定の内部を縦にスクロールします。"
+    },
+    "subtitle-results-scrollbar-02": {
+      "label": "編集用字幕：横スクロール",
+      "description": "一覧の内部を横にスクロールし、長い行の続きを確認します。"
+    },
+    "layout-settings-selector": {
+      "label": "表示項目",
+      "description": "表示「詳細設定」内の項目を選びます。この画像は「画面・字幕の配置」を選択した状態です。"
+    },
+    "layout-settings-entry-01": {
+      "label": "画面幅",
+      "description": "編集キャンバスの幅をピクセルで入力します。完成動画の出力幅とは別の設定です。"
+    },
+    "layout-settings-entry-02": {
+      "label": "画面高さ",
+      "description": "編集キャンバスの高さをピクセルで入力します。完成動画の出力高さとは別の設定です。"
+    },
+    "layout-settings-entry-03": {
+      "label": "動画拡大率 %",
+      "description": "動画の表示倍率を百分率で指定します。"
+    },
+    "layout-settings-entry-04": {
+      "label": "動画 X",
+      "description": "動画の横方向の配置座標を指定します。"
+    },
+    "layout-settings-entry-05": {
+      "label": "動画 Y",
+      "description": "動画の縦方向の配置座標を指定します。"
+    },
+    "layout-settings-entry-06": {
+      "label": "左切り取り px",
+      "description": "元動画の左端から切り取るピクセル数を指定します。"
+    },
+    "layout-settings-entry-07": {
+      "label": "上切り取り px",
+      "description": "元動画の上端から切り取るピクセル数を指定します。"
+    },
+    "layout-settings-entry-08": {
+      "label": "右切り取り px",
+      "description": "元動画の右端から切り取るピクセル数を指定します。"
+    },
+    "layout-settings-entry-09": {
+      "label": "下切り取り px",
+      "description": "元動画の下端から切り取るピクセル数を指定します。"
+    },
+    "layout-settings-entry-10": {
+      "label": "字幕 X",
+      "description": "アプリから追加した対応字幕の横方向の配置座標を指定します。"
+    },
+    "layout-settings-entry-11": {
+      "label": "字幕 Y",
+      "description": "アプリから追加した対応字幕の縦方向の配置座標を指定します。"
+    },
+    "layout-settings-entry-12": {
+      "label": "字幕サイズ",
+      "description": "アプリから追加した対応字幕の文字サイズを指定します。"
+    },
+    "layout-settings-entry-13": {
+      "label": "プレビューフレーム",
+      "description": "画面設定の結果を確認するフレーム位置を指定します。"
+    },
+    "layout-settings-scrollbar-01": {
+      "label": "画面・字幕の配置：縦スクロール",
+      "description": "この一覧または詳細設定の内部を縦にスクロールします。"
+    },
+    "supporting-actions-selector": {
+      "label": "表示項目",
+      "description": "表示「操作」内の項目を選びます。この画像は「追加・適用・プレビュー」を選択した状態です。"
+    },
+    "supporting-actions-button-01": {
+      "label": "対象動画の場所を確認",
+      "description": "補助素材を配置する編集用動画のパスを確認します。"
+    },
+    "supporting-actions-button-02": {
+      "label": "画像を追加",
+      "description": "画像ファイルをデータ用フォルダへコピーし、現在の編集用動画に配置を追加します。"
+    },
+    "supporting-actions-button-03": {
+      "label": "BGMを追加",
+      "description": "音声ファイルをコピーしてBGM配置を追加します。初期長さは素材の長さで、映像末尾には自動短縮しません。"
+    },
+    "supporting-actions-button-04": {
+      "label": "効果音を追加",
+      "description": "音声ファイルをコピーして効果音配置を追加します。"
+    },
+    "supporting-actions-button-05": {
+      "label": "配置をAviUtl2へ適用・プレビュー",
+      "description": "未適用の配置設定をAviUtl2へ反映し、指定フレームから最大5秒の画像・ミックス音声を用意します。"
+    },
+    "supporting-actions-button-06": {
+      "label": "直前のプレビューを開く",
+      "description": "直前に生成した補助素材のプレビューを開きます。"
+    },
+    "supporting-actions-button-07": {
+      "label": "未適用入力を破棄",
+      "description": "選択配置の未適用入力を、最後に確定した配置設定へ戻します。"
+    },
+    "supporting-results-selector": {
+      "label": "表示項目",
+      "description": "表示「結果」内の項目を選びます。この画像は「補助素材一覧」を選択した状態です。"
+    },
+    "supporting-results-list-01": {
+      "label": "補助素材一覧",
+      "description": "現在の編集用動画に追加した画像・BGM・効果音の配置を選びます。"
+    },
+    "supporting-results-scrollbar-01": {
+      "label": "補助素材一覧：縦スクロール",
+      "description": "この一覧または詳細設定の内部を縦にスクロールします。"
+    },
+    "supporting-results-scrollbar-02": {
+      "label": "補助素材一覧：横スクロール",
+      "description": "一覧の内部を横にスクロールし、長い行の続きを確認します。"
+    },
+    "supporting-settings-selector": {
+      "label": "表示項目",
+      "description": "表示「詳細設定」内の項目を選びます。この画像は「素材の配置・音声設定」を選択した状態です。"
+    },
+    "supporting-settings-entry-01": {
+      "label": "開始F (0始まり)",
+      "description": "補助素材を置き始めるフレームを0始まりで指定します。"
+    },
+    "supporting-settings-entry-02": {
+      "label": "長さF",
+      "description": "補助素材を表示・再生するフレーム数を指定します。"
+    },
+    "supporting-settings-entry-03": {
+      "label": "素材の開始秒（音声）",
+      "description": "BGM・効果音で素材内の再生開始位置を秒で指定します。"
+    },
+    "supporting-settings-entry-04": {
+      "label": "音量 %",
+      "description": "BGM・効果音の音量を百分率で指定します。"
+    },
+    "supporting-settings-entry-05": {
+      "label": "画像 X",
+      "description": "画像の横方向の配置座標を指定します。"
+    },
+    "supporting-settings-entry-06": {
+      "label": "画像 Y",
+      "description": "画像の縦方向の配置座標を指定します。"
+    },
+    "supporting-settings-entry-07": {
+      "label": "画像拡大率 %",
+      "description": "画像の表示倍率を百分率で指定します。"
+    },
+    "supporting-settings-entry-08": {
+      "label": "プレビュー開始F",
+      "description": "補助素材のプレビューを始めるフレーム位置を指定します。"
+    },
+    "supporting-settings-scrollbar-01": {
+      "label": "素材の配置・音声設定：縦スクロール",
+      "description": "この一覧または詳細設定の内部を縦にスクロールします。"
+    },
+    "save-export-actions-selector": {
+      "label": "表示項目",
+      "description": "表示「操作」内の項目を選びます。この画像は「保存・書き出し」を選択した状態です。"
+    },
+    "save-export-actions-button-01": {
+      "label": "保存",
+      "description": "未適用の画面・字幕・補助素材を適用し、AviUtl2で開いている対応プロジェクトを明示保存して確認します。"
+    },
+    "save-export-actions-button-02": {
+      "label": "完成動画を書き出す",
+      "description": "保存を確認した対応プロジェクトを現在の出力設定でMP4に書き出し、完成条件を検査します。"
+    },
+    "save-export-actions-button-03": {
+      "label": "書き出しを中止",
+      "description": "書き出しに中止を要求します。実際の停止完了まで同じ編集の操作は待ちます。"
+    },
+    "save-export-actions-button-04": {
+      "label": "強制停止…",
+      "description": "通常中止要求から3秒以上応答がない場合に使います。描画・エンコード中は担当AviUtl2も終了し、未保存編集が失われます。"
+    },
+    "project-target-selector": {
+      "label": "表示項目",
+      "description": "表示「操作」内の項目を選びます。この画像は「対象プロジェクト」を選択した状態です。"
+    },
+    "project-target-button-01": {
+      "label": "対象の場所を確認",
+      "description": "対象の編集用動画と保存するAviUtl2プロジェクトのパスを確認します。"
+    },
+    "project-target-button-02": {
+      "label": "対応するAviUtl2プロジェクトを選ぶ",
+      "description": "projects内の同じ編集フォルダにある対応.aup2を選びます。AviUtl2で開いているものと一致させてください。"
+    },
+    "project-target-button-03": {
+      "label": "プロジェクトの保存フォルダを開く",
+      "description": "現在の編集に対応するprojectsフォルダを開きます。過去の.aup2はAviUtl2で直接開きます。"
+    },
+    "save-export-results-selector": {
+      "label": "表示項目",
+      "description": "表示「結果」内の項目を選びます。この画像は「処理結果」を選択した状態です。"
+    },
+    "save-export-results-text-01": {
+      "label": "処理結果の詳細",
+      "description": "保存・書き出しの対象、進行、完了または失敗の内容を確認します。完成確認済みの表示を確認してください。"
+    },
+    "save-export-results-scrollbar-01": {
+      "label": "処理結果：縦スクロール",
+      "description": "この一覧または詳細設定の内部を縦にスクロールします。"
+    },
+    "export-settings-selector": {
+      "label": "表示項目",
+      "description": "表示「詳細設定」内の項目を選びます。この画像は「書き出し設定」を選択した状態です。"
+    },
+    "export-settings-choice-01": {
+      "label": "完成動画の用途",
+      "description": "横またはショートを選びます。初期値を適用するには隣のボタンを押します。"
+    },
+    "export-settings-button-01": {
+      "label": "用途の初期値を設定",
+      "description": "横1920×1080またはショート1080×1920、編集のfpsなどの初期値を入力欄に設定します。"
+    },
+    "export-settings-entry-01": {
+      "label": "出力幅 px",
+      "description": "完成MP4の幅をピクセルで指定します。キャンバスの画面幅とは別です。"
+    },
+    "export-settings-entry-02": {
+      "label": "出力高さ px",
+      "description": "完成MP4の高さをピクセルで指定します。キャンバスの画面高さとは別です。"
+    },
+    "export-settings-entry-03": {
+      "label": "固定fps（分数も可）",
+      "description": "完成MP4のfpsを指定します。30000/1001のような分数も入力できます。"
+    },
+    "export-settings-entry-04": {
+      "label": "映像 Mbps",
+      "description": "H.264映像のビットレートをMbpsで指定します。"
+    },
+    "export-settings-entry-05": {
+      "label": "音声 Hz",
+      "description": "AAC音声のサンプルレートをHzで指定します。初期値は48000です。"
+    },
+    "export-settings-scrollbar-01": {
+      "label": "書き出し設定：縦スクロール",
+      "description": "この一覧または詳細設定の内部を縦にスクロールします。"
+    },
+    "saved-results-selector": {
+      "label": "表示項目",
+      "description": "表示「結果」内の項目を選びます。この画像は「保存済み一覧」を選択した状態です。"
+    },
+    "saved-results-list-01": {
+      "label": "保存済み一覧",
+      "description": "結果CSVを選択して内容を表示します。各タブで過去版を使用する前に、ここで対象の版を選びます。"
+    },
+    "saved-results-scrollbar-01": {
+      "label": "保存済み一覧：縦スクロール",
+      "description": "この一覧または詳細設定の内部を縦にスクロールします。"
+    },
+    "saved-results-scrollbar-02": {
+      "label": "保存済み一覧：横スクロール",
+      "description": "一覧の内部を横にスクロールし、長い行の続きを確認します。"
+    },
+    "saved-csv-selector": {
+      "label": "表示項目",
+      "description": "表示「結果」内の項目を選びます。この画像は「CSV本文」を選択した状態です。"
+    },
+    "saved-csv-text-01": {
+      "label": "選択したCSVの内容",
+      "description": "保存済み一覧で選んだCSVを読み取り専用で表示します。ここで直接修正・保存はできません。"
+    },
+    "saved-csv-scrollbar-01": {
+      "label": "CSV本文：縦スクロール",
+      "description": "この一覧または詳細設定の内部を縦にスクロールします。"
+    },
+    "management-actions-selector": {
+      "label": "表示項目",
+      "description": "表示「操作」内の項目を選びます。この画像は「登録情報を管理」を選択した状態です。"
+    },
+    "management-actions-check-01": {
+      "label": "非表示の項目も表示",
+      "description": "管理一覧に非表示の項目も含め、再表示操作の対象にします。"
+    },
+    "management-actions-button-01": {
+      "label": "非表示",
+      "description": "管理一覧で選んだ項目を通常一覧から隠します。実ファイル・辞書の働き・保存結果は保持します。"
+    },
+    "management-actions-button-02": {
+      "label": "再表示",
+      "description": "管理一覧で選んだ非表示項目を通常一覧に戻します。"
+    },
+    "management-actions-button-03": {
+      "label": "登録情報を削除…",
+      "description": "選択項目の登録情報を確認後に削除します。実ファイルは残り、参照中の情報は削除できません。"
+    },
+    "management-actions-button-04": {
+      "label": "実ファイルを選んで削除…",
+      "description": "削除可能な範囲内のファイルを選び、パスを確認して完全に削除します。操作は取り消せません。"
+    },
+    "archive-actions-selector": {
+      "label": "表示項目",
+      "description": "表示「操作」内の項目を選びます。この画像は「動画を保管・展開」を選択した状態です。"
+    },
+    "archive-actions-button-01": {
+      "label": "動画を保管…",
+      "description": "登録動画を選び、動画とmanifestをZIP64でarchivesへ保管します。元動画は残ります。"
+    },
+    "archive-actions-button-02": {
+      "label": "保管物を展開…",
+      "description": "保管ZIPを選び、SHA256を検証してmedia/restoredの新しいフォルダへ展開します。"
+    },
+    "log-actions-selector": {
+      "label": "表示項目",
+      "description": "表示「操作」内の項目を選びます。この画像は「ログの整理」を選択した状態です。"
+    },
+    "log-actions-button-01": {
+      "label": "30日経過した通常ログを整理",
+      "description": "30日以上経過した通常ログを整理します。復旧待ち・状態不明のログは保持します。"
+    },
+    "management-results-selector": {
+      "label": "表示項目",
+      "description": "表示「結果」内の項目を選びます。この画像は「登録一覧」を選択した状態です。"
+    },
+    "management-results-list-01": {
+      "label": "登録一覧",
+      "description": "人物・語・結果・動画などを選び、非表示・再表示・登録情報の削除の対象にします。"
+    },
+    "management-results-scrollbar-01": {
+      "label": "登録一覧：縦スクロール",
+      "description": "この一覧または詳細設定の内部を縦にスクロールします。"
+    },
+    "management-results-scrollbar-02": {
+      "label": "登録一覧：横スクロール",
+      "description": "一覧の内部を横にスクロールし、長い行の続きを確認します。"
+    },
+    "archive-results-selector": {
+      "label": "表示項目",
+      "description": "表示「詳細設定」内の項目を選びます。この画像は「保管・展開結果」を選択した状態です。"
+    },
+    "archive-results-scrollbar-01": {
+      "label": "保管・展開結果：縦スクロール",
+      "description": "この一覧または詳細設定の内部を縦にスクロールします。"
+    },
+    "process-running-button-01": {
+      "label": "実行中の処理を中止",
+      "description": "共通の管理対象処理に通常中止を要求します。実際の終了を確認するまで処理中の状態を維持します。"
+    },
+    "process-running-button-02": {
+      "label": "実行中の処理を強制停止…",
+      "description": "通常中止要求から3秒後も終了しない場合に、対象処理とその子プロセスを確認して強制停止します。"
+    },
+    "process-stopping-button-01": {
+      "label": "実行中の処理を中止",
+      "description": "共通の管理対象処理に通常中止を要求します。実際の終了を確認するまで処理中の状態を維持します。"
+    },
+    "process-stopping-button-02": {
+      "label": "実行中の処理を強制停止…",
+      "description": "通常中止要求から3秒後も終了しない場合に、対象処理とその子プロセスを確認して強制停止します。"
+    },
+    "process-stopped-button-01": {
+      "label": "実行中の処理を中止",
+      "description": "共通の管理対象処理に通常中止を要求します。実際の終了を確認するまで処理中の状態を維持します。"
+    },
+    "process-stopped-button-02": {
+      "label": "実行中の処理を強制停止…",
+      "description": "通常中止要求から3秒後も終了しない場合に、対象処理とその子プロセスを確認して強制停止します。"
+    },
+    "dialog-location-button-01": {
+      "label": "閉じる",
+      "description": "確認内容またはプレビューを閉じます。"
+    },
+    "dialog-error-button-01": {
+      "label": "閉じる",
+      "description": "確認内容またはプレビューを閉じます。"
+    },
+    "dialog-warning-button-01": {
+      "label": "閉じる",
+      "description": "確認内容またはプレビューを閉じます。"
+    },
+    "dialog-short-button-01": {
+      "label": "編集・設定を直す",
+      "description": "書き出しを開始せず、編集や出力設定を修正するために戻ります。"
+    },
+    "dialog-short-button-02": {
+      "label": "通常の動画として書き出す",
+      "description": "ショート判定の条件外でも、現在の比率・配置・長さ・設定を保って通常の動画として出力します。"
+    },
+    "dialog-unsaved-export-button-01": {
+      "label": "保存して書き出す",
+      "description": "対応プロジェクトを保存し、保存確認が揃ってから書き出しを開始します。"
+    },
+    "dialog-unsaved-export-button-02": {
+      "label": "戻る",
+      "description": "操作を開始せず、元の編集画面に戻ります。"
+    },
+    "dialog-unsaved-close-button-01": {
+      "label": "保存する",
+      "description": "対応プロジェクトを保存し、保存確認後にアプリを終了します。"
+    },
+    "dialog-unsaved-close-button-02": {
+      "label": "破棄する",
+      "description": "未保存の変更を保存せずにアプリを終了します。AviUtl2の未保存変更も失われる場合があります。"
+    },
+    "dialog-unsaved-close-button-03": {
+      "label": "戻る",
+      "description": "操作を開始せず、元の編集画面に戻ります。"
+    },
+    "dialog-screen-button-01": {
+      "label": "いいえ",
+      "description": "この確認で提案された操作を実行せず、元の画面に戻ります。"
+    },
+    "dialog-screen-button-02": {
+      "label": "はい",
+      "description": "この確認の内容を了承して操作を実行します。削除・強制停止では対象と影響を先に確認してください。"
+    },
+    "dialog-registration-delete-button-01": {
+      "label": "いいえ",
+      "description": "この確認で提案された操作を実行せず、元の画面に戻ります。"
+    },
+    "dialog-registration-delete-button-02": {
+      "label": "はい",
+      "description": "この確認の内容を了承して操作を実行します。削除・強制停止では対象と影響を先に確認してください。"
+    },
+    "dialog-file-delete-button-01": {
+      "label": "いいえ",
+      "description": "この確認で提案された操作を実行せず、元の画面に戻ります。"
+    },
+    "dialog-file-delete-button-02": {
+      "label": "はい",
+      "description": "この確認の内容を了承して操作を実行します。削除・強制停止では対象と影響を先に確認してください。"
+    },
+    "dialog-process-force-button-01": {
+      "label": "いいえ",
+      "description": "この確認で提案された操作を実行せず、元の画面に戻ります。"
+    },
+    "dialog-process-force-button-02": {
+      "label": "はい",
+      "description": "この確認の内容を了承して操作を実行します。削除・強制停止では対象と影響を先に確認してください。"
+    },
+    "dialog-export-force-button-01": {
+      "label": "強制停止する",
+      "description": "確認で示された対象だけを強制終了します。描画・エンコード中はAviUtl2内の未保存編集が失われます。"
+    },
+    "dialog-export-force-button-02": {
+      "label": "停止を待つ",
+      "description": "強制停止を実行せず、通常中止の完了を待ちます。"
+    },
+    "dialog-verification-force-button-01": {
+      "label": "強制停止する",
+      "description": "確認で示された対象だけを強制終了します。描画・エンコード中はAviUtl2内の未保存編集が失われます。"
+    },
+    "dialog-verification-force-button-02": {
+      "label": "停止を待つ",
+      "description": "強制停止を実行せず、通常中止の完了を待ちます。"
+    },
+    "preview-button-01": {
+      "label": "この位置から音声を試聴（最大5秒）",
+      "description": "指定したプレビュー位置から、最大5秒・映像末尾までのミックス音声を試聴します。この撮影では音声処理を実行していません。"
+    },
+    "preview-button-02": {
+      "label": "試聴を停止",
+      "description": "プレビュー音声の試聴を停止します。プレビューを閉じるときも試聴を停止します。"
+    },
+    "preview-button-03": {
+      "label": "閉じる",
+      "description": "確認内容またはプレビューを閉じます。"
+    }
+  },
+  "screens": {
+    "overview": {
+      "note": "共通操作の画像です。右の番号欄から色の付いた線と枠をたどると、対応する操作部品を確認できます。各項目の個別画面では、その画面の操作部品だけに番号を付けています。"
+    },
+    "trimming-range": {
+      "note": "登録済み動画の一範囲を別の登録動画にします。元動画は保持します。未書き出しの開始・終了・保存名は、フォルダ切り替えと終了時の未保存確認の対象に含まれません。"
+    },
+    "speaker-registration": {
+      "note": "動画から参照音声を作る場合、抽出元は「取得・媒体操作」の登録済み動画一覧で選びます。ここにある開始・終了秒だけでは抽出元を選べません。"
+    },
+    "review-edit": {
+      "note": "発言の分割後は両行がunknown・本文空欄になります。判定と本文を再設定してください。"
+    },
+    "layout-actions": {
+      "note": "「横」は元の幅・高さ、「ショート」は元の高さ・幅を使います。縦向き元動画はショートで横長になるため、詳細設定の幅・高さも確認してください。"
+    },
+    "subtitle-actions": {
+      "note": "終了Fは表示範囲に含まれます。別版保存後は「保存・書き出し」の「保存」で未適用字幕を追加します。字幕全体が追加されるため、AviUtl2側の既存字幕との重複を確認してください。"
+    },
+    "supporting-settings": {
+      "note": "BGMは素材の元の長さで追加され、映像の末尾へ自動短縮しません。必要な長さFを手動で調整してください。"
+    },
+    "save-export-actions": {
+      "note": "保存・書き出しは、Windows上のClipChannelAPPと対応するプラグインで操作してください。この撮影ではAviUtl2を操作していません。"
+    },
+    "process-running": {
+      "note": "共通の管理対象処理の実行中表示です。説明用の待機処理を実際に起動して撮影しています。"
+    },
+    "process-stopping": {
+      "note": "通常中止を要求してから3秒後も終了していない状態です。3秒は強制停止の選択肢を有効にする待機時間で、自動停止の期限ではありません。"
+    },
+    "process-stopped": {
+      "note": "実際の処理終了を確認した状態です。処理時間の表示は終了時点で固定されます。"
+    },
+    "dialog-process-force": {
+      "note": "対象はこの管理対象処理と、それが起動した子プロセスです。同名の別プロセスは対象にしません。"
+    },
+    "dialog-export-force": {
+      "note": "描画・エンコード中の強制停止では、担当AviUtl2とエンコーダーを終了します。AviUtl2内の未保存編集は失われます。"
+    },
+    "dialog-verification-force": {
+      "note": "出力検査中は検査プロセスとffprobeを止めます。AviUtl2の編集は保持し、出力ファイルは完成確認済みとしません。"
+    },
+    "preview": {
+      "note": "ダイアログの操作方法を示す説明用の図形です。AviUtl2の描画・ミックス音声の検証結果ではありません。"
+    }
+  }
+}

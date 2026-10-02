@@ -19,657 +19,3158 @@ dialog{max-width:96vw;max-height:96vh;padding:15px;border:0;border-radius:8px;ba
 @media(max-width:760px){.layout{display:block}nav{position:static;height:auto;max-height:300px;border-bottom:1px solid var(--line)}main{padding:22px 16px}h1{font-size:25px}h2{font-size:22px}table{font-size:13px}header{padding:16px}header a{display:block;margin-left:0}}
 @media print{nav,header,.top,dialog{display:none}.layout{display:block}main{padding:0}h2{break-before:page}img,table{break-inside:avoid}a{color:inherit}body{font-size:11pt}}
 </style></head><body id="top">
-<header><strong>ClipChannelAPP 操作ガイド</strong><a href="manual.md">Markdown原本</a><a href="screens.json">画面一覧</a></header>
+<header><strong>ClipChannelAPP 操作ガイド</strong><a href="manual.md">Markdown版</a><a href="screens.json">画面一覧</a></header>
 <div class="layout"><nav aria-label="目次"><strong>目次</strong><div class="toc">
 <ul>
-<li><a href="#1">1. このマニュアルの読み方</a></li>
-<li><a href="#2">2. 起動と共通操作</a><ul>
-<li><a href="#21">2.1 起動前の準備</a></li>
-<li><a href="#22">2.2 データ用フォルダを選ぶ</a></li>
-<li><a href="#23">2.3 画面を切り替える</a></li>
+<li><a href="#_1">起動と必要なツール</a></li>
+<li><a href="#_2">データ用フォルダと共通操作</a></li>
+<li><a href="#_3">動画を取得・登録する</a><ul>
+<li><a href="#url">URLから取得する</a></li>
+<li><a href="#_4">手元の動画を登録する</a></li>
 </ul>
 </li>
-<li><a href="#3">3. 動画を準備する</a><ul>
-<li><a href="#31-url">3.1 URLから取得する</a></li>
-<li><a href="#32">3.2 手元の動画を登録する／変換を再試行する</a></li>
+<li><a href="#_5">連続した一範囲をトリミングする</a></li>
+<li><a href="#_6">人物と参照音声を登録する</a></li>
+<li><a href="#_7">対象話者の発話を判定し、文字起こしする</a><ul>
+<li><a href="#_8">試聴区間を判定する</a></li>
+<li><a href="#_9">対象発話を文字起こしする</a></li>
+<li><a href="#_10">発言を修正する</a></li>
 </ul>
 </li>
-<li><a href="#4">4. 人物登録から文字起こしまで</a><ul>
-<li><a href="#41">4.1 人物と参照音声を登録する</a></li>
-<li><a href="#42">4.2 対象動画を選び、試聴区間を判定する</a></li>
-<li><a href="#43">4.3 対象発話を文字起こしする</a></li>
-<li><a href="#44">4.4 発言を修正する／保存版を開き直す</a></li>
+<li><a href="#_11">頻出語を集計して発話を確認する</a></li>
+<li><a href="#_12">切り出し区間を作る</a><ul>
+<li><a href="#_13">解析結果から候補を作る／手動で始める</a></li>
+<li><a href="#_14">境界と採否を調整する</a></li>
+<li><a href="#_15">フレーム境界を確認する</a></li>
 </ul>
 </li>
-<li><a href="#5">5. 頻出語を集計し、発話を確認する</a></li>
-<li><a href="#6">6. 切り出し区間を作り、編集用動画にする</a><ul>
-<li><a href="#61">6.1 候補を作成する／手動で開始する／保存版を使用する</a></li>
-<li><a href="#62">6.2 区間を選択し、境界・採否を調整する</a></li>
-<li><a href="#63">6.3 フレーム境界を確認する</a></li>
-<li><a href="#64">6.4 使用順を決め、編集用動画を作る</a></li>
+<li><a href="#_16">使用順を決めて編集用動画を作る</a></li>
+<li><a href="#aviutl2">AviUtl2で編集する前に</a></li>
+<li><a href="#_17">画面と字幕の配置を調整する</a></li>
+<li><a href="#_18">編集用字幕を生成・修正する</a></li>
+<li><a href="#bgm">画像・BGM・効果音を追加する</a></li>
+<li><a href="#_19">プロジェクトを保存する</a></li>
+<li><a href="#_20">完成動画を書き出す</a></li>
+<li><a href="#_21">保存結果から再開する</a></li>
+<li><a href="#_22">登録情報・実ファイルを管理する</a></li>
+<li><a href="#_23">動画を保管・展開する</a></li>
+<li><a href="#_24">処理を中止・強制停止する</a></li>
+<li><a href="#_25">ログを確認・整理する</a></li>
+<li><a href="#_26">データの保存場所</a></li>
+<li><a href="#_27">困ったときの確認</a></li>
+<li><a href="#_28">画面ごとの番号説明</a><ul>
+<li><a href="#_29">全体の操作</a></li>
+<li><a href="#url_1">取得・媒体操作：URL・取得</a></li>
+<li><a href="#_30">取得・媒体操作：ローカル動画</a></li>
+<li><a href="#_31">取得・媒体操作：取得結果</a></li>
+<li><a href="#_32">取得・媒体操作：登録済み動画</a></li>
+<li><a href="#_33">取得・媒体操作：形式・品質と取得設定</a></li>
+<li><a href="#_34">動画をトリミング：範囲を指定して書き出す</a></li>
+<li><a href="#_35">人物・参照音声：人物と対象動画</a></li>
+<li><a href="#_36">人物・参照音声：試聴・判定・再表示</a></li>
+<li><a href="#_37">人物・参照音声：対象話者の文字起こし</a></li>
+<li><a href="#_38">人物・参照音声：人物一覧</a></li>
+<li><a href="#_39">人物・参照音声：試聴区間・文字起こし</a></li>
+<li><a href="#_40">人物・参照音声：人物・参照音声の登録</a></li>
+<li><a href="#_41">人物・参照音声：発言の修正</a></li>
+<li><a href="#_42">頻出語：集計条件</a></li>
+<li><a href="#_43">頻出語：登録語・除外語</a></li>
+<li><a href="#_44">頻出語：頻出語一覧</a></li>
+<li><a href="#_45">頻出語：発話一覧</a></li>
+<li><a href="#_46">切り出し区間：候補と保存版</a></li>
+<li><a href="#_47">切り出し区間：区間を修正・試聴</a></li>
+<li><a href="#_48">切り出し区間：編集用動画を作成</a></li>
+<li><a href="#_49">切り出し区間：フレーム境界を確認</a></li>
+<li><a href="#_50">切り出し区間：切り出し区間</a></li>
+<li><a href="#_51">切り出し区間：編集用動画の順番</a></li>
+<li><a href="#_52">切り出し区間：区間の境界・採否</a></li>
+<li><a href="#_53">画面・字幕：画面設定とプレビュー</a></li>
+<li><a href="#_54">画面・字幕：字幕を修正</a></li>
+<li><a href="#_55">画面・字幕：編集用字幕</a></li>
+<li><a href="#_56">画面・字幕：画面・字幕の配置</a></li>
+<li><a href="#_57">補助素材：追加・適用・プレビュー</a></li>
+<li><a href="#_58">補助素材：補助素材一覧</a></li>
+<li><a href="#_59">補助素材：素材の配置・音声設定</a></li>
+<li><a href="#_60">保存・書き出し：保存・書き出し</a></li>
+<li><a href="#_61">保存・書き出し：対象プロジェクト</a></li>
+<li><a href="#_62">保存・書き出し：処理結果</a></li>
+<li><a href="#_63">保存・書き出し：書き出し設定</a></li>
+<li><a href="#_64">保存済み情報：保存済み一覧</a></li>
+<li><a href="#csv">保存済み情報：CSV本文</a></li>
+<li><a href="#_65">管理・保管：登録情報を管理</a></li>
+<li><a href="#_66">管理・保管：動画を保管・展開</a></li>
+<li><a href="#_67">管理・保管：ログの整理</a></li>
+<li><a href="#_68">管理・保管：登録一覧</a></li>
+<li><a href="#_69">管理・保管：保管・展開結果</a></li>
+<li><a href="#_70">実行中</a></li>
+<li><a href="#_71">停止待ち・強制停止選択可能</a></li>
+<li><a href="#_72">停止完了</a></li>
+<li><a href="#_73">場所を確認</a></li>
+<li><a href="#_74">エラー表示</a></li>
+<li><a href="#_75">警告表示</a></li>
+<li><a href="#_76">ショート条件外</a></li>
+<li><a href="#_77">未保存の編集・書き出し前</a></li>
+<li><a href="#_78">未保存の編集・終了時</a></li>
+<li><a href="#_79">画面を選択</a></li>
+<li><a href="#_80">登録情報を削除</a></li>
+<li><a href="#_81">実ファイルを削除</a></li>
+<li><a href="#_82">管理対象処理の強制停止</a></li>
+<li><a href="#_83">書き出しの強制停止</a></li>
+<li><a href="#_84">完成動画の検査を強制停止</a></li>
+<li><a href="#_85">画像・音声プレビュー</a></li>
 </ul>
 </li>
-<li><a href="#7-aviutl2">7. AviUtl2で開き、画面と字幕を編集する</a><ul>
-<li><a href="#71">7.1 対応するプロジェクトを開く</a></li>
-<li><a href="#72">7.2 画面サイズ・配置を設定する</a></li>
-<li><a href="#73">7.3 初めて字幕を追加する</a></li>
-<li><a href="#74">7.4 字幕を変更する際の注意</a></li>
-</ul>
-</li>
-<li><a href="#8-bgm">8. 画像・BGM・効果音を追加する</a></li>
-<li><a href="#9">9. 保存から完成動画の書き出しまで</a><ul>
-<li><a href="#91">9.1 プロジェクトを保存する</a></li>
-<li><a href="#92">9.2 書き出し条件を設定する</a></li>
-<li><a href="#93">9.3 完成動画を書き出す</a></li>
-</ul>
-</li>
-<li><a href="#10">10. 保存結果を確認し、作業を再開する</a></li>
-<li><a href="#11">11. 登録情報・動画・ログを管理する</a><ul>
-<li><a href="#111">11.1 非表示と再表示</a></li>
-<li><a href="#112">11.2 動画を保管・展開する</a></li>
-<li><a href="#113">11.3 古いログを整理する</a></li>
-</ul>
-</li>
-<li><a href="#12">12. 中止・強制停止・終了確認</a><ul>
-<li><a href="#121">12.1 共通の案内・エラー・警告</a></li>
-<li><a href="#122">12.2 ショート条件と未保存の確認</a></li>
-<li><a href="#123">12.3 削除確認</a></li>
-<li><a href="#124">12.4 強制停止の確認</a></li>
-<li><a href="#125">12.5 プレビュー画面</a></li>
-</ul>
-</li>
-<li><a href="#13">13. 保存場所と困ったときの確認</a></li>
-<li><a href="#14">14. 撮影範囲と更新方法</a></li>
 </ul>
 </div>
 </nav>
-<main><h1 id="clipchannelapp">ClipChannelAPP 使い方マニュアル</h1>
-<p>更新日：2026年9月28日。本番Tkinter UIの操作を説明します。<a href="index.html">HTML版</a>では目次から移動でき、画像をクリックすると拡大できます。</p>
-<h2 id="1">1. このマニュアルの読み方</h2>
-<p>画像は本番アプリを実際に表示して撮影しています。赤枠と番号は操作箇所を示します。番号は画像ごとの位置の識別用で、手順の番号とは別です。各画面の上にある「移動」の順に、左の作業、タブ、「表示」、項目を選んでください。画像内のパス・動画・CSVは説明用の一時データです。自分のデータでは名前や件数が変わります。</p>
-<p>一連の制作は <strong>動画を準備 → 解析・切り出し → 編集用動画を作成 → AviUtl2でプロジェクトを開く → 画面・字幕・補助素材を反映 → 保存 → 完成動画を書き出す</strong> の順です。解析を使わず手動で区間を作成する経路もあります。</p>
-<p>撮影では一時動画から編集用動画と <code>.aup2</code> を作成し、説明用CSVを表示しました。補助画像のコピー、動画の保管、一時処理の中止も一時データで実行しています。ネット取得、人物照合・Whisper解析、AviUtl2への反映・保存・書き出しは撮影時には実行していません。確認ダイアログは本番の表示処理に説明用メッセージを渡した例です。プレビュー画像も説明用です。これらを未実行の処理の成功証拠として扱わないでください。</p>
-<p>Windows標準ファイル選択、エクスプローラー、外部プレイヤー、AviUtl2本体の画面は今回未収録です。アプリ内の全9タブ・41表示項目を収録し、共通ダイアログを種類別に説明しています。エラー文や完了文は状況ごとに変わるため、すべての文面の組み合わせを収録するものではありません。</p>
-<h2 id="2">2. 起動と共通操作</h2>
-<h3 id="21">2.1 起動前の準備</h3>
+<main><h1 id="clipchannelapp">ClipChannelAPP 操作マニュアル</h1>
+<p>登録済み動画から切り出し区間を選び、使用順を決めて編集用動画を作成します。対象話者の文字起こしから候補を作る方法と、解析を使わず手動で区間を作る方法があります。編集用動画と対応するプロジェクトをAviUtl2で開き、画面・字幕・補助素材を調整して保存・書き出しを行います。</p>
+<p>2026年10月2日時点の実装に基づくマニュアルです。全6作業・10タブ・42項目を扱います。まず操作手順を説明し、後半の<a href="#screen-reference">画面ごとの番号説明</a>で各入力欄・ボタンを確認できます。</p>
+<p>画像は現行アプリを一時データ用フォルダで動かして撮影しています。ネット取得、人物照合、Whisper、AviUtl2への送信・描画・保存・書き出しは撮影時に実行していません。確認ダイアログとプレビューには説明用の内容を表示しています。Windowsと撮影環境のWSLでは、文字・枠などの外観が異なる場合があります。</p>
+<p>画像右側の番号欄はマニュアル用に付けた説明欄です。同じ色の線と枠で実際の操作部品に対応付けています。番号は画像ごとに1から振り直し、画像直下の表と一対一で対応します。手順の実施順を表す番号ではありません。</p>
+<h2 id="_1">起動と必要なツール</h2>
 <p>開発環境で起動する場合は、プロジェクトフォルダで次を実行します。</p>
 <pre><code class="language-sh">python -m pip install -r requirements.txt
 python -m clipchannel.app
 </code></pre>
-<p>媒体確認・変換・編集用動画作成には <code>ffmpeg</code> と <code>ffprobe</code>、試聴・動画再生には <code>ffplay</code> が必要です。人物登録にはローカルECAPAモデル、文字起こしにはローカルWhisperモデルと関連ライブラリが必要です。AviUtl2連携には専用プラグインを導入してください。ビルド手順は <a href="../../README.md">README</a> にあります。</p>
-<h3 id="22">2.2 データ用フォルダを選ぶ</h3>
-<p><img loading="lazy" decoding="async" tabindex="0" width="1360" height="850" style="max-width:1360px" alt="共通画面：1フォルダ、2作業、3中止" src="images/00-overview.png" /></p>
-<ol>
-<li>上部の「フォルダを選択・切り替え」を押し、既存のデータ用フォルダを選びます。初めて使う場合は空のフォルダを用意します。</li>
-<li>左側で作業を選びます。必要なタブだけが表示されます。</li>
-<li>下部で処理状態を確認します。実行中は「実行中の処理を中止」が有効になります。</li>
-</ol>
-<p>フォルダ内には保存用のサブフォルダが作られます。Windowsでは直接接続されたドライブを選んでください。処理中、または未保存入力がある間はデータ用フォルダを切り替えられません。起動時にフォルダ未選択なら毎回選択してください。</p>
-<h3 id="23">2.3 画面を切り替える</h3>
+<p>動画の確認・変換・トリミング・編集用動画の作成にはFFmpegとffprobe、外部プレイヤーでの試聴・映像確認にはffplayが必要です。AviUtl2連携には専用プラグインが必要です。導入・ビルド方法は<a href="../../README.md">プロジェクトのREADME</a>を参照してください。編集から書き出しまでの通常手順は、Windows上のClipChannelAPPとAviUtl2を使用します。</p>
+<p>人物登録と解析には、モデルと関連ライブラリを別途準備します。実行時にモデルをネット取得する操作はありません。</p>
 <table>
 <thead>
 <tr>
-<th>操作</th>
-<th>働き</th>
+<th>用途</th>
+<th>必要な準備</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>左の作業</td>
-<td>動画準備、解析、編集、結果確認、管理を切り替える</td>
+<td>人物登録・話者照合</td>
+<td><code>speechbrain/spkrec-ecapa-voxceleb</code> のローカルモデル一式。フォルダ内の <code>hyperparams.yaml</code> が必要です。Torch、SpeechBrain、soundfile、NumPyを利用します。</td>
 </tr>
 <tr>
-<td>上部のタブ</td>
-<td>選択中の作業の機能を切り替える</td>
-</tr>
-<tr>
-<td>表示「操作」</td>
-<td>入力・実行ボタンを表示する</td>
-</tr>
-<tr>
-<td>表示「結果」</td>
-<td>一覧や結果を表示する</td>
-</tr>
-<tr>
-<td>表示「詳細設定」</td>
-<td>設定を表示する。内部スクロールできる</td>
-</tr>
-<tr>
-<td>表示「自動」</td>
-<td>幅が十分なら操作と結果を並べ、狭い場合は操作を表示する</td>
-</tr>
-<tr>
-<td>項目のプルダウン／◁▷</td>
-<td>同じ表示種別の別項目へ切り替える</td>
-</tr>
-<tr>
-<td>小／中／大</td>
-<td>使用可能画面の約70%／約85%／最大化にする</td>
-</tr>
-<tr>
-<td>場所を確認</td>
-<td>省略されたパスの全文を確認する</td>
+<td>対象発話の文字起こし</td>
+<td>faster-whisper用のローカルWhisperモデル一式。フォルダ内の <code>config.json</code> が必要です。faster-whisper、NumPyを利用します。単独のWhisper <code>.pt</code> ファイルは指定できません。</td>
 </tr>
 </tbody>
 </table>
-<p>メイン画面全体はスクロールしません。目的のボタンが見えない場合は「表示」と項目を切り替えます。一覧や詳細設定の内部はスクロールできます。作業・タブ・サイズ・表示を切り替えても、そのセッションの入力・選択・実行中処理を保持します。処理完了後は次の作業への案内に従って手動で移動してください。</p>
-<p>前回のサイズと作業・タブは復元しますが、編集中の入力やプロジェクトを再起動後に自動復元する機能ではありません。青は主要操作、赤は削除などの注意操作です。無効なボタンは処理状態や前提条件を確認してください。</p>
-<h2 id="3">3. 動画を準備する</h2>
-<h3 id="31-url">3.1 URLから取得する</h3>
-<p>移動：<strong>動画を準備 → 取得・媒体操作 → 操作 → URL・取得</strong>。</p>
-<p><img loading="lazy" decoding="async" tabindex="0" width="1360" height="850" style="max-width:1360px" alt="URL入力と取得操作" src="images/01-screen.png" /></p>
-<ol>
-<li>認証不要のURLを入力します。</li>
-<li>動画を取得するならチェックを外したままにします。「音声のみ」は音声成果物、「情報のみ」はファイルを保存せず情報を取得します。</li>
-<li>必要なら次の詳細設定を変更します。</li>
-<li>「取得・情報表示」を押し、下部の状態を確認します。</li>
-</ol>
-<p>移動：<strong>動画を準備 → 取得・媒体操作 → 詳細設定 → 形式・品質と取得設定</strong>。</p>
-<p><img loading="lazy" decoding="async" tabindex="0" width="1360" height="850" style="max-width:1360px" alt="取得形式・品質と再試行設定" src="images/05-screen.png" /></p>
-<p>形式・品質はyt-dlpの形式指定です。初期値は <code>bestvideo*+bestaudio/best</code>、再試行回数は3です。追加引数欄が受け付ける指定は画面にある <code>-f</code>、<code>--retries</code>、<code>--fragment-retries</code>、<code>--sub-langs</code> です。認証、保存先変更、上書き、外部コマンドなどの指定は保護条件で拒否されます。「機能案内」で範囲を確認できます。</p>
-<p>移動：<strong>動画を準備 → 取得・媒体操作 → 結果 → 取得結果</strong>。</p>
-<p><img loading="lazy" decoding="async" tabindex="0" width="1360" height="850" style="max-width:1360px" alt="取得項目の結果一覧" src="images/03-screen.png" /></p>
-<p>状態・経過時間・タイトル・保存先またはエラーを確認します。失敗項目を選び、詳細設定を修正して「URL・取得」の「失敗項目を再試行」を押します。取得済みの項目は保持します。</p>
-<h3 id="32">3.2 手元の動画を登録する／変換を再試行する</h3>
-<p>移動：<strong>動画を準備 → 取得・媒体操作 → 操作 → ローカル動画</strong>。</p>
-<p><img loading="lazy" decoding="async" tabindex="0" width="1360" height="850" style="max-width:1360px" alt="ローカル動画の登録と変換" src="images/02-screen.png" /></p>
-<p>「ローカル動画を登録」でファイルを選びます。アプリ側のデータ用フォルダへ登録し、必要な媒体確認・互換変換を行います。外部の原本は変更しません。別動画が既存動画と同名なら、名前を変更してから登録してください。</p>
-<p>移動：<strong>動画を準備 → 取得・媒体操作 → 結果 → 登録済み動画</strong>。</p>
-<p><img loading="lazy" decoding="async" tabindex="0" width="1360" height="850" style="max-width:1360px" alt="登録済み動画一覧" src="images/04-screen.png" /></p>
-<p>登録済み動画を選びます。媒体確認・変換に失敗した場合は「ローカル動画」に戻り「選択した動画を媒体確認・変換（再試行）」を押します。取得原本、登録原本、変換結果は別の保存場所で保持されます。</p>
-<h2 id="4">4. 人物登録から文字起こしまで</h2>
-<h3 id="41">4.1 人物と参照音声を登録する</h3>
-<p>移動：<strong>解析・切り出し → 人物・参照音声 → 詳細設定 → 人物・参照音声の登録</strong>。</p>
-<p><img loading="lazy" decoding="async" tabindex="0" width="1360" height="850" style="max-width:1360px" alt="人物登録の入力欄" src="images/11-screen.png" /></p>
-<ol>
-<li>名前を入力します。</li>
-<li>「音声ファイルを選択」で参照音声を指定します。登録済み動画から参照音声を作る場合は音声欄を空にし、対象動画と開始・終了秒を指定します。</li>
-<li>ローカルECAPAモデルのフォルダを選びます。</li>
-<li>照合閾値を指定します。閾値は別動画で品質を確認して調整してください。最下部の分割方法は <code>whole-reference</code>（参照音声全体）または <code>five-second-windows</code>（5秒窓）から選びます。</li>
-<li>「表示：操作 → 人物と対象動画」に切り替え、「人物を登録」を押します。設定の入力値は保持されます。</li>
-</ol>
-<p>移動：<strong>解析・切り出し → 人物・参照音声 → 結果 → 人物一覧</strong>。</p>
-<p><img loading="lazy" decoding="async" tabindex="0" width="1360" height="850" style="max-width:1360px" alt="登録した人物の選択" src="images/09-screen.png" /></p>
-<p>人物を選んだ後、「表示：操作 → 人物と対象動画」の「参照音声を試聴」で確認できます。同じ画面の「動画の対象話者に設定」で、その人物を選択中の動画の対象話者として設定します。</p>
-<h3 id="42">4.2 対象動画を選び、試聴区間を判定する</h3>
-<p>移動：<strong>解析・切り出し → 人物・参照音声 → 操作 → 人物と対象動画</strong>。</p>
-<p><img loading="lazy" decoding="async" tabindex="0" width="1360" height="850" style="max-width:1360px" alt="対象話者と対象動画" src="images/06-screen.png" /></p>
-<p>対象動画をプルダウンから選びます。対象話者の表示を確認してください。同じ人物を別動画にも指定できます。</p>
-<p>移動：<strong>解析・切り出し → 人物・参照音声 → 操作 → 試聴・判定・再表示</strong>。</p>
-<p><img loading="lazy" decoding="async" tabindex="0" width="1360" height="850" style="max-width:1360px" alt="試聴と話者判定" src="images/07-screen.png" /></p>
-<p>「試聴区間を作成」で対象話者の照合を行います。結果一覧で区間を選んで「試聴」し、「対象発話」「対象話者の非発話」「不明」を指定します。非発話は他者の声がある区間も含みます。保存に失敗した場合は入力を保持し「保存を再試行」できます。</p>
-<p>移動：<strong>解析・切り出し → 人物・参照音声 → 結果 → 試聴区間・文字起こし</strong>。</p>
-<p><img loading="lazy" decoding="async" tabindex="0" width="1360" height="850" style="max-width:1360px" alt="試聴区間と発言一覧" src="images/10-screen.png" /></p>
-<h3 id="43">4.3 対象発話を文字起こしする</h3>
-<p>移動：<strong>解析・切り出し → 人物・参照音声 → 操作 → 対象話者の文字起こし</strong>。</p>
-<p><img loading="lazy" decoding="async" tabindex="0" width="1360" height="850" style="max-width:1360px" alt="Whisperモデル指定と文字起こし" src="images/08-screen.png" /></p>
-<p>ローカルWhisperモデルの場所を指定し、「対象発話を文字起こし・別版保存」を押します。対象発話と判定した区間だけが認識対象です。停止する場合は「解析を中止」または下部の共通中止を使います。</p>
-<h3 id="44">4.4 発言を修正する／保存版を開き直す</h3>
-<p>移動：<strong>解析・切り出し → 人物・参照音声 → 詳細設定 → 発言の修正</strong>。</p>
-<p><img loading="lazy" decoding="async" tabindex="0" width="1360" height="850" style="max-width:1360px" alt="発言の時刻・本文・判定を修正" src="images/12-screen.png" /></p>
-<p>結果一覧で行を選び、開始秒・終了秒・本文・判定を入力します。「選択行を修正」で更新、「終了秒で分割」で区間を分割、「発言を追加」で新しい発言を追加します。判定は <code>target</code>＝対象発話、<code>non-target</code>＝対象話者の非発話、<code>unknown</code>＝不明です。修正結果は別版保存され、旧CSVを上書きしません。</p>
-<p>保存版を再表示する場合は「保存結果を確認」で同じ動画の文字起こしCSVを選び、このタブの「試聴・判定・再表示」に戻って「保存版を再表示」を押します。未保存の入力がある場合は先に保存します。</p>
-<h2 id="5">5. 頻出語を集計し、発話を確認する</h2>
-<p>移動：<strong>解析・切り出し → 頻出語 → 操作 → 集計条件</strong>。</p>
-<p><img loading="lazy" decoding="async" tabindex="0" width="1360" height="850" style="max-width:1360px" alt="頻出語の集計条件" src="images/13-screen.png" /></p>
-<p>対象動画は人物タブで選びます。修正済み文字起こしの版番号を指定します。初期の集計対象は名詞です。必要なら動詞・形容詞も含め、「再集計して別版保存」を押します。</p>
-<p>移動：<strong>解析・切り出し → 頻出語 → 操作 → 登録語・除外語</strong>。</p>
-<p><img loading="lazy" decoding="async" tabindex="0" width="1360" height="850" style="max-width:1360px" alt="登録語・除外語の編集" src="images/14-screen.png" /></p>
-<p>固有名詞などを一語として集計したい場合は欄に入力し「登録語に追加」。数えたくない語は「除外語に追加」を押します。削除はそれぞれ「〜から削除」です。辞書を変更した後は再集計してください。以前の集計CSVは変わりません。</p>
-<p>移動：<strong>解析・切り出し → 頻出語 → 結果 → 頻出語一覧</strong>。</p>
-<p><img loading="lazy" decoding="async" tabindex="0" width="1360" height="850" style="max-width:1360px" alt="頻出語の一覧" src="images/15-screen.png" /></p>
-<p>「出現」は語の出現回数、「発言」はその語を含む発言数です。語を選びます。</p>
-<p>移動：<strong>解析・切り出し → 頻出語 → 結果 → 発話一覧</strong>。</p>
-<p><img loading="lazy" decoding="async" tabindex="0" width="1360" height="850" style="max-width:1360px" alt="語を含む発話の一覧" src="images/16-screen.png" /></p>
-<p>発話をダブルクリックすると元動画の該当部分を外部プレイヤーで確認します。保存版を使う場合は「保存結果を確認」で <code>word-counts</code> のCSVを選び、集計条件の「選択した保存版を表示」を押します。</p>
-<h2 id="6">6. 切り出し区間を作り、編集用動画にする</h2>
-<h3 id="61">6.1 候補を作成する／手動で開始する／保存版を使用する</h3>
-<p>移動：<strong>解析・切り出し → 切り出し区間 → 操作 → 候補と保存版</strong>。</p>
-<p><img loading="lazy" decoding="async" tabindex="0" width="1360" height="850" style="max-width:1360px" alt="区間候補の生成と保存版の選択" src="images/17-screen.png" /></p>
-<p>対象動画を人物タブで選びます。文字起こし版と前後余白（秒）を指定し、「候補を生成して別版保存」を押します。解析を使わない場合は「解析なしで区間を手動作成」で開始します。</p>
-<p>保存済み区間を使う場合は「保存結果を確認」で同じ動画の <code>segments</code> CSVを選び、「選択した保存版を使用」を押します。</p>
-<h3 id="62">6.2 区間を選択し、境界・採否を調整する</h3>
-<p>移動：<strong>解析・切り出し → 切り出し区間 → 結果 → 切り出し区間</strong>。</p>
-<p><img loading="lazy" decoding="async" tabindex="0" width="1360" height="850" style="max-width:1360px" alt="切り出し区間一覧" src="images/21-screen.png" /></p>
-<p>区間を選択します。複数選択を使う操作ではCtrl／Shiftなどで対象を選びます。</p>
-<p>移動：<strong>解析・切り出し → 切り出し区間 → 詳細設定 → 区間の境界・採否</strong>。</p>
-<p><img loading="lazy" decoding="async" tabindex="0" width="1360" height="850" style="max-width:1360px" alt="開始・終了と採用の設定" src="images/23-screen.png" /></p>
-<p>開始秒・終了秒と「採用」を設定します。</p>
-<p>移動：<strong>解析・切り出し → 切り出し区間 → 操作 → 区間を修正・試聴</strong>。</p>
-<p><img loading="lazy" decoding="async" tabindex="0" width="1360" height="850" style="max-width:1360px" alt="区間の修正操作" src="images/18-screen.png" /></p>
+<p>人物処理とWhisperはCPUで実行し、Whisperの計算方式はint8です。設定ファイルだけでなく、必要なモデルファイル一式を用意してください。ECAPAは登録時のモデル一式とファイル内容の一致を確認するため、モデルを差し替えると既存人物との照合が停止します。</p>
+<h2 id="_2">データ用フォルダと共通操作</h2>
+<p>上部の「フォルダを選択・切り替え」でデータ用フォルダを選びます。初めて使う場合は空のフォルダを用意します。Windowsでは直接接続された内蔵・外付けドライブ上に置きます。NAS・ネットワーク共有・クラウド同期中のフォルダは対応範囲に含まれません。</p>
+<p>動画、人物、解析結果、編集用動画、プロジェクトなどは、このフォルダに保存します。人物・登録語・除外語は同じデータ用フォルダ内の動画で共通です。フォルダを切り替えると、切り替え先の登録情報を使用します。</p>
+<p>処理中、またはアプリが未保存と判断した入力がある間はフォルダを切り替えられません。トリミングの開始・終了・保存名は、この切り替え防止や終了時の未保存確認に含まれません。必要な範囲を動画として書き出してから切り替え・終了してください。</p>
+<p>左側の作業を選ぶと、その作業のタブが表示されます。</p>
 <table>
 <thead>
 <tr>
-<th>ボタン</th>
-<th>操作</th>
+<th>作業</th>
+<th>タブ</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>試聴・映像確認</td>
-<td>選択区間を再生する</td>
+<td>動画を準備</td>
+<td>取得・媒体操作</td>
 </tr>
 <tr>
-<td>境界を修正</td>
-<td>入力した開始・終了で選択区間を更新する</td>
+<td>動画をトリミング</td>
+<td>動画をトリミング</td>
 </tr>
 <tr>
-<td>終了秒で分割</td>
-<td>入力した終了秒を境に選択区間を分割する</td>
+<td>解析・切り出し</td>
+<td>人物・参照音声、頻出語、切り出し区間</td>
 </tr>
 <tr>
-<td>区間結合</td>
-<td>複数選択した区間を最初の開始から最後の終了まで連続させる。間の映像も含む</td>
+<td>編集・書き出し</td>
+<td>画面・字幕、補助素材、保存・書き出し</td>
 </tr>
 <tr>
-<td>手動追加</td>
-<td>入力した開始・終了で区間を追加する</td>
+<td>保存結果を確認</td>
+<td>保存済み情報</td>
 </tr>
 <tr>
-<td>採否を適用</td>
-<td>採用チェックを選択区間へ適用する</td>
-</tr>
-<tr>
-<td>保存を再試行</td>
-<td>失敗後に保持している区間を保存する</td>
+<td>データを管理</td>
+<td>管理・保管</td>
 </tr>
 </tbody>
 </table>
-<p>区間の操作は別版保存します。前後余白が重なっただけでは自動結合しません。</p>
-<h3 id="63">6.3 フレーム境界を確認する</h3>
-<p>移動：<strong>解析・切り出し → 切り出し区間 → 操作 → フレーム境界を確認</strong>。</p>
-<p><img loading="lazy" decoding="async" tabindex="0" width="1360" height="850" style="max-width:1360px" alt="フレーム境界の確認と1F調整" src="images/20-screen.png" /></p>
-<p>「フレーム境界へ合わせる」で近い実フレームの時刻と差を確認します。「開始-1F／+1F」「終了-1F／+1F」で調整できます。値を確認した後、「区間を修正・試聴」の「境界を修正」で区間に保存します。</p>
-<h3 id="64">6.4 使用順を決め、編集用動画を作る</h3>
-<p>移動：<strong>解析・切り出し → 切り出し区間 → 操作 → 編集用動画を作成</strong>。</p>
-<p><img loading="lazy" decoding="async" tabindex="0" width="1360" height="850" style="max-width:1360px" alt="区間の追加と編集用動画作成" src="images/19-screen.png" /></p>
-<p>区間一覧で選び、「区間を追加」で使用順へ追加します。同じ区間を複数回追加できます。</p>
-<p>移動：<strong>解析・切り出し → 切り出し区間 → 結果 → 編集用動画の順番</strong>。</p>
-<p><img loading="lazy" decoding="async" tabindex="0" width="1360" height="850" style="max-width:1360px" alt="使用順一覧" src="images/22-screen.png" /></p>
-<p>使用順の行を選び、「編集用動画を作成」の「上へ」「下へ」で並べ替え、「外す」で除外します。使用順が空の場合は採用された区間を元の順番で使用します。</p>
-<p>必要なら固定fpsを入力します。可変fpsの動画では必須です。「新しい編集を作成」を押し、確認でショートなら「はい」、横画面なら「いいえ」を選びます。編集用MP4と対応する <code>.aup2</code> が別フォルダへ作成されます。同じ内容を再生成しても別の編集フォルダになります。</p>
-<p>「編集用動画を再生」で確認できます。現在の編集に未保存変更がある場合は、保存してから新しい編集を作ってください。旧編集の字幕・補助素材配置は新しい編集へ自動移行しません。</p>
-<h2 id="7-aviutl2">7. AviUtl2で開き、画面と字幕を編集する</h2>
-<h3 id="71">7.1 対応するプロジェクトを開く</h3>
-<p>移動：<strong>編集・書き出し → 保存・書き出し → 操作 → 対象プロジェクト</strong>。</p>
-<p><img loading="lazy" decoding="async" tabindex="0" width="1360" height="850" style="max-width:1360px" alt="プロジェクトの場所と選択" src="images/32-screen.png" /></p>
-<ol>
-<li>「プロジェクトの保存フォルダを開く」を押します。エクスプローラーが開きます。</li>
-<li>フォルダ内の <code>.aup2</code> をAviUtl2側の「開く」で開きます。</li>
-<li>アプリで「対応するAviUtl2プロジェクトを選ぶ」を押し、同じ <code>.aup2</code> を指定します。</li>
-</ol>
-<p>フォルダを開くボタンはAviUtl2を起動したりプロジェクトを読み込んだりしません。プロジェクト選択も保存・書き出し対象の指定です。現在の編集用動画と同じ編集フォルダ内の <code>.aup2</code> を選んでください。</p>
-<p>再起動後に編集用動画が未選択なら、フォルダボタンはデータ用フォルダ内の <code>projects</code> を開きます。そこから過去の <code>.aup2</code> をAviUtl2で直接開けます。ただし、アプリには過去の <code>.aup2</code> を読み込んで編集を再開する機能はありません。</p>
-<h3 id="72">7.2 画面サイズ・配置を設定する</h3>
-<p>移動：<strong>編集・書き出し → 画面・字幕 → 操作 → 画面設定とプレビュー</strong>。</p>
-<p><img loading="lazy" decoding="async" tabindex="0" width="1360" height="850" style="max-width:1360px" alt="画面の用途と適用" src="images/24-screen.png" /></p>
-<p>横／ショートを選びます。配置調整は詳細設定で行います。「画面設定をAviUtl2へ渡す」を押すと、開いている対応プロジェクトへ適用を試みます。「AviUtl2結果のプレビューを開く」で確認します。</p>
-<p>移動：<strong>編集・書き出し → 画面・字幕 → 詳細設定 → 画面・字幕の配置</strong>。</p>
-<p><img loading="lazy" decoding="async" tabindex="0" width="1360" height="850" style="max-width:1360px" alt="動画と字幕の配置設定" src="images/27-screen.png" /></p>
-<p>画面幅・高さ、映像の拡大率・X／Y、上下左右の切り取り、字幕X／Y・サイズ、プレビュー位置Fを設定します。切り取り量は元動画の大きさを超えられません。Fはフレーム位置です。詳細設定は必要に応じて内部スクロールしてください。</p>
-<p>直接適用できない場合は、表示された指示ファイルをAviUtl2の「ClipChannel → 画面設定を適用」で選びます。プラグインと対応する動画・プロジェクトを確認してください。</p>
-<h3 id="73">7.3 初めて字幕を追加する</h3>
-<ol>
-<li>「保存結果を確認」で同じ元動画の文字起こしCSVを選びます。</li>
-<li>「解析・切り出し → 切り出し区間 → 操作 → 編集用動画を作成」に戻ります。</li>
-<li>「字幕をAviUtl2へ追加」を押します。</li>
-<li>開いている対応プロジェクトへ追加された字幕を確認します。直接追加できなければAviUtl2の「ClipChannel → 字幕を追加」で、案内された <code>.ccsub</code> を選びます。</li>
-</ol>
-<p>字幕は編集用動画の使用順とフレーム時刻に合わせて取り込まれます。元の文字起こしCSVは変更しません。</p>
-<h3 id="74">7.4 字幕を変更する際の注意</h3>
-<p>移動：<strong>編集・書き出し → 画面・字幕 → 結果 → 編集用字幕</strong>。</p>
-<p><img loading="lazy" decoding="async" tabindex="0" width="1360" height="850" style="max-width:1360px" alt="編集用字幕の選択" src="images/26-screen.png" /></p>
-<p>移動：<strong>編集・書き出し → 画面・字幕 → 操作 → 字幕を修正</strong>。</p>
-<p><img loading="lazy" decoding="async" tabindex="0" width="1360" height="850" style="max-width:1360px" alt="字幕の本文・フレーム時刻の修正" src="images/25-screen.png" /></p>
-<p>同じセッションなら一覧で字幕を選び、開始F・終了F・本文を変更して「選択字幕を別版保存」を押せます。</p>
-<p><strong>この操作は既存字幕の置換ではありません。変更後の字幕一覧全体を新しいテキストオブジェクトとして追加します。旧字幕が残るため、そのままでは重なります。</strong> AviUtl2側で旧字幕を削除・整理してから保存してください。未保存字幕を「保存」で反映する場合も、必要な再反映は追加動作になります。</p>
-<p>既存字幕を少し修正する場合は、AviUtl2の該当テキストオブジェクトを直接編集して保存する方法が分かりやすいです。AviUtl2での手編集をアプリの字幕一覧へ読み戻す機能はありません。再起動後の既存プロジェクトはAviUtl2側で編集してください。</p>
-<h2 id="8-bgm">8. 画像・BGM・効果音を追加する</h2>
-<p>移動：<strong>編集・書き出し → 補助素材 → 操作 → 追加・適用・プレビュー</strong>。</p>
-<p><img loading="lazy" decoding="async" tabindex="0" width="1360" height="850" style="max-width:1360px" alt="補助素材の追加と適用" src="images/28-screen.png" /></p>
-<p>編集用動画を作成した後、「画像を追加」「BGMを追加」「効果音を追加」でファイルを選びます。画像はPNG／JPEG／BMPを使用します。外部の素材はアプリ側へコピーされ、原本は変更しません。</p>
-<p>移動：<strong>編集・書き出し → 補助素材 → 結果 → 補助素材一覧</strong>。</p>
-<p><img loading="lazy" decoding="async" tabindex="0" width="1360" height="850" style="max-width:1360px" alt="補助素材の選択" src="images/29-screen.png" /></p>
-<p>調整する素材を選びます。</p>
-<p>移動：<strong>編集・書き出し → 補助素材 → 詳細設定 → 素材の配置・音声設定</strong>。</p>
-<p><img loading="lazy" decoding="async" tabindex="0" width="1360" height="850" style="max-width:1360px" alt="配置・音量・プレビュー位置" src="images/30-screen.png" /></p>
+<p>タブ内の「表示」で操作・結果・詳細設定を切り替え、その下の項目欄で目的の項目を選びます。「◁／▷」でも同じ表示区分の項目を移動できます。</p>
 <table>
 <thead>
 <tr>
-<th>項目</th>
-<th>入力する内容</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>開始F</td>
-<td>編集用動画のどのフレームから置くか。0始まり</td>
-</tr>
-<tr>
-<td>長さF</td>
-<td>素材を配置する長さ</td>
-</tr>
-<tr>
-<td>素材の開始秒</td>
-<td>音声ファイルのどこから使うか</td>
-</tr>
-<tr>
-<td>音量%</td>
-<td>音声の音量</td>
-</tr>
-<tr>
-<td>画像X／Y、拡大率%</td>
-<td>画像の位置と大きさ</td>
-</tr>
-<tr>
-<td>プレビュー開始F</td>
-<td>確認するフレームと試聴の開始位置</td>
-</tr>
-</tbody>
-</table>
-<p>「追加・適用・プレビュー」に戻り「配置をAviUtl2へ適用・プレビュー」を押します。同じ素材の配置を調整して再適用する場合は更新され、字幕のような重複追加にはなりません。</p>
-<p>「直前のプレビューを開く」で画像を確認できます。ミックス音声の試聴は開始Fから最大5秒、映像終端までです。BGM自体は元の長さで追加し、継ぎ目・終端で自動的に短くしません。必要な長さは手動で調整します。入力を取り消す場合は「未適用入力を破棄」を押します。配置適用後もプロジェクトは明示的に保存してください。</p>
-<h2 id="9">9. 保存から完成動画の書き出しまで</h2>
-<h3 id="91">9.1 プロジェクトを保存する</h3>
-<p>移動：<strong>編集・書き出し → 保存・書き出し → 操作 → 保存・書き出し</strong>。</p>
-<p><img loading="lazy" decoding="async" tabindex="0" width="1360" height="850" style="max-width:1360px" alt="保存と完成動画書き出し" src="images/31-screen.png" /></p>
-<p>対応する <code>.aup2</code> をAviUtl2で開いた状態で「保存」を押します。アプリの未反映入力を適用し、AviUtl2の手編集も含めて現在の内容を保存します。保存対象が1件なら自動選択され、複数なら選択します。必要なら新しい <code>.aup2</code> の保存名を指定します。</p>
-<p>移動：<strong>編集・書き出し → 保存・書き出し → 結果 → 処理結果</strong>。</p>
-<p><img loading="lazy" decoding="async" tabindex="0" width="1360" height="850" style="max-width:1360px" alt="保存・書き出しの結果" src="images/33-screen.png" /></p>
-<p>完了表示を確認します。保存を確認できなかった表示は成功として扱わず、プロジェクト・プラグイン・保存先を確認してください。保存完了のファイル確認は簡易判定であり、編集の自動復旧は行いません。</p>
-<h3 id="92">9.2 書き出し条件を設定する</h3>
-<p>移動：<strong>編集・書き出し → 保存・書き出し → 詳細設定 → 書き出し設定</strong>。</p>
-<p><img loading="lazy" decoding="async" tabindex="0" width="1360" height="850" style="max-width:1360px" alt="書き出しの解像度・fps・品質" src="images/34-screen.png" /></p>
-<table>
-<thead>
-<tr>
-<th>項目</th>
-<th>初期値／範囲</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>横</td>
-<td>1920×1080</td>
-</tr>
-<tr>
-<td>ショート</td>
-<td>1080×1920</td>
-</tr>
-<tr>
-<td>幅・高さ</td>
-<td>2～8192の偶数</td>
-</tr>
-<tr>
-<td>fps</td>
-<td>編集と同じ固定fps。0より大きく120以下</td>
-</tr>
-<tr>
-<td>ビットレート</td>
-<td>30fps以下は8Mbps、30fps超は12Mbps。指定範囲0.1～200Mbps</td>
-</tr>
-<tr>
-<td>音声サンプルレート</td>
-<td>初期48kHz。32／44.1／48／96kHz</td>
-</tr>
-<tr>
-<td>形式</td>
-<td>MP4／H.264／AAC-LC／SDR</td>
-</tr>
-</tbody>
-</table>
-<p>「用途の初期値を設定」で選択用途の初期値に戻せます。書き出しにはWindows版 <code>ffmpeg.exe</code> が必要です。PATHに配置するか、起動前に <code>CLIPCHANNEL_FFMPEG</code> に絶対パスを設定します。WSLから起動する場合もエンコードはWindows版、検査はWSL側の <code>ffprobe</code> を使います。</p>
-<h3 id="93">9.3 完成動画を書き出す</h3>
-<ol>
-<li>「保存・書き出し」の「完成動画を書き出す」を押します。</li>
-<li>未保存なら「保存して書き出す」を選びます。戻る場合は「戻る」です。</li>
-<li>新しいMP4の保存名を指定します。既存動画は上書きしません。</li>
-<li>状態表示で書き出しと検査の終了を待ちます。</li>
-<li>完成が確認された表示と保存先の動画を確認します。</li>
-</ol>
-<p>出力範囲は最後の映像までです。フレーム数・長さ・解像度・fps・音声・形式の確認が揃ってから完成表示になります。中止・失敗で残った出力は完成扱いしません。</p>
-<p>ショート用途で正方形または縦長・3分以内の条件を外れた場合、「編集・設定を直す」か「通常の動画として書き出す」を選びます。通常を選んでも現在の配置・長さ・書き出し設定は保持します。投稿サイトでの分類を保証する機能ではありません。</p>
-<h2 id="10">10. 保存結果を確認し、作業を再開する</h2>
-<p>移動：<strong>保存結果を確認 → 保存済み情報 → 結果 → 保存済み一覧</strong>。</p>
-<p><img loading="lazy" decoding="async" tabindex="0" width="1360" height="850" style="max-width:1360px" alt="保存済みCSVの選択" src="images/35-screen.png" /></p>
-<p>一覧からCSVを選びます。</p>
-<p>移動：<strong>保存結果を確認 → 保存済み情報 → 結果 → CSV本文</strong>。</p>
-<p><img loading="lazy" decoding="async" tabindex="0" width="1360" height="850" style="max-width:1360px" alt="選択したCSV本文" src="images/36-screen.png" /></p>
-<p>CSVの内容を内部スクロールで確認できます。文字起こし、区間、頻出語を再利用する場合は、選択後それぞれのタブに戻って「保存版を再表示」「選択した保存版を使用」「選択した保存版を表示」を押します。</p>
-<table>
-<thead>
-<tr>
-<th>再開するもの</th>
-<th>再開方法</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>文字起こし・切り出し区間・頻出語</td>
-<td>上記の保存CSVを選んで各タブで再表示する</td>
-</tr>
-<tr>
-<td>過去の編集済み <code>.aup2</code></td>
-<td>AviUtl2で直接開き、編集・保存する</td>
-</tr>
-<tr>
-<td>アプリ内の未保存入力</td>
-<td>再起動後の復元には対応していない。終了前に保存する</td>
-</tr>
-</tbody>
-</table>
-<h2 id="11">11. 登録情報・動画・ログを管理する</h2>
-<h3 id="111">11.1 非表示と再表示</h3>
-<p>移動：<strong>データを管理 → 管理・保管 → 結果 → 登録一覧</strong>。</p>
-<p><img loading="lazy" decoding="async" tabindex="0" width="1360" height="850" style="max-width:1360px" alt="管理対象の一覧" src="images/40-screen.png" /></p>
-<p>移動：<strong>データを管理 → 管理・保管 → 操作 → 登録情報を管理</strong>。</p>
-<p><img loading="lazy" decoding="async" tabindex="0" width="1360" height="850" style="max-width:1360px" alt="非表示・登録削除・実ファイル削除" src="images/37-screen.png" /></p>
-<p>一覧で項目を選び「非表示」を押します。人物、登録語、除外語、結果、動画を一覧から隠せます。非表示はファイルや辞書の働きを変更しません。「非表示の項目も表示」を有効にして対象を選び、「再表示」で戻します。</p>
-<p>「登録情報を削除…」は一覧の登録を削除し、実ファイルを残します。「実ファイルを選んで削除…」は確認したファイルを完全に削除します。二つは別操作です。参照中の情報や選択中の対象話者などは削除が止められます。削除できない場合は非表示を使ってください。データ用フォルダ外の元ファイルは削除対象にしません。処理中や未保存入力がある場合は、完了・保存後に管理します。</p>
-<h3 id="112">11.2 動画を保管・展開する</h3>
-<p>移動：<strong>データを管理 → 管理・保管 → 操作 → 動画を保管・展開</strong>。</p>
-<p><img loading="lazy" decoding="async" tabindex="0" width="1360" height="850" style="max-width:1360px" alt="動画の可逆保管と展開" src="images/38-screen.png" /></p>
-<p>「動画を保管…」で動画を選び、ZIP64の保管物を作成します。「保管物を展開…」でZIPを選び、新しい展開フォルダへ展開します。原本・保管物・過去の展開物は保持します。SHA256で内容を検証します。</p>
-<p>移動：<strong>データを管理 → 管理・保管 → 詳細設定 → 保管・展開結果</strong>。</p>
-<p><img loading="lazy" decoding="async" tabindex="0" width="1360" height="850" style="max-width:1360px" alt="保管結果と保存場所" src="images/41-screen.png" /></p>
-<p>圧縮前後のバイト数、削減量、保存先を確認します。すでに圧縮された動画などは容量が減らない場合があります。その場合も結果を表示し、保管物を残します。展開した動画を制作に使うには「ローカル動画を登録」から選びます。</p>
-<h3 id="113">11.3 古いログを整理する</h3>
-<p>移動：<strong>データを管理 → 管理・保管 → 操作 → ログの整理</strong>。</p>
-<p><img loading="lazy" decoding="async" tabindex="0" width="1360" height="850" style="max-width:1360px" alt="通常ログの整理" src="images/39-screen.png" /></p>
-<p>「30日経過した通常ログを整理」を押します。終了を確認できない処理のログや、復旧待ち情報がある場合のログは保持します。処理終了時のログには処理名・状態・経過秒・UTC時刻を記録します。</p>
-<h2 id="12">12. 中止・強制停止・終了確認</h2>
-<p>通常の処理は下部の「実行中の処理を中止」で中止要求を送ります。要求後も停止が確認されるまで編集を待ちます。入力と既存の成果物は保持されます。中止要求から3秒経っても止まらない管理対象処理では強制停止を選べます。3秒で自動的に終了する設定ではありません。</p>
-<p><img loading="lazy" decoding="async" tabindex="0" width="1360" height="850" style="max-width:1360px" alt="実行中の状態と有効な中止ボタン" src="images/process-running.png" /></p>
-<p>実行中の例です。入力欄が無効でも作業の切替はできます。</p>
-<p><img loading="lazy" decoding="async" tabindex="0" width="1360" height="850" style="max-width:1360px" alt="停止待ちと強制停止の選択" src="images/process-stopping.png" /></p>
-<p>通常中止の要求後、停止待ちが続いている例です。赤枠2の強制停止は、自動で実行されるものではありません。</p>
-<p><img loading="lazy" decoding="async" tabindex="0" width="1360" height="850" style="max-width:1360px" alt="停止完了後の画面" src="images/process-stopped.png" /></p>
-<p>停止完了を確認すると入力操作が再開できます。これらの画像は実データを処理しない説明用の待機処理で撮影しました。</p>
-<p>書き出し中は「書き出しを中止」または共通中止を使います。強制停止では対象が異なるため、確認文を読んでください。</p>
-<table>
-<thead>
-<tr>
-<th>対象</th>
-<th>強制停止の影響</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>アプリの管理対象処理</td>
-<td>その管理プロセスと子プロセスを終了。AviUtl2の未保存編集は変更しない</td>
-</tr>
-<tr>
-<td>AviUtl2で描画・エンコード中</td>
-<td>対象AviUtl2とエンコーダーを終了。AviUtl2の未保存編集は失われる</td>
-</tr>
-<tr>
-<td>書き出し後の動画検査</td>
-<td>検査とそのffprobeのみ終了。AviUtl2の編集は保持</td>
-</tr>
-</tbody>
-</table>
-<p>途中ファイルが残る場合があります。停止が確認されてから操作を再開してください。自動復旧はありません。</p>
-<h3 id="121">12.1 共通の案内・エラー・警告</h3>
-<p><img loading="lazy" decoding="async" tabindex="0" width="381" height="159" style="max-width:381px" alt="場所などを確認する案内の例" src="images/dialog-01.png" /></p>
-<p>案内を読み「閉じる」で戻ります。</p>
-<p><img loading="lazy" decoding="async" tabindex="0" width="381" height="159" style="max-width:381px" alt="エラー表示の例" src="images/dialog-02.png" /></p>
-<p>エラーの場合は原因と入力条件を確認し、関連する詳細設定を直して再試行します。</p>
-<p><img loading="lazy" decoding="async" tabindex="0" width="381" height="140" style="max-width:381px" alt="警告表示の例" src="images/dialog-03.png" /></p>
-<p>警告では「適用したがプレビュー未生成」など、完了した範囲を確認します。</p>
-<h3 id="122">12.2 ショート条件と未保存の確認</h3>
-<p><img loading="lazy" decoding="async" tabindex="0" width="381" height="177" style="max-width:381px" alt="ショート条件外の選択" src="images/dialog-04.png" /></p>
-<p>編集へ戻るか、現在の設定で通常動画として書き出すか選びます。</p>
-<p><img loading="lazy" decoding="async" tabindex="0" width="381" height="158" style="max-width:381px" alt="未保存の編集を保存して書き出す" src="images/dialog-05.png" /></p>
-<p>保存が確認されるまで書き出しに進みません。</p>
-<p><img loading="lazy" decoding="async" tabindex="0" width="381" height="195" style="max-width:381px" alt="終了時の保存・破棄・戻る" src="images/dialog-06.png" /></p>
-<p>「保存する」は保存後に終了、「破棄する」は未保存入力を保存せず終了、「戻る」はアプリへ戻ります。アプリを閉じても外部AviUtl2の終了を意味しません。</p>
-<p><img loading="lazy" decoding="async" tabindex="0" width="381" height="196" style="max-width:381px" alt="編集用動画作成時の横・ショート選択" src="images/dialog-07.png" /></p>
-<p>「はい」でショート、「いいえ」で横画面の新しい編集を作成します。</p>
-<h3 id="123">12.3 削除確認</h3>
-<p><img loading="lazy" decoding="async" tabindex="0" width="381" height="215" style="max-width:381px" alt="登録情報の削除確認" src="images/dialog-08.png" /></p>
-<p>登録情報の削除では実ファイルを残します。</p>
-<p><img loading="lazy" decoding="async" tabindex="0" width="381" height="196" style="max-width:381px" alt="実ファイルの削除確認" src="images/dialog-09.png" /></p>
-<p>実ファイルの削除は取り消せません。ファイル選択後に対象の全文パスを確認します。</p>
-<h3 id="124">12.4 強制停止の確認</h3>
-<p><img loading="lazy" decoding="async" tabindex="0" width="381" height="272" style="max-width:381px" alt="管理対象処理の強制停止確認" src="images/dialog-10.png" /></p>
-<p>管理対象処理だけを止める確認です。</p>
-<p><img loading="lazy" decoding="async" tabindex="0" width="381" height="196" style="max-width:381px" alt="AviUtl2書き出しの強制停止確認" src="images/dialog-11.png" /></p>
-<p>AviUtl2の未保存編集を失う場合があります。「停止を待つ」で戻れます。</p>
-<p><img loading="lazy" decoding="async" tabindex="0" width="381" height="196" style="max-width:381px" alt="完成動画検査の強制停止確認" src="images/dialog-12.png" /></p>
-<p>こちらは検査プロセスのみを止める確認です。</p>
-<h3 id="125">12.5 プレビュー画面</h3>
-<p><img loading="lazy" decoding="async" tabindex="0" width="976" height="640" style="max-width:976px" alt="プレビューの閉じる・音声試聴操作" src="images/preview.png" /></p>
-<p>画像全体が収まるよう縮小表示されます。「閉じる」で戻ります。補助素材のプレビューには音声試聴の操作があります。図は説明用画像で、実際のAviUtl2出力ではありません。</p>
-<h2 id="13">13. 保存場所と困ったときの確認</h2>
-<table>
-<thead>
-<tr>
-<th>データ用フォルダ内</th>
+<th>表示</th>
 <th>内容</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>media/downloaded/</code></td>
-<td>URLから取得した元ファイル</td>
+<td>操作</td>
+<td>入力欄・実行ボタン</td>
 </tr>
 <tr>
-<td><code>media/originals/</code></td>
-<td>登録した元動画</td>
+<td>結果</td>
+<td>一覧・処理結果</td>
 </tr>
 <tr>
-<td><code>media/prepared/</code></td>
-<td>編集互換変換した動画と時刻対応JSON</td>
+<td>詳細設定</td>
+<td>設定欄。内部をスクロールできます</td>
 </tr>
 <tr>
-<td><code>media/audio/</code></td>
-<td>音声のみの成果物</td>
-</tr>
-<tr>
-<td><code>media/edits/&lt;編集フォルダ&gt;/</code></td>
-<td>編集用MP4と区間・fps情報</td>
-</tr>
-<tr>
-<td><code>media/supporting/&lt;編集フォルダ&gt;/</code></td>
-<td>コピーした補助素材</td>
-</tr>
-<tr>
-<td><code>projects/&lt;編集フォルダ&gt;/</code></td>
-<td><code>.aup2</code>、字幕・画面・素材の指示ファイル</td>
-</tr>
-<tr>
-<td><code>catalog/&lt;元動画名&gt;/transcripts/</code></td>
-<td>文字起こしCSV</td>
-</tr>
-<tr>
-<td><code>catalog/&lt;元動画名&gt;/segments/</code></td>
-<td>切り出し区間CSV</td>
-</tr>
-<tr>
-<td><code>catalog/&lt;元動画名&gt;/word-counts/</code></td>
-<td>頻出語CSV</td>
-</tr>
-<tr>
-<td><code>people/</code></td>
-<td>人物・参照音声・共通辞書</td>
-</tr>
-<tr>
-<td><code>exports/</code></td>
-<td>完成動画の初期保存先</td>
-</tr>
-<tr>
-<td><code>archives/</code></td>
-<td>動画の保管ZIP</td>
-</tr>
-<tr>
-<td><code>media/restored/</code></td>
-<td>保管物から展開した動画</td>
-</tr>
-<tr>
-<td><code>logs/</code></td>
-<td>処理ログ</td>
+<td>自動</td>
+<td>画面幅に応じて操作と結果を配置</td>
 </tr>
 </tbody>
 </table>
-<p>解析結果は <code>_v1</code>、<code>_v2</code> のように版を進め、旧版を保持します。字幕・画面・補助素材の指示ファイルも別版で保存します。ただしAviUtl2プロジェクトの「保存」は選択した <code>.aup2</code> の現在の内容を保存する操作です。指示ファイルの版とプロジェクト保存は別です。</p>
+<p>一覧の内部は縦・横に、詳細設定の内部は縦にスクロールできます。「小／中／大」でウィンドウサイズを変更し、省略されたパスは「場所を確認」で全文を確認します。前回のサイズ・作業・タブは復元しますが、再起動後に入力や編集中プロジェクトを自動復元する機能ではありません。</p>
+<p>共通操作の位置は<a href="#overview">全体の操作</a>を参照してください。下部の状態表示で処理の終了を確認してから次の作業へ進みます。</p>
+<h2 id="_3">動画を取得・登録する</h2>
+<h3 id="url">URLから取得する</h3>
+<p><strong>動画を準備 → 取得・媒体操作 → 操作 → URL・取得</strong>を表示します。「認証不要のURL」を入力し、「取得・情報表示」を押します。</p>
+<p>通常の動画取得では「音声のみ」「情報のみ」を外します。「音声のみ」は音声成果物を取得し、登録済み動画としては扱いません。「情報のみ」は媒体ファイルを保存せず情報を取得します。</p>
+<p>形式・品質や再試行回数を変える場合は、<strong>詳細設定 → 形式・品質と取得設定</strong>を開きます。yt-dlp形式指定の初期値は <code>bestvideo*+bestaudio/best</code>、再試行回数は3です。追加引数欄は <code>-f</code>、<code>--retries</code>、<code>--fragment-retries</code>、<code>--sub-langs</code> を受け付けます。認証・保存先変更・上書き・任意コマンドなどの指定は受け付けません。「機能案内」で受付範囲を確認できます。</p>
+<p>認証付き取得、HDR変換、用途別の複数音声選択は対応範囲に含まれません。<strong>結果 → 取得結果</strong>で状態、経過時間、タイトル、保存先またはエラーを確認します。設定を修正し、「URL・取得」の「失敗項目を再試行」で直前の取得の失敗項目を再試行します。成功した取得結果は保持します。</p>
+<p>画面は<a href="#download-url">URL・取得</a>、<a href="#download-settings">取得設定</a>を参照してください。</p>
+<h3 id="_4">手元の動画を登録する</h3>
+<p><strong>操作 → ローカル動画</strong>で「ローカル動画を登録」を押し、動画を選びます。データ用フォルダへコピーして登録し、媒体確認・必要な互換変換を行います。外部の元ファイルは変更しません。</p>
+<p>登録済み動画と同名の別内容の動画は、名前を変更してから登録してください。同じ元動画の解析を繰り返す場合は、結果の版番号が進みます。</p>
+<p><strong>結果 → 登録済み動画</strong>で登録結果を確認します。媒体確認・変換に失敗した場合は対象を選び、「ローカル動画」の「選択した動画を媒体確認・変換（再試行）」を押します。</p>
+<h2 id="_5">連続した一範囲をトリミングする</h2>
+<p><strong>動画をトリミング → 動画をトリミング → 操作 → 範囲を指定して書き出す</strong>を開きます。登録済み動画の連続した一範囲から、新しい登録済みMP4を作成します。複数区間を結合する編集用動画の作成とは別の操作です。</p>
+<ol>
+<li>「登録済み動画」で元動画を選びます。必要なら「一覧を更新」を押します。</li>
+<li>再生位置のつまみを動かし、離して映像を確認します。「再生／一時停止」でも確認できます。</li>
+<li>「現在位置を開始に」「現在位置を終了に」で範囲を設定します。「開始 秒」「終了 秒」へ直接入力もできます。</li>
+<li>「選択範囲を再生」で確認し、新しい保存名を.mp4付きで入力します（例：scene_trim.mp4）。開始は0以上、終了は開始より後で動画の長さ以内にします。</li>
+<li>「範囲を確認」で検査し、「MP4を書き出す」を押します。未確定なら書き出し時に範囲確認を行うため、確認ボタンを事前に押すことは必須ではありません。</li>
+<li>下部で完了を確認し、登録済み動画一覧から新しい動画を選びます。</li>
+</ol>
+<p>元動画は保持し、既存ファイルを上書きしません。例では <code>media/originals/scene_trim.mp4</code> に保存し、元動画と範囲の履歴を隣の <code>.scene_trim.mp4.trim.json</code> に記録します。「履歴を表示」で確認できます。元動画とトリミング済み動画の文字起こし・解析はそれぞれ独立しています。</p>
+<p>入力を変更すると確認済み範囲は解除されます。未書き出しの範囲はフォルダ切り替え・終了時の保護対象に含まれません。画面は<a href="#trimming-range">トリミング</a>を参照してください。</p>
+<h2 id="_6">人物と参照音声を登録する</h2>
+<p><strong>解析・切り出し → 人物・参照音声 → 詳細設定 → 人物・参照音声の登録</strong>を開きます。名前、参照音声、ECAPAモデルフォルダ、−1から1の照合閾値、分割方法を指定します。</p>
+<p>音声ファイルを使う場合は「音声ファイルを選択」で指定します。WAV、MP3、M4A、FLAC、OGG、AAC、Opusを扱い、16kHz・モノラルWAVへ変換します。参照音声は1秒以上必要です。</p>
+<p>動画から参照音声を作る場合は、次の順で指定します。</p>
+<ol>
+<li><strong>動画を準備 → 取得・媒体操作 → 結果 → 登録済み動画</strong>で抽出元の動画を選びます。</li>
+<li>人物の登録設定へ戻り、参照音声ファイル欄を空にします。</li>
+<li>参照音声にする開始・終了秒を指定します。</li>
+</ol>
+<p>抽出元は取得タブの動画一覧の選択を使います。人物タブの「対象動画」だけを変更しても抽出元は変わりません。取得タブの動画一覧が未選択なら登録できません。</p>
+<p><code>whole-reference</code> は参照音声全体の特徴を求めます。<code>five-second-windows</code> は5秒単位の特徴を平均し、末尾の端数は1秒以上の場合に使います。照合閾値は登録情報として保存しますが、現在の試聴区間作成ではこの値で自動分類しません。</p>
+<p><strong>操作 → 人物と対象動画</strong>の「人物を登録」で登録します。<strong>結果 → 人物一覧</strong>で人物を選び、「人物と対象動画」の「参照音声を試聴」で確認できます。同名で再登録しても別の人物IDになります。</p>
+<p>解析する動画を人物タブの「対象動画」で選び、人物一覧で人物を選び、「動画の対象話者に設定」を押します。同じ人物を複数の動画に指定できます。画面は<a href="#speaker-registration">人物登録設定</a>、<a href="#speaker-target">人物と対象動画</a>を参照してください。</p>
+<h2 id="_7">対象話者の発話を判定し、文字起こしする</h2>
+<h3 id="_8">試聴区間を判定する</h3>
+<p>対象動画と対象話者を確認し、<strong>操作 → 試聴・判定・再表示</strong>の「試聴区間を作成」を押します。動画を5秒ごとの区間に分け、参照音声との類似度を付けます。作成直後はすべて「不明」で、自動的に対象発話へ分類しません。</p>
+<p><strong>結果 → 試聴区間・文字起こし</strong>で行を選び、操作表示の「試聴」で確認して、「対象発話」「対象話者の非発話」「不明」のいずれかに判定します。他の人物だけが話している区間も、対象話者の非発話です。判定すると別版に保存します。失敗して入力が保持された場合は「保存を再試行」を押します。</p>
+<h3 id="_9">対象発話を文字起こしする</h3>
+<p><strong>操作 → 対象話者の文字起こし</strong>でローカルWhisperモデルフォルダを指定し、「対象発話を文字起こし・別版保存」を押します。<code>target</code> と確認した区間だけを認識し、全区間を新しい文字起こし版へ保存します。<code>non-target</code> と <code>unknown</code> の本文は空です。</p>
+<p>中止は「解析を中止」または下部の共通中止で要求し、停止完了まで待ちます。画面は<a href="#speaker-transcribe">文字起こし</a>を参照してください。</p>
+<h3 id="_10">発言を修正する</h3>
+<p>結果一覧で行を選び、<strong>詳細設定 → 発言の修正</strong>で開始秒・終了秒・本文・判定を変更し、「選択行を修正」を押します。「発言を追加」で新しい区間も追加できます。区間の時刻が重複・逆転すると保存できません。</p>
 <table>
 <thead>
 <tr>
-<th>症状</th>
-<th>確認すること</th>
+<th>判定値</th>
+<th>意味</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>ボタンが見つからない</td>
-<td>作業・タブ・表示・項目を確認する。詳細設定内部をスクロールする</td>
+<td><code>target</code></td>
+<td>対象発話。本文を保存できます</td>
 </tr>
 <tr>
-<td>保存フォルダが開かない</td>
-<td>データ用フォルダを選ぶ。開くエラーが出たら全文パスと環境を確認する</td>
+<td><code>non-target</code></td>
+<td>対象話者の非発話。本文は空にします</td>
 </tr>
 <tr>
-<td><code>.aup2</code> がアプリに読み込まれない</td>
-<td>過去の編集の再読込機能はない。AviUtl2で直接開く</td>
-</tr>
-<tr>
-<td>字幕が重なった</td>
-<td>再反映は一覧全体の追加。AviUtl2で旧字幕を整理する</td>
-</tr>
-<tr>
-<td>AviUtl2へ反映できない</td>
-<td>プラグイン、対応プロジェクト、先頭の編集用動画、同じ編集フォルダを確認する</td>
-</tr>
-<tr>
-<td>保存できない</td>
-<td>処理中でないか、保存先・対応プロジェクトを確認する。入力を保持したまま再試行する</td>
-</tr>
-<tr>
-<td>動画が再生できない</td>
-<td><code>ffplay</code> と対象ファイルを確認する</td>
-</tr>
-<tr>
-<td>完成表示が出ない</td>
-<td>保存・描画・エンコード・検査のどこで失敗したか状態を確認する。残ったMP4を完成扱いしない</td>
-</tr>
-<tr>
-<td>フォルダを切り替えられない</td>
-<td>実行中処理の停止完了と未保存入力の保存を待つ</td>
-</tr>
-<tr>
-<td>削除できない</td>
-<td>結果からの参照などがある。必要なら非表示を使う</td>
+<td><code>unknown</code></td>
+<td>不明。本文は空にします</td>
 </tr>
 </tbody>
 </table>
-<h2 id="14">14. 撮影範囲と更新方法</h2>
-<p>スクリーンショットはWSLのTkinter表示で撮影しています。Windows標準ダイアログやWindows表示倍率ごとの差異、AviUtl2本体の実画面は未収録です。UIの変更時は画像も撮り直してください。<a href="screens.json">画面一覧</a>に全表示項目と撮影条件を記録しています。</p>
-<p>このMarkdownと画像フォルダが原本です。HTMLはオフライン閲覧でき、外部サービスやCDNを使いません。共有するときは <code>docs/manual/</code> フォルダ全体を渡し、<code>index.html</code> をブラウザーで開いてください。</p>
-<p>再撮影・HTML再生成の例（開発者向け）：</p>
-<pre><code class="language-sh">python -m pip install Pillow Markdown
-python scripts/manual_capture.py   # WSLのX11環境、ffmpeg/ffprobeが必要。一時データのみ使用
-python scripts/render_manual.py
-</code></pre></main></div><a class="top" href="#top">先頭へ</a>
+<p>「終了秒で分割」は入力した終了秒を分割点にします。分割後の2行はどちらもunknown、本文は空になるため、判定と本文を入れ直すか再認識してください。修正・追加・分割は別版に保存し、旧CSVを残します。</p>
+<p>過去版は<strong>保存結果を確認 → 保存済み情報</strong>で同じ動画の <code>transcripts</code> CSVを選び、人物タブの「保存版を再表示」で読み込みます。未保存入力は先に保存します。類似度は文字起こしCSVに保存していないため、保存版の再表示では表示されません。</p>
+<h2 id="_11">頻出語を集計して発話を確認する</h2>
+<p>人物タブで対象動画を選び、<strong>頻出語 → 操作 → 集計条件</strong>で文字起こしの版番号を指定します。初期状態では名詞を集計し、必要なら動詞・形容詞を追加して「再集計して別版保存」を押します。</p>
+<p><strong>操作 → 登録語・除外語</strong>の入力欄へ語を入力し、「登録語に追加」で複合語を一語として数える設定、「除外語に追加」で集計から外す設定を行います。削除は同じ入力欄へ語を入力し、「登録語から削除」「除外語から削除」を押します。辞書変更だけでは保存済み集計は変わらないため、変更後に再集計します。</p>
+<p><strong>結果 → 頻出語一覧</strong>で語を選び、<strong>結果 → 発話一覧</strong>で該当発話を確認します。「出現」は語の出現回数、「発言」はその語を含む発言数です。発話をダブルクリックすると元動画の該当部分をffplayで再生します。</p>
+<p>過去の集計は保存済み情報で <code>word-counts</code> CSVを選び、集計条件の「選択した保存版を表示」で開きます。画面は<a href="#word-settings">集計条件</a>、<a href="#word-dictionary">辞書操作</a>を参照してください。</p>
+<h2 id="_12">切り出し区間を作る</h2>
+<h3 id="_13">解析結果から候補を作る／手動で始める</h3>
+<p>人物タブで対象動画を選び、<strong>切り出し区間 → 操作 → 候補と保存版</strong>で文字起こし版と前後の余白秒を指定し、「候補を生成して別版保存」を押します。target区間を候補にし、動画の先頭・末尾を超えない範囲で余白を付けます。余白が重なっても自動結合はしません。</p>
+<p>解析なしで作る場合は「解析なしで区間を手動作成」を押します。過去版を使う場合は保存済み情報で同じ動画の <code>segments</code> CSVを選び、「選択した保存版を使用」を押します。</p>
+<h3 id="_14">境界と採否を調整する</h3>
+<p><strong>結果 → 切り出し区間</strong>で行を選び、<strong>詳細設定 → 区間の境界・採否</strong>で開始秒・終了秒・採用を設定します。<strong>操作 → 区間を修正・試聴</strong>で操作します。</p>
+<table>
+<thead>
+<tr>
+<th>操作</th>
+<th>結果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>映像を再生</td>
+<td>選択区間をffplayで再生</td>
+</tr>
+<tr>
+<td>境界を修正</td>
+<td>入力した開始・終了を選択区間へ保存</td>
+</tr>
+<tr>
+<td>終了秒で分割</td>
+<td>入力した終了秒を分割点にして2区間へ分割</td>
+</tr>
+<tr>
+<td>区間結合</td>
+<td>2件以上の選択行を、最初から最後までの1区間に置き換え</td>
+</tr>
+<tr>
+<td>手動追加</td>
+<td>入力した開始・終了の区間を追加</td>
+</tr>
+<tr>
+<td>採否を適用</td>
+<td>採用チェックを選択区間へ適用</td>
+</tr>
+<tr>
+<td>保存を再試行</td>
+<td>保存に失敗して保持している区間を再保存</td>
+</tr>
+</tbody>
+</table>
+<p>複数行はCtrl／Shiftなどで選びます。離れた行を結合すると、最初と最後の選択行の間にある未選択区間と、その間の映像も含みます。区間変更は別版に保存します。</p>
+<h3 id="_15">フレーム境界を確認する</h3>
+<p><strong>操作 → フレーム境界を確認</strong>の「フレーム境界へ合わせる」で、入力した開始・終了を近い実フレーム時刻へ更新します。「開始-1F／+1F」「終了-1F／+1F」でも調整できます。</p>
+<p>これらは入力欄を更新する操作です。「区間を修正・試聴」の「境界を修正」で区間へ保存してください。画面は<a href="#frame-boundaries">境界確認</a>を参照してください。</p>
+<h2 id="_16">使用順を決めて編集用動画を作る</h2>
+<p><strong>結果 → 切り出し区間</strong>で採用区間を選び、<strong>操作 → 編集用動画を作成</strong>の「区間を追加」で使用順へ追加します。同じ区間を複数回追加できます。</p>
+<p><strong>結果 → 編集用動画の順番</strong>で行を選び、「上へ」「下へ」「外す」で変更します。使用順が空なら、採用区間を元の順番で使用します。切り出し区間を修正して一覧を更新すると使用順が空になるため、境界調整の後で順番を指定してください。</p>
+<p>固定fpsを指定します。可変fpsの元動画では指定が必須です。固定fpsの元動画は空欄なら元動画のfpsを優先します。「新しい編集を作成」を押し、確認で「はい」ならショート、「いいえ」なら横の画面設定で作成します。これは元動画の幅・高さを使用する設定なので、次の画面調整手順で実際の寸法も確認してください。</p>
+<p>指定順を連結した編集用MP4と対応.aup2を新規作成します。旧動画・旧プロジェクトは保持し、既存編集の字幕や補助素材配置は新しい編集へ自動移行しません。作成完了後、対応するプロジェクトをAviUtl2で開きます。「編集用動画を再生」は連結したMP4の確認用で、AviUtl2で追加する字幕・補助素材を含みません。</p>
+<p>画面は<a href="#compose-actions">編集用動画の作成</a>、<a href="#compose-order">使用順</a>を参照してください。</p>
+<h2 id="aviutl2">AviUtl2で編集する前に</h2>
+<p>編集用動画を作成した後は、Windows上のClipChannelAPPと専用プラグインを備えたAviUtl2を使用します。両方で同じ編集用動画・対応プロジェクトを対象にしてください。編集の切り抜き元動画は1件で、画像・BGM・効果音は別の素材から追加できます。</p>
+<p>WSLでは現行UIの撮影ができますが、現在の編集受け渡しには制約があります。<code>.aup2</code> 内の動画パスはWindows形式へ変換される一方、<code>.cclayout</code>・<code>.ccsub</code>・<code>.ccmedia</code> の動画パスはLinux形式のままです。プラグインはパス文字列で動画を照合するため、対応動画の検出に失敗します。補助素材のLinuxパスもWindowsから読み込めません。このためWSLからAviUtl2までの一連の編集・書き出しを通常手順として扱いません。</p>
+<p><strong>編集・書き出し → 保存・書き出し → 操作 → 対象プロジェクト</strong>で「対象の場所を確認」を押し、対象の編集用動画と.aup2を確認します。プロジェクトは <code>projects/&lt;編集フォルダ&gt;/</code> に保存します。同じ編集フォルダに1件だけある場合は保存操作時に自動選択し、複数なら「対応するAviUtl2プロジェクトを選ぶ」で選びます。「プロジェクトの保存フォルダを開く」から場所を確認できます。</p>
+<p>新しい編集の.aup2を開き、動画が配置されていることをAviUtl2で確認します。既存の編集用動画を無題プロジェクトへ手動配置して保存する場合は、同じ編集フォルダ内の新しい.aup2名を指定します。既存ファイルへの初回保存は拒否します。</p>
+<h2 id="_17">画面と字幕の配置を調整する</h2>
+<p><strong>編集・書き出し → 画面・字幕 → 操作 → 画面設定とプレビュー</strong>を表示します。「横」「ショート」で画面を選び、<strong>詳細設定 → 画面・字幕の配置</strong>で数値を確認します。</p>
+<table>
+<thead>
+<tr>
+<th>入力</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>画面幅・画面高さ</td>
+<td>編集キャンバスの幅・高さ。完成MP4の出力解像度とは別</td>
+</tr>
+<tr>
+<td>動画拡大率 %</td>
+<td>動画を表示する倍率</td>
+</tr>
+<tr>
+<td>動画 X・動画 Y</td>
+<td>動画の配置座標</td>
+</tr>
+<tr>
+<td>左・上・右・下切り取り px</td>
+<td>元動画の各辺から切り取るピクセル数</td>
+</tr>
+<tr>
+<td>字幕 X・字幕 Y</td>
+<td>アプリから追加した対応字幕の配置座標</td>
+</tr>
+<tr>
+<td>字幕サイズ</td>
+<td>対応字幕の文字サイズ</td>
+</tr>
+<tr>
+<td>プレビューフレーム</td>
+<td>確認するフレーム位置</td>
+</tr>
+</tbody>
+</table>
+<p>「横」は元動画の幅・高さ、「ショート」は元動画の高さ・幅を使います。向きを自動判別して縦長へ揃える処理ではありません。元動画が720×1280なら、横は720×1280、ショートは1280×720になります。目的の寸法を幅・高さへ直接入力してください。切り替えても配置・拡大率・切り取り値を保持します。</p>
+<p>「画面設定をAviUtl2へ渡す」で保存・適用し、「AviUtl2結果のプレビューを開く」で確認します。AviUtl2の対象動画、切り取り、位置、字幕の見切れも確認してください。</p>
+<p>AviUtl2側で手修正した字幕の開始・終了・本文が、保存した取り込み情報と一致しなくなると、その字幕はアプリによる位置・サイズ更新の対象から外れます。AviUtl2側の編集をアプリへ読み戻す機能はありません。</p>
+<p>画面は<a href="#layout-actions">画面設定</a>、<a href="#layout-settings">配置設定</a>を参照してください。</p>
+<h2 id="_18">編集用字幕を生成・修正する</h2>
+<p>保存済み情報で、編集用動画と同じ元動画の <code>transcripts</code> CSVを選びます。<strong>解析・切り出し → 切り出し区間 → 操作 → 編集用動画を作成</strong>の「字幕をAviUtl2へ追加」で、選択版のtarget本文を編集用動画の使用順に合わせて字幕化し、初回追加まで行います。同じ区間を繰り返す場合も、それぞれの位置へ字幕を割り当てます。</p>
+<p>修正する場合は、<strong>編集・書き出し → 画面・字幕 → 結果 → 編集用字幕</strong>で行を選び、<strong>操作 → 字幕を修正</strong>へ切り替えます。開始F・終了F・本文を変更し、「選択字幕を別版保存」を押します。</p>
+<p>Fは0始まりの編集用動画内のフレーム番号です。開始Fは0以上、終了Fは開始F以上で全フレーム数未満にします。終了Fも表示範囲に含み、開始Fと同じ値なら1フレームの字幕です。</p>
+<p>別版は <code>projects/&lt;編集フォルダ&gt;/*_subtitles_vN.ccsub</code> に保存します。元の文字起こしCSVは変更しません。別版保存だけではAviUtl2へ再適用しないため、「保存・書き出し」の「保存」で未適用字幕を追加します。</p>
+<p>字幕の再追加は全体を追加する動作です。既存オブジェクトを置換・差分更新しないため、重複が発生します。再追加前にAviUtl2で既存字幕を整理し、追加後にタイムラインを確認してください。手編集した字幕はアプリへ自動で戻りません。</p>
+<p>画面は<a href="#subtitle-results">編集用字幕一覧</a>、<a href="#subtitle-actions">字幕の修正</a>を参照してください。</p>
+<h2 id="bgm">画像・BGM・効果音を追加する</h2>
+<p><strong>編集・書き出し → 補助素材 → 操作 → 追加・適用・プレビュー</strong>を表示します。対象動画の場所を確認し、「画像を追加」「BGMを追加」「効果音を追加」でファイルを選びます。素材を <code>media/supporting/&lt;編集フォルダ&gt;/</code> へコピーし、外部の元ファイルは保持します。</p>
+<p><strong>結果 → 補助素材一覧</strong>で配置を選び、<strong>詳細設定 → 素材の配置・音声設定</strong>で入力します。</p>
+<table>
+<thead>
+<tr>
+<th>入力</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>開始F (0始まり)</td>
+<td>編集用動画内の配置開始フレーム</td>
+</tr>
+<tr>
+<td>長さF</td>
+<td>配置するフレーム数</td>
+</tr>
+<tr>
+<td>素材の開始秒（音声）</td>
+<td>BGM・効果音で素材内の再生を始める秒</td>
+</tr>
+<tr>
+<td>音量 %</td>
+<td>BGM・効果音の音量</td>
+</tr>
+<tr>
+<td>画像 X・画像 Y</td>
+<td>画像の配置座標</td>
+</tr>
+<tr>
+<td>画像拡大率 %</td>
+<td>画像の表示倍率</td>
+</tr>
+<tr>
+<td>プレビュー開始F</td>
+<td>プレビューを始めるフレーム</td>
+</tr>
+</tbody>
+</table>
+<p>BGMは素材の元の長さで追加し、映像の終了へ自動短縮しません。必要な長さFを手動で設定してください。</p>
+<p>「配置をAviUtl2へ適用・プレビュー」で適用します。同じ配置IDは更新し、重複追加しません。プレビューは指定フレームから最大5秒、映像末尾までの画像・ミックス音声です。「直前のプレビューを開く」から確認し、ダイアログの音声試聴・停止を使います。</p>
+<p>「未適用入力を破棄」は入力を最後に確定した配置へ戻します。新しい編集用動画を作っても、既存編集の配置は自動移行しません。画面は<a href="#supporting-actions">素材追加</a>、<a href="#supporting-settings">素材設定</a>を参照してください。</p>
+<h2 id="_19">プロジェクトを保存する</h2>
+<p><strong>編集・書き出し → 保存・書き出し → 操作 → 保存・書き出し</strong>を表示し、対応するプロジェクトをAviUtl2で開いた状態で「保存」を押します。</p>
+<p>未適用の画面・字幕・補助素材を先に適用し、AviUtl2の現在のプロジェクトを明示保存します。字幕が未適用なら全字幕を追加するため、重複に注意してください。AviUtl2で直接行った手編集も保存対象です。</p>
+<p>保存前後の更新日時・サイズ、プロジェクト内容の読み取り、250ms間隔で3回連続の安定を確認します。10秒以内に確認が揃わなければ「保存を確認できませんでした」と表示し、アプリの入力を保持します。確認のための自動再保存は行いません。</p>
+<p>これは保存状態の簡易判定です。意図した編集内容の検証や、保存から出力までの競合防止・失敗時の自動復旧を行う機能ではありません。処理結果と保存先を確認してください。</p>
+<h2 id="_20">完成動画を書き出す</h2>
+<p>保存を確認してから「完成動画を書き出す」を押します。未保存なら「保存して書き出す／戻る」を選び、保存確認が揃うまで出力しません。</p>
+<p><strong>詳細設定 → 書き出し設定</strong>で完成動画の用途と各設定を確認します。用途の選択後、「用途の初期値を設定」を押すと入力欄へ初期値を設定します。</p>
+<table>
+<thead>
+<tr>
+<th>設定</th>
+<th>初期値・形式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>横の出力解像度</td>
+<td>1920×1080</td>
+</tr>
+<tr>
+<td>ショートの出力解像度</td>
+<td>1080×1920</td>
+</tr>
+<tr>
+<td>固定fps</td>
+<td>編集用動画と同じ。分数も指定可</td>
+</tr>
+<tr>
+<td>映像ビットレート</td>
+<td>30fps以下は8Mbps、30fps超は12Mbps</td>
+</tr>
+<tr>
+<td>音声サンプルレート</td>
+<td>48000Hz</td>
+</tr>
+<tr>
+<td>形式</td>
+<td>MP4 / H.264 / AAC-LC / SDR</td>
+</tr>
+</tbody>
+</table>
+<p>画面・字幕タブのキャンバス寸法と、ここでの出力解像度は別設定です。本アプリのショート検査は、出力が正方形または縦長で、映像が3分以内かを確認します。条件外なら「編集・設定を直す／通常の動画として書き出す」を選びます。通常動画を選んでも現在の比率・配置・長さ・設定を保持します。投稿後の分類を保証するものではありません。</p>
+<p>Windows版FFmpegをPATHへ置くか、起動前に <code>CLIPCHANNEL_FFMPEG</code> へ <code>ffmpeg.exe</code> の絶対パスを設定してください。</p>
+<p>出力中は同じ編集のアプリ入力とAviUtl2の操作を待ちます。BGMが長くても最後の映像までを出力します。フレーム数・長さ・解像度・fps・音声・形式の確認が揃った場合だけ完成を表示します。既存の完成動画は上書きせず、中止・失敗で残ったファイルは完成扱いにしません。</p>
+<p>完了表示のパスから完成動画を開き、使用順・字幕・切り取り・素材の音を確認してください。画面は<a href="#save-export-actions">保存・書き出し</a>、<a href="#export-settings">出力設定</a>を参照してください。</p>
+<h2 id="_21">保存結果から再開する</h2>
+<p><strong>保存結果を確認 → 保存済み情報 → 結果 → 保存済み一覧</strong>で結果CSVを選びます。「CSV本文」で読み取り専用の内容を確認できます。選択後、使用するタブへ戻って読み込みます。</p>
+<table>
+<thead>
+<tr>
+<th>結果の種類</th>
+<th>読み込み操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>transcripts</code></td>
+<td>人物・参照音声の「保存版を再表示」</td>
+</tr>
+<tr>
+<td><code>word-counts</code></td>
+<td>頻出語の「選択した保存版を表示」</td>
+</tr>
+<tr>
+<td><code>segments</code></td>
+<td>切り出し区間の「選択した保存版を使用」</td>
+</tr>
+</tbody>
+</table>
+<p>対象動画とCSVが一致していることを確認し、現在の未保存入力を先に保存します。再起動後はデータ用フォルダと対象動画を選び直し、必要な版を読み込みます。</p>
+<p>過去の.aup2をアプリに読み込み、画面・字幕・補助素材の編集状態をまとめて復元する機能はありません。過去のプロジェクトは <code>projects/&lt;編集フォルダ&gt;/</code> の.aup2をAviUtl2で直接開きます。</p>
+<h2 id="_22">登録情報・実ファイルを管理する</h2>
+<p><strong>データを管理 → 管理・保管 → 結果 → 登録一覧</strong>で項目を選び、<strong>操作 → 登録情報を管理</strong>へ切り替えます。</p>
+<p>「非表示」は通常一覧から隠し、実ファイル・保存結果・辞書の働きを保持します。「非表示の項目も表示」を有効にし、項目を選んで「再表示」すると戻せます。</p>
+<p>「登録情報を削除…」は確認後に登録情報を削除し、実ファイルは残します。保存結果が参照する人物・辞書・元結果・元動画や、対象話者として選択中の人物は削除できません。参照を確定できない旧CSVがある場合も、削除を止めて非表示を案内します。</p>
+<p>「実ファイルを選んで削除…」は選んだパスを確認後、完全に削除します。取り消せません。データ用フォルダ外は対象にしません。削除できるのは次の範囲です。</p>
+<ul>
+<li>保存結果のCSV。</li>
+<li><code>media/originals/</code> 内の登録動画。</li>
+<li><code>archives/</code> 内のZIP。</li>
+<li><code>media/restored/</code> 内の展開ファイル。</li>
+<li>人物登録から参照されていない <code>people/</code> 内の.wav・.json。</li>
+</ul>
+<p>人物の参照音声・特徴ファイルは、先に人物登録を削除する必要があります。取得物、変換結果、編集用動画、補助素材、プロジェクト、完成動画は管理画面の実ファイル削除の対象外です。画面は<a href="#management-actions">管理操作</a>を参照してください。</p>
+<h2 id="_23">動画を保管・展開する</h2>
+<p><strong>管理・保管 → 操作 → 動画を保管・展開</strong>で「動画を保管…」を押し、ファイル選択画面で登録動画を選びます。管理一覧の選択を保管対象にする操作ではありません。</p>
+<p>動画とmanifestをZIP64で <code>archives/</code> へ保存し、動画のSHA256を記録して圧縮後にも検証します。元動画は保持します。圧縮前後の容量と削減量を表示し、減らなくても「容量は削減できなかった」と案内して保管物を残します。</p>
+<p>「保管物を展開…」でこのアプリの保管ZIPを選びます。整合性を検証し、毎回 <code>media/restored/&lt;新しいフォルダ&gt;/</code> へ展開します。元動画・保管ZIP・過去の展開物は保持します。展開動画を制作に使う場合は「ローカル動画を登録」から選びます。</p>
+<p><strong>詳細設定 → 保管・展開結果</strong>で結果を確認します。保管物は動画とmanifestを含み、CSV・プロジェクト・補助素材を含む作業全体のバックアップではありません。</p>
+<h2 id="_24">処理を中止・強制停止する</h2>
+<p>取得・情報取得、動画登録・変換、トリミング、話者照合・文字起こし・修正保存、フレーム境界の確認・調整、編集用動画の作成、保管・展開は共通の管理対象処理です。下部で状態と経過秒を確認します。</p>
+<p>「実行中の処理を中止」は停止要求です。対象処理と子プロセスが実際に終了するまで操作とフォルダ切り替えを待ちます。通常中止から3秒後も終了しなければ「実行中の処理を強制停止…」を選べます。自動で強制停止しません。確認後、対象処理とそれが起動した子プロセスだけを停止し、同名の別プロセスは止めません。</p>
+<p>停止待ちでも画面入力と既存成果物を保持し、途中ファイルを完成扱いにしません。強制停止後に一時ファイルが残る場合があります。終了時の経過秒は固定して表示します。</p>
+<p>人物登録、頻出語の集計、多くの切り出し区間保存などは共通の中止・強制停止の対象ではありません。</p>
+<p>完成動画の書き出しは「書き出しを中止」と「強制停止…」を使います。通常中止から3秒経過しても終了しない場合に強制停止を選び、確認画面の対象と影響を確認します。</p>
+<table>
+<thead>
+<tr>
+<th>段階</th>
+<th>強制停止の対象と影響</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AviUtl2の描画・エンコード中</td>
+<td>担当AviUtl2とエンコーダーを終了。AviUtl2内の未保存編集は失われます</td>
+</tr>
+<tr>
+<td>出力動画の検査中</td>
+<td>検査プロセスとffprobeを停止。AviUtl2内の編集は保持します</td>
+</tr>
+</tbody>
+</table>
+<p>実際の停止後に操作を再開します。アプリ側の入力は保持し、完成確認できない出力を完成品としません。自動復旧は行いません。</p>
+<p>終了時の未保存編集には「保存する／破棄する／戻る」を選べます。トリミングの未書き出し入力はこの確認に含まれないため、必要な動画を先に書き出してください。</p>
+<h2 id="_25">ログを確認・整理する</h2>
+<p>管理対象処理の終了時に、処理名・状態・経過秒・UTC時刻の4項目だけを <code>logs/</code> に記録します。日本時間はUTCに9時間を加えます。アプリ内にログ本文の閲覧画面はないため、必要ならファイルを開きます。全エラー詳細や対象パスを記録するログではありません。</p>
+<p><strong>管理・保管 → 操作 → ログの整理</strong>の「30日経過した通常ログを整理」で整理できます。データ用フォルダを開いたときと処理終了時にも整理します。</p>
+<p>30日以上経過した通常.logと、終了済みのプロジェクト制御ログが対象です。終了を確認できない書き出し・状態不明のログを保持し、<code>recovery/</code> に項目がある間は全ログを保持します。古いログが残る場合でも、削除漏れとは限りません。</p>
+<h2 id="_26">データの保存場所</h2>
+<p>データ用フォルダからの相対位置です。</p>
+<table>
+<thead>
+<tr>
+<th>場所</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>catalog/&lt;動画名&gt;/&lt;結果種別&gt;/</code></td>
+<td>transcripts・word-counts・segmentsなどの版付き結果CSVと参照情報</td>
+</tr>
+<tr>
+<td><code>catalog/</code></td>
+<td>人物・対象話者・登録語・除外語などの共通CSV、一覧状態</td>
+</tr>
+<tr>
+<td><code>media/originals/</code></td>
+<td>登録動画とトリミング動画</td>
+</tr>
+<tr>
+<td><code>media/downloaded/</code></td>
+<td>取得した媒体</td>
+</tr>
+<tr>
+<td><code>media/prepared/</code></td>
+<td>互換変換した動画</td>
+</tr>
+<tr>
+<td><code>media/edits/&lt;編集フォルダ&gt;/</code></td>
+<td>編集用MP4と使用順・fpsなどのJSON</td>
+</tr>
+<tr>
+<td><code>media/supporting/&lt;編集フォルダ&gt;/</code></td>
+<td>コピーした画像・BGM・効果音</td>
+</tr>
+<tr>
+<td><code>media/restored/&lt;展開フォルダ&gt;/</code></td>
+<td>保管ZIPの展開物</td>
+</tr>
+<tr>
+<td><code>people/&lt;人物ID&gt;/</code></td>
+<td>reference.wavとfeature.json</td>
+</tr>
+<tr>
+<td><code>projects/&lt;編集フォルダ&gt;/</code></td>
+<td>.aup2、.cclayout、版付き.ccsub、.ccmedia、制御情報</td>
+</tr>
+<tr>
+<td><code>exports/</code></td>
+<td>完成動画</td>
+</tr>
+<tr>
+<td><code>archives/</code></td>
+<td>動画とmanifestの保管ZIP</td>
+</tr>
+<tr>
+<td><code>work/</code></td>
+<td>処理途中の一時ファイル</td>
+</tr>
+<tr>
+<td><code>recovery/</code></td>
+<td>復旧待ち情報</td>
+</tr>
+<tr>
+<td><code>logs/</code></td>
+<td>管理対象処理の終了ログ</td>
+</tr>
+</tbody>
+</table>
+<p>ファイルの役割と現在の参照先を確認してください。別PCへ移す際は動画・素材・CSV・プロジェクトを保全し、移動後の絶対パスも確認します。プロジェクトだけのコピーでは参照素材は揃いません。</p>
+<h2 id="_27">困ったときの確認</h2>
+<table>
+<thead>
+<tr>
+<th>状況</th>
+<th>確認・操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ボタンが無効</td>
+<td>データ用フォルダ、対象動画、選択行、実行中の処理を確認</td>
+</tr>
+<tr>
+<td>人物登録で動画を選べと言われる</td>
+<td>取得・媒体操作の登録済み動画一覧で抽出元を選び、音声ファイル欄を空にする</td>
+</tr>
+<tr>
+<td>閾値を変えても自動判定されない</td>
+<td>現行処理は全区間unknownから手動判定</td>
+</tr>
+<tr>
+<td>分割後に本文が消えた</td>
+<td>発言分割は両行をunknown・本文空欄にする。判定と本文を再設定</td>
+</tr>
+<tr>
+<td>フレーム調整が保存されない</td>
+<td>調整後に「境界を修正」を押す</td>
+</tr>
+<tr>
+<td>字幕が重複した</td>
+<td>再追加は全字幕を追加。AviUtl2で既存字幕を整理</td>
+</tr>
+<tr>
+<td>手修正字幕の位置・サイズが更新されない</td>
+<td>開始・終了・本文が保存した取り込み情報と一致するか確認</td>
+</tr>
+<tr>
+<td>ショートで横長になる</td>
+<td>元動画の寸法を入れ替える動作を確認し、キャンバスと出力寸法を直接設定</td>
+</tr>
+<tr>
+<td>過去の編集がアプリへ戻らない</td>
+<td>CSVは各タブで再表示。.aup2はAviUtl2で直接開く</td>
+</tr>
+<tr>
+<td>削除を拒否される</td>
+<td>削除可能な場所と参照関係を確認し、必要なら非表示を使う</td>
+</tr>
+<tr>
+<td>保存確認に失敗</td>
+<td>対応.aup2、AviUtl2の開いている編集、保存先を確認して再試行</td>
+</tr>
+<tr>
+<td>書き出しに失敗</td>
+<td>保存状態、対象プロジェクト、Windowsのffmpeg設定、結果表示を確認</td>
+</tr>
+<tr>
+<td>WSLから編集連携ができない</td>
+<td>受け渡しパスの現行制約を確認し、Windows上のアプリとプラグインを使う</td>
+</tr>
+</tbody>
+</table>
+<p>失敗・中止した処理は完了と扱わず、保持された入力と途中ファイルを確認して再試行します。</p>
+<p><a id="screen-reference"></a></p>
+<h2 id="_28">画面ごとの番号説明</h2>
+<p>各画像右側の番号は、直下の表の同じ番号に対応します。手順の実施順とは別です。番号は画像ごとに1から振り直します。</p>
+<p><a id="overview"></a></p>
+<h3 id="_29">全体の操作</h3>
+<p>共通操作の画像です。右の番号欄から色の付いた線と枠をたどると、対応する操作部品を確認できます。各項目の個別画面では、その画面の操作部品だけに番号を付けています。</p>
+<p><img loading="lazy" decoding="async" tabindex="0" width="1760" height="850" style="max-width:1760px" alt="全体の操作" src="images/overview.png" /></p>
+<table>
+<thead>
+<tr>
+<th>画像の番号</th>
+<th>画面の項目</th>
+<th>説明・操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>フォルダを選択・切り替え</td>
+<td>解析結果・人物・動画などを保存するデータ用フォルダを選択します。処理中は切り替えできません。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>場所を確認</td>
+<td>省略されているデータ用フォルダの絶対パスを確認します。</td>
+</tr>
+<tr>
+<td>3</td>
+<td>小</td>
+<td>ウィンドウを小サイズにします。実際の大きさは表示可能な画面領域に合わせて調整します。</td>
+</tr>
+<tr>
+<td>4</td>
+<td>中</td>
+<td>ウィンドウを中サイズにします。</td>
+</tr>
+<tr>
+<td>5</td>
+<td>大</td>
+<td>ウィンドウを大サイズにします。</td>
+</tr>
+<tr>
+<td>6</td>
+<td>動画を準備</td>
+<td>取得・媒体操作タブを表示します。URL取得やローカル動画登録を行います。</td>
+</tr>
+<tr>
+<td>7</td>
+<td>動画をトリミング</td>
+<td>動画をトリミングタブを表示します。連続した一範囲を新しい登録動画に書き出します。</td>
+</tr>
+<tr>
+<td>8</td>
+<td>解析・切り出し</td>
+<td>人物・参照音声、頻出語、切り出し区間のタブを表示します。</td>
+</tr>
+<tr>
+<td>9</td>
+<td>編集・書き出し</td>
+<td>画面・字幕、補助素材、保存・書き出しのタブを表示します。</td>
+</tr>
+<tr>
+<td>10</td>
+<td>保存結果を確認</td>
+<td>保存済み情報タブを表示します。結果CSVと使用する版を選択します。</td>
+</tr>
+<tr>
+<td>11</td>
+<td>データを管理</td>
+<td>管理・保管タブを表示します。登録情報の整理・動画の保管・ログの整理を行います。</td>
+</tr>
+<tr>
+<td>12</td>
+<td>実行中の処理を中止</td>
+<td>共通の管理対象処理に通常中止を要求します。実際の終了を確認するまで処理中の状態を維持します。</td>
+</tr>
+<tr>
+<td>13</td>
+<td>実行中の処理を強制停止…</td>
+<td>通常中止要求から3秒後も終了しない場合に、対象処理とその子プロセスを確認して強制停止します。</td>
+</tr>
+<tr>
+<td>14</td>
+<td>表示</td>
+<td>自動・操作・結果・詳細設定を切り替えます。自動では幅に応じて操作と結果を配置します。</td>
+</tr>
+<tr>
+<td>15</td>
+<td>◁</td>
+<td>現在の表示区分の前の項目へ移動します。</td>
+</tr>
+<tr>
+<td>16</td>
+<td>▷</td>
+<td>現在の表示区分の次の項目へ移動します。</td>
+</tr>
+</tbody>
+</table>
+<p>この画像の番号は <strong>16個</strong>、説明表は <strong>16件</strong>です。</p>
+<p>撮影条件：一時データの本番UI。ネット取得・解析モデル・AviUtl2送信は未実行。</p>
+<p><a id="download-url"></a></p>
+<h3 id="url_1">取得・媒体操作：URL・取得</h3>
+<p>移動：<strong>動画を準備 → 取得・媒体操作 → 表示「操作」→ 項目「URL・取得」</strong>。</p>
+<p><img loading="lazy" decoding="async" tabindex="0" width="1760" height="850" style="max-width:1760px" alt="取得・媒体操作：URL・取得" src="images/download-url.png" /></p>
+<table>
+<thead>
+<tr>
+<th>画像の番号</th>
+<th>画面の項目</th>
+<th>説明・操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>表示項目</td>
+<td>表示「操作」内の項目を選びます。この画像は「URL・取得」を選択した状態です。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>認証不要のURL</td>
+<td>ログイン・Cookieを使わず取得できる動画URLを入力します。</td>
+</tr>
+<tr>
+<td>3</td>
+<td>音声のみ（音声成果物）</td>
+<td>動画の代わりに音声成果物を取得します。音声成果物は登録済み動画として扱いません。</td>
+</tr>
+<tr>
+<td>4</td>
+<td>情報のみ</td>
+<td>メディアを取得せず、URLの情報を表示します。</td>
+</tr>
+<tr>
+<td>5</td>
+<td>取得・情報表示</td>
+<td>現在のURLと設定で取得または情報表示を開始します。完了した項目を結果一覧で確認してください。</td>
+</tr>
+<tr>
+<td>6</td>
+<td>失敗項目を再試行</td>
+<td>直前の取得で失敗した項目だけを再試行します。</td>
+</tr>
+<tr>
+<td>7</td>
+<td>通常中止</td>
+<td>管理対象の取得処理に中止を要求します。実際の終了を確認するまでは操作を再開しません。</td>
+</tr>
+<tr>
+<td>8</td>
+<td>機能案内</td>
+<td>取得機能で対応する範囲と、認証などの対象外の機能を表示します。</td>
+</tr>
+</tbody>
+</table>
+<p>この画像の番号は <strong>8個</strong>、説明表は <strong>8件</strong>です。</p>
+<p>撮影条件：一時データ。ネット取得・人物照合・Whisper・AviUtl2送信は未実行。</p>
+<p><a id="download-local"></a></p>
+<h3 id="_30">取得・媒体操作：ローカル動画</h3>
+<p>移動：<strong>動画を準備 → 取得・媒体操作 → 表示「操作」→ 項目「ローカル動画」</strong>。</p>
+<p><img loading="lazy" decoding="async" tabindex="0" width="1760" height="850" style="max-width:1760px" alt="取得・媒体操作：ローカル動画" src="images/download-local.png" /></p>
+<table>
+<thead>
+<tr>
+<th>画像の番号</th>
+<th>画面の項目</th>
+<th>説明・操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>表示項目</td>
+<td>表示「操作」内の項目を選びます。この画像は「ローカル動画」を選択した状態です。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>ローカル動画を登録</td>
+<td>動画ファイルを選び、媒体を確認してデータ用フォルダへ取り込みます。元ファイルは保持します。</td>
+</tr>
+<tr>
+<td>3</td>
+<td>選択した動画を媒体確認・変換（再試行）</td>
+<td>登録済み動画一覧で選択した動画を再確認し、必要な媒体変換を再試行します。</td>
+</tr>
+</tbody>
+</table>
+<p>この画像の番号は <strong>3個</strong>、説明表は <strong>3件</strong>です。</p>
+<p>撮影条件：一時データ。ネット取得・人物照合・Whisper・AviUtl2送信は未実行。</p>
+<p><a id="download-results"></a></p>
+<h3 id="_31">取得・媒体操作：取得結果</h3>
+<p>移動：<strong>動画を準備 → 取得・媒体操作 → 表示「結果」→ 項目「取得結果」</strong>。</p>
+<p><img loading="lazy" decoding="async" tabindex="0" width="1760" height="850" style="max-width:1760px" alt="取得・媒体操作：取得結果" src="images/download-results.png" /></p>
+<table>
+<thead>
+<tr>
+<th>画像の番号</th>
+<th>画面の項目</th>
+<th>説明・操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>表示項目</td>
+<td>表示「結果」内の項目を選びます。この画像は「取得結果」を選択した状態です。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>取得結果一覧</td>
+<td>取得項目ごとの状態・保存先・失敗理由などを確認します。失敗項目は再試行できます。</td>
+</tr>
+<tr>
+<td>3</td>
+<td>取得結果：縦スクロール</td>
+<td>この一覧または詳細設定の内部を縦にスクロールします。</td>
+</tr>
+<tr>
+<td>4</td>
+<td>取得結果：横スクロール</td>
+<td>一覧の内部を横にスクロールし、長い行の続きを確認します。</td>
+</tr>
+</tbody>
+</table>
+<p>この画像の番号は <strong>4個</strong>、説明表は <strong>4件</strong>です。</p>
+<p>撮影条件：一時データ。ネット取得・人物照合・Whisper・AviUtl2送信は未実行。</p>
+<p><a id="registered-videos"></a></p>
+<h3 id="_32">取得・媒体操作：登録済み動画</h3>
+<p>移動：<strong>動画を準備 → 取得・媒体操作 → 表示「結果」→ 項目「登録済み動画」</strong>。</p>
+<p><img loading="lazy" decoding="async" tabindex="0" width="1760" height="850" style="max-width:1760px" alt="取得・媒体操作：登録済み動画" src="images/registered-videos.png" /></p>
+<table>
+<thead>
+<tr>
+<th>画像の番号</th>
+<th>画面の項目</th>
+<th>説明・操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>表示項目</td>
+<td>表示「結果」内の項目を選びます。この画像は「登録済み動画」を選択した状態です。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>登録済み動画一覧</td>
+<td>制作に使う登録動画を選び、媒体の詳細を確認します。動画からの参照音声登録も、ここで選んだ動画を使います。</td>
+</tr>
+<tr>
+<td>3</td>
+<td>登録済み動画：縦スクロール</td>
+<td>この一覧または詳細設定の内部を縦にスクロールします。</td>
+</tr>
+<tr>
+<td>4</td>
+<td>登録済み動画：横スクロール</td>
+<td>一覧の内部を横にスクロールし、長い行の続きを確認します。</td>
+</tr>
+</tbody>
+</table>
+<p>この画像の番号は <strong>4個</strong>、説明表は <strong>4件</strong>です。</p>
+<p>撮影条件：一時データ。ネット取得・人物照合・Whisper・AviUtl2送信は未実行。</p>
+<p><a id="download-settings"></a></p>
+<h3 id="_33">取得・媒体操作：形式・品質と取得設定</h3>
+<p>移動：<strong>動画を準備 → 取得・媒体操作 → 表示「詳細設定」→ 項目「形式・品質と取得設定」</strong>。</p>
+<p><img loading="lazy" decoding="async" tabindex="0" width="1760" height="850" style="max-width:1760px" alt="取得・媒体操作：形式・品質と取得設定" src="images/download-settings.png" /></p>
+<table>
+<thead>
+<tr>
+<th>画像の番号</th>
+<th>画面の項目</th>
+<th>説明・操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>表示項目</td>
+<td>表示「詳細設定」内の項目を選びます。この画像は「形式・品質と取得設定」を選択した状態です。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>形式・品質 (yt-dlp format)</td>
+<td>yt-dlpの形式指定を入力します。初期値は bestvideo*+bestaudio/best です。</td>
+</tr>
+<tr>
+<td>3</td>
+<td>取得の再試行回数</td>
+<td>取得処理の再試行回数を整数で指定します。</td>
+</tr>
+<tr>
+<td>4</td>
+<td>追加引数（-f, --retries, --fragment-retries, --sub-langs）</td>
+<td>対応するyt-dlp追加引数を指定します。認証用や任意の引数を渡す欄ではありません。</td>
+</tr>
+<tr>
+<td>5</td>
+<td>形式・品質と取得設定：縦スクロール</td>
+<td>この一覧または詳細設定の内部を縦にスクロールします。</td>
+</tr>
+</tbody>
+</table>
+<p>この画像の番号は <strong>5個</strong>、説明表は <strong>5件</strong>です。</p>
+<p>撮影条件：一時データ。ネット取得・人物照合・Whisper・AviUtl2送信は未実行。</p>
+<p><a id="trimming-range"></a></p>
+<h3 id="_34">動画をトリミング：範囲を指定して書き出す</h3>
+<p>移動：<strong>動画をトリミング → 動画をトリミング → 表示「操作」→ 項目「範囲を指定して書き出す」</strong>。</p>
+<p>登録済み動画の一範囲を別の登録動画にします。元動画は保持します。未書き出しの開始・終了・保存名は、フォルダ切り替えと終了時の未保存確認の対象に含まれません。</p>
+<p><img loading="lazy" decoding="async" tabindex="0" width="1760" height="850" style="max-width:1760px" alt="動画をトリミング：範囲を指定して書き出す" src="images/trimming-range.png" /></p>
+<table>
+<thead>
+<tr>
+<th>画像の番号</th>
+<th>画面の項目</th>
+<th>説明・操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>表示項目</td>
+<td>表示「操作」内の項目を選びます。この画像は「範囲を指定して書き出す」を選択した状態です。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>登録済み動画</td>
+<td>トリミングする登録済み動画を選びます。切り替えると範囲と保存名が選択動画の初期値になります。</td>
+</tr>
+<tr>
+<td>3</td>
+<td>一覧を更新</td>
+<td>登録済み動画の候補を読み直します。</td>
+</tr>
+<tr>
+<td>4</td>
+<td>履歴を表示</td>
+<td>選択動画のトリミング元と範囲を表示します。元動画にはトリミング履歴がありません。</td>
+</tr>
+<tr>
+<td>5</td>
+<td>動画プレビュー</td>
+<td>選択動画の映像を表示します。原寸の出力確認ではありません。範囲を決めるためのプレビューです。</td>
+</tr>
+<tr>
+<td>6</td>
+<td>再生位置</td>
+<td>つまみを動かし、離してその位置の映像を表示します。ここから開始・終了位置を設定できます。</td>
+</tr>
+<tr>
+<td>7</td>
+<td>再生／一時停止</td>
+<td>現在位置から動画を再生、または一時停止します。音声の試聴にはffplayが必要です。</td>
+</tr>
+<tr>
+<td>8</td>
+<td>現在位置を開始に</td>
+<td>現在の再生位置を「開始 秒」へ設定します。</td>
+</tr>
+<tr>
+<td>9</td>
+<td>現在位置を終了に</td>
+<td>現在の再生位置を「終了 秒」へ設定します。</td>
+</tr>
+<tr>
+<td>10</td>
+<td>選択範囲を再生</td>
+<td>入力した開始秒から終了秒まで再生し、残す範囲を確認します。</td>
+</tr>
+<tr>
+<td>11</td>
+<td>開始 秒</td>
+<td>残す範囲の開始位置を秒で入力します。0以上、終了より前にしてください。</td>
+</tr>
+<tr>
+<td>12</td>
+<td>終了 秒</td>
+<td>残す範囲の終了位置を秒で入力します。開始より後、動画の長さ以内にしてください。</td>
+</tr>
+<tr>
+<td>13</td>
+<td>保存名</td>
+<td>新しいMP4ファイル名を.mp4付きで入力します（例：scene_trim.mp4）。既存ファイルと同名・同じ保存名は使えません。</td>
+</tr>
+<tr>
+<td>14</td>
+<td>範囲を確認</td>
+<td>開始・終了と保存名を検査して書き出し範囲を確定します。入力を変えると確定は解除されます。</td>
+</tr>
+<tr>
+<td>15</td>
+<td>MP4を書き出す</td>
+<td>確定した範囲を新しい登録済みMP4にします。未確定なら先に範囲を確認します。元動画は保持します。</td>
+</tr>
+</tbody>
+</table>
+<p>この画像の番号は <strong>15個</strong>、説明表は <strong>15件</strong>です。</p>
+<p>撮影条件：一時データ。ネット取得・人物照合・Whisper・AviUtl2送信は未実行。</p>
+<p><a id="speaker-target"></a></p>
+<h3 id="_35">人物・参照音声：人物と対象動画</h3>
+<p>移動：<strong>解析・切り出し → 人物・参照音声 → 表示「操作」→ 項目「人物と対象動画」</strong>。</p>
+<p><img loading="lazy" decoding="async" tabindex="0" width="1760" height="850" style="max-width:1760px" alt="人物・参照音声：人物と対象動画" src="images/speaker-target.png" /></p>
+<table>
+<thead>
+<tr>
+<th>画像の番号</th>
+<th>画面の項目</th>
+<th>説明・操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>表示項目</td>
+<td>表示「操作」内の項目を選びます。この画像は「人物と対象動画」を選択した状態です。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>対象話者を確認</td>
+<td>選択中の人物・閾値・分割方法を確認します。</td>
+</tr>
+<tr>
+<td>3</td>
+<td>対象動画（別動画にも同じ人物を指定できます）</td>
+<td>照合・文字起こし・頻出語・切り出しに使う登録済み動画を選びます。参照音声の切り出し元は取得タブの動画一覧で選びます。</td>
+</tr>
+<tr>
+<td>4</td>
+<td>人物を登録</td>
+<td>詳細設定の名前・参照音声・ECAPAモデル・閾値・分割方法で人物を登録します。この処理は共通の強制停止の対象ではありません。</td>
+</tr>
+<tr>
+<td>5</td>
+<td>参照音声を試聴</td>
+<td>人物一覧で選んだ人物のreference.wavをffplayで試聴します。</td>
+</tr>
+<tr>
+<td>6</td>
+<td>動画の対象話者に設定</td>
+<td>人物一覧で選んだ人物を、対象動画の対象話者として保存します。</td>
+</tr>
+</tbody>
+</table>
+<p>この画像の番号は <strong>6個</strong>、説明表は <strong>6件</strong>です。</p>
+<p>撮影条件：一時データ。ネット取得・人物照合・Whisper・AviUtl2送信は未実行。</p>
+<p><a id="review-actions"></a></p>
+<h3 id="_36">人物・参照音声：試聴・判定・再表示</h3>
+<p>移動：<strong>解析・切り出し → 人物・参照音声 → 表示「操作」→ 項目「試聴・判定・再表示」</strong>。</p>
+<p><img loading="lazy" decoding="async" tabindex="0" width="1760" height="850" style="max-width:1760px" alt="人物・参照音声：試聴・判定・再表示" src="images/review-actions.png" /></p>
+<table>
+<thead>
+<tr>
+<th>画像の番号</th>
+<th>画面の項目</th>
+<th>説明・操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>表示項目</td>
+<td>表示「操作」内の項目を選びます。この画像は「試聴・判定・再表示」を選択した状態です。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>試聴区間を作成</td>
+<td>対象動画を5秒ごとの確認区間に分け、参照人物との類似度を計算します。判定はすべてunknownで始まります。</td>
+</tr>
+<tr>
+<td>3</td>
+<td>試聴</td>
+<td>試聴区間一覧で選択した区間の音声をffplayで再生します。</td>
+</tr>
+<tr>
+<td>4</td>
+<td>対象発話</td>
+<td>選択区間をtargetにして保存します。文字起こしの対象になります。</td>
+</tr>
+<tr>
+<td>5</td>
+<td>対象話者の非発話</td>
+<td>選択区間をnon-targetにして保存します。その区間の本文は空にします。</td>
+</tr>
+<tr>
+<td>6</td>
+<td>不明</td>
+<td>選択区間をunknownにして保存します。その区間の本文は空にします。</td>
+</tr>
+<tr>
+<td>7</td>
+<td>保存を再試行</td>
+<td>未保存の試聴区間・判定・修正内容を再度保存します。</td>
+</tr>
+<tr>
+<td>8</td>
+<td>保存版を再表示</td>
+<td>保存済み情報で選択したtranscripts版を試聴区間一覧に読み込みます。</td>
+</tr>
+</tbody>
+</table>
+<p>この画像の番号は <strong>8個</strong>、説明表は <strong>8件</strong>です。</p>
+<p>撮影条件：一時データ。ネット取得・人物照合・Whisper・AviUtl2送信は未実行。</p>
+<p><a id="speaker-transcribe"></a></p>
+<h3 id="_37">人物・参照音声：対象話者の文字起こし</h3>
+<p>移動：<strong>解析・切り出し → 人物・参照音声 → 表示「操作」→ 項目「対象話者の文字起こし」</strong>。</p>
+<p><img loading="lazy" decoding="async" tabindex="0" width="1760" height="850" style="max-width:1760px" alt="人物・参照音声：対象話者の文字起こし" src="images/speaker-transcribe.png" /></p>
+<table>
+<thead>
+<tr>
+<th>画像の番号</th>
+<th>画面の項目</th>
+<th>説明・操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>表示項目</td>
+<td>表示「操作」内の項目を選びます。この画像は「対象話者の文字起こし」を選択した状態です。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>ローカル Whisper モデル（対象発話の区間のみ認識）</td>
+<td>config.jsonを含むfaster-whisper用ローカルモデルフォルダを指定します。Whisperの単独.ptファイルは使えません。</td>
+</tr>
+<tr>
+<td>3</td>
+<td>対象発話を文字起こし・別版保存</td>
+<td>targetと確認済みの区間だけを認識し、全区間を新しいtranscripts版に保存します。旧版は残ります。</td>
+</tr>
+<tr>
+<td>4</td>
+<td>解析を中止</td>
+<td>共通の管理対象処理に中止を要求します。中止の完了は画面下部で確認します。</td>
+</tr>
+</tbody>
+</table>
+<p>この画像の番号は <strong>4個</strong>、説明表は <strong>4件</strong>です。</p>
+<p>撮影条件：一時データ。ネット取得・人物照合・Whisper・AviUtl2送信は未実行。</p>
+<p><a id="registered-people"></a></p>
+<h3 id="_38">人物・参照音声：人物一覧</h3>
+<p>移動：<strong>解析・切り出し → 人物・参照音声 → 表示「結果」→ 項目「人物一覧」</strong>。</p>
+<p><img loading="lazy" decoding="async" tabindex="0" width="1760" height="850" style="max-width:1760px" alt="人物・参照音声：人物一覧" src="images/registered-people.png" /></p>
+<table>
+<thead>
+<tr>
+<th>画像の番号</th>
+<th>画面の項目</th>
+<th>説明・操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>表示項目</td>
+<td>表示「結果」内の項目を選びます。この画像は「人物一覧」を選択した状態です。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>人物一覧</td>
+<td>人物を選択します。参照音声の試聴、対象話者の設定は操作表示から実行します。</td>
+</tr>
+<tr>
+<td>3</td>
+<td>人物一覧：縦スクロール</td>
+<td>この一覧または詳細設定の内部を縦にスクロールします。</td>
+</tr>
+<tr>
+<td>4</td>
+<td>人物一覧：横スクロール</td>
+<td>一覧の内部を横にスクロールし、長い行の続きを確認します。</td>
+</tr>
+</tbody>
+</table>
+<p>この画像の番号は <strong>4個</strong>、説明表は <strong>4件</strong>です。</p>
+<p>撮影条件：一時データ。ネット取得・人物照合・Whisper・AviUtl2送信は未実行。</p>
+<p><a id="review-results"></a></p>
+<h3 id="_39">人物・参照音声：試聴区間・文字起こし</h3>
+<p>移動：<strong>解析・切り出し → 人物・参照音声 → 表示「結果」→ 項目「試聴区間・文字起こし」</strong>。</p>
+<p><img loading="lazy" decoding="async" tabindex="0" width="1760" height="850" style="max-width:1760px" alt="人物・参照音声：試聴区間・文字起こし" src="images/review-results.png" /></p>
+<table>
+<thead>
+<tr>
+<th>画像の番号</th>
+<th>画面の項目</th>
+<th>説明・操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>表示項目</td>
+<td>表示「結果」内の項目を選びます。この画像は「試聴区間・文字起こし」を選択した状態です。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>試聴区間・文字起こし一覧</td>
+<td>時刻・判定・類似度・本文を確認し、判定や修正の対象行を選択します。保存CSVからの再表示では類似度は保存されていません。</td>
+</tr>
+<tr>
+<td>3</td>
+<td>試聴区間・文字起こし：縦スクロール</td>
+<td>この一覧または詳細設定の内部を縦にスクロールします。</td>
+</tr>
+<tr>
+<td>4</td>
+<td>試聴区間・文字起こし：横スクロール</td>
+<td>一覧の内部を横にスクロールし、長い行の続きを確認します。</td>
+</tr>
+</tbody>
+</table>
+<p>この画像の番号は <strong>4個</strong>、説明表は <strong>4件</strong>です。</p>
+<p>撮影条件：一時データ。ネット取得・人物照合・Whisper・AviUtl2送信は未実行。</p>
+<p><a id="speaker-registration"></a></p>
+<h3 id="_40">人物・参照音声：人物・参照音声の登録</h3>
+<p>移動：<strong>解析・切り出し → 人物・参照音声 → 表示「詳細設定」→ 項目「人物・参照音声の登録」</strong>。</p>
+<p>動画から参照音声を作る場合、抽出元は「取得・媒体操作」の登録済み動画一覧で選びます。ここにある開始・終了秒だけでは抽出元を選べません。</p>
+<p><img loading="lazy" decoding="async" tabindex="0" width="1760" height="850" style="max-width:1760px" alt="人物・参照音声：人物・参照音声の登録" src="images/speaker-registration.png" /></p>
+<table>
+<thead>
+<tr>
+<th>画像の番号</th>
+<th>画面の項目</th>
+<th>説明・操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>表示項目</td>
+<td>表示「詳細設定」内の項目を選びます。この画像は「人物・参照音声の登録」を選択した状態です。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>名前</td>
+<td>人物を識別する表示名を入力します。同じ名前で再登録しても別の人物IDになります。</td>
+</tr>
+<tr>
+<td>3</td>
+<td>参照音声ファイル（動画を使う場合は空欄）</td>
+<td>外部の音声ファイルのパスを入力します。登録済み動画から切り出す場合は空欄にします。</td>
+</tr>
+<tr>
+<td>4</td>
+<td>音声ファイルを選択</td>
+<td>参照音声にする音声ファイルを選びます。動画を使う場合はこの欄を空にしてください。</td>
+</tr>
+<tr>
+<td>5</td>
+<td>参照区間の開始秒</td>
+<td>取得・媒体操作の登録済み動画一覧で選んだ動画から、参照音声にする区間の開始秒を指定します。外部音声ファイルを使うときは使用しません。</td>
+</tr>
+<tr>
+<td>6</td>
+<td>参照区間の終了秒</td>
+<td>動画から参照音声にする区間の終了秒を指定します。開始より後にしてください。参照音声は1秒以上必要です。</td>
+</tr>
+<tr>
+<td>7</td>
+<td>ローカル ECAPA モデルフォルダ</td>
+<td>hyperparams.yamlを含むECAPAモデル一式のフォルダを指定します。話者照合でも登録時と同じモデルが必要です。</td>
+</tr>
+<tr>
+<td>8</td>
+<td>モデルを選択</td>
+<td>ローカルのECAPAモデルフォルダを選びます。モデルをネット取得する操作ではありません。</td>
+</tr>
+<tr>
+<td>9</td>
+<td>照合閾値（-1〜1、品質は別動画で確認）</td>
+<td>-1から1の閾値を登録情報として保存します。現行の試聴区間生成はこの値による自動分類を行いません。</td>
+</tr>
+<tr>
+<td>10</td>
+<td>参照音声の分割方法</td>
+<td>whole-referenceは全音声を1区間として特徴化し、five-second-windowsは5秒窓の特徴を平均します。末尾の1秒未満は除きます。</td>
+</tr>
+<tr>
+<td>11</td>
+<td>人物・参照音声の登録：縦スクロール</td>
+<td>この一覧または詳細設定の内部を縦にスクロールします。</td>
+</tr>
+</tbody>
+</table>
+<p>この画像の番号は <strong>11個</strong>、説明表は <strong>11件</strong>です。</p>
+<p>撮影条件：一時データ。ネット取得・人物照合・Whisper・AviUtl2送信は未実行。</p>
+<p><a id="review-edit"></a></p>
+<h3 id="_41">人物・参照音声：発言の修正</h3>
+<p>移動：<strong>解析・切り出し → 人物・参照音声 → 表示「詳細設定」→ 項目「発言の修正」</strong>。</p>
+<p>発言の分割後は両行がunknown・本文空欄になります。判定と本文を再設定してください。</p>
+<p><img loading="lazy" decoding="async" tabindex="0" width="1760" height="850" style="max-width:1760px" alt="人物・参照音声：発言の修正" src="images/review-edit.png" /></p>
+<table>
+<thead>
+<tr>
+<th>画像の番号</th>
+<th>画面の項目</th>
+<th>説明・操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>表示項目</td>
+<td>表示「詳細設定」内の項目を選びます。この画像は「発言の修正」を選択した状態です。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>開始秒</td>
+<td>発言の開始位置を秒で入力します。保存時はミリ秒へ変換します。</td>
+</tr>
+<tr>
+<td>3</td>
+<td>終了秒</td>
+<td>発言の終了位置を秒で入力します。「終了秒で分割」ではこの時刻を分割点にします。</td>
+</tr>
+<tr>
+<td>4</td>
+<td>本文</td>
+<td>対象発話の文字起こし本文を入力します。non-target・unknownには本文を保存できません。</td>
+</tr>
+<tr>
+<td>5</td>
+<td>発話の判定</td>
+<td>target（対象発話）、non-target（対象話者の非発話）、unknown（不明）を選び、修正または追加します。</td>
+</tr>
+<tr>
+<td>6</td>
+<td>選択行を修正</td>
+<td>選択した発言の開始・終了・判定・本文を修正し、別版に保存します。</td>
+</tr>
+<tr>
+<td>7</td>
+<td>終了秒で分割</td>
+<td>選択発言を入力した終了秒で分割して別版に保存します。分割後の2行はunknown・本文空欄になるため、判定と本文を再設定してください。</td>
+</tr>
+<tr>
+<td>8</td>
+<td>発言を追加</td>
+<td>入力した時刻・判定・本文で発言を追加します。既存区間との重複は保存できません。</td>
+</tr>
+<tr>
+<td>9</td>
+<td>発言の修正：縦スクロール</td>
+<td>この一覧または詳細設定の内部を縦にスクロールします。</td>
+</tr>
+</tbody>
+</table>
+<p>この画像の番号は <strong>9個</strong>、説明表は <strong>9件</strong>です。</p>
+<p>撮影条件：一時データ。ネット取得・人物照合・Whisper・AviUtl2送信は未実行。</p>
+<p><a id="word-settings"></a></p>
+<h3 id="_42">頻出語：集計条件</h3>
+<p>移動：<strong>解析・切り出し → 頻出語 → 表示「操作」→ 項目「集計条件」</strong>。</p>
+<p><img loading="lazy" decoding="async" tabindex="0" width="1760" height="850" style="max-width:1760px" alt="頻出語：集計条件" src="images/word-settings.png" /></p>
+<table>
+<thead>
+<tr>
+<th>画像の番号</th>
+<th>画面の項目</th>
+<th>説明・操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>表示項目</td>
+<td>表示「操作」内の項目を選びます。この画像は「集計条件」を選択した状態です。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>文字起こしの版番号</td>
+<td>集計する対象動画のtranscripts版番号を指定します。最新版本を自動選択する欄ではありません。</td>
+</tr>
+<tr>
+<td>3</td>
+<td>動詞を含める</td>
+<td>名詞に加えて動詞を頻出語の集計対象にします。</td>
+</tr>
+<tr>
+<td>4</td>
+<td>形容詞を含める</td>
+<td>名詞に加えて形容詞を頻出語の集計対象にします。</td>
+</tr>
+<tr>
+<td>5</td>
+<td>再集計して別版保存</td>
+<td>指定transcripts版と現在の辞書・品詞設定で集計し、新しいword-counts版に保存します。</td>
+</tr>
+<tr>
+<td>6</td>
+<td>選択した保存版を表示</td>
+<td>保存済み情報で選択したword-counts版の頻出語と該当発言を表示します。</td>
+</tr>
+</tbody>
+</table>
+<p>この画像の番号は <strong>6個</strong>、説明表は <strong>6件</strong>です。</p>
+<p>撮影条件：一時データ。ネット取得・人物照合・Whisper・AviUtl2送信は未実行。</p>
+<p><a id="word-dictionary"></a></p>
+<h3 id="_43">頻出語：登録語・除外語</h3>
+<p>移動：<strong>解析・切り出し → 頻出語 → 表示「操作」→ 項目「登録語・除外語」</strong>。</p>
+<p><img loading="lazy" decoding="async" tabindex="0" width="1760" height="850" style="max-width:1760px" alt="頻出語：登録語・除外語" src="images/word-dictionary.png" /></p>
+<table>
+<thead>
+<tr>
+<th>画像の番号</th>
+<th>画面の項目</th>
+<th>説明・操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>表示項目</td>
+<td>表示「操作」内の項目を選びます。この画像は「登録語・除外語」を選択した状態です。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>登録・除外する語</td>
+<td>辞書へ追加、または辞書から削除する語を入力します。辞書を変更した後は再集計してください。</td>
+</tr>
+<tr>
+<td>3</td>
+<td>登録語に追加</td>
+<td>入力語を登録語辞書へ追加します。複合語を一語として数えるために使います。</td>
+</tr>
+<tr>
+<td>4</td>
+<td>除外語に追加</td>
+<td>入力語を除外語辞書へ追加します。再集計で対象語を除きます。</td>
+</tr>
+<tr>
+<td>5</td>
+<td>登録語から削除</td>
+<td>入力語の登録を登録語辞書から外します。保存済み集計は変わりません。</td>
+</tr>
+<tr>
+<td>6</td>
+<td>除外語から削除</td>
+<td>入力語の登録を除外語辞書から外します。保存済み集計は変わりません。</td>
+</tr>
+</tbody>
+</table>
+<p>この画像の番号は <strong>6個</strong>、説明表は <strong>6件</strong>です。</p>
+<p>撮影条件：一時データ。ネット取得・人物照合・Whisper・AviUtl2送信は未実行。</p>
+<p><a id="word-totals"></a></p>
+<h3 id="_44">頻出語：頻出語一覧</h3>
+<p>移動：<strong>解析・切り出し → 頻出語 → 表示「結果」→ 項目「頻出語一覧」</strong>。</p>
+<p><img loading="lazy" decoding="async" tabindex="0" width="1760" height="850" style="max-width:1760px" alt="頻出語：頻出語一覧" src="images/word-totals.png" /></p>
+<table>
+<thead>
+<tr>
+<th>画像の番号</th>
+<th>画面の項目</th>
+<th>説明・操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>表示項目</td>
+<td>表示「結果」内の項目を選びます。この画像は「頻出語一覧」を選択した状態です。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>頻出語一覧</td>
+<td>語ごとの出現回数・発話数を確認し、語を選択します。該当発話は「発話一覧」に表示されます。</td>
+</tr>
+<tr>
+<td>3</td>
+<td>頻出語一覧：縦スクロール</td>
+<td>この一覧または詳細設定の内部を縦にスクロールします。</td>
+</tr>
+<tr>
+<td>4</td>
+<td>頻出語一覧：横スクロール</td>
+<td>一覧の内部を横にスクロールし、長い行の続きを確認します。</td>
+</tr>
+</tbody>
+</table>
+<p>この画像の番号は <strong>4個</strong>、説明表は <strong>4件</strong>です。</p>
+<p>撮影条件：一時データ。ネット取得・人物照合・Whisper・AviUtl2送信は未実行。</p>
+<p><a id="word-utterances"></a></p>
+<h3 id="_45">頻出語：発話一覧</h3>
+<p>移動：<strong>解析・切り出し → 頻出語 → 表示「結果」→ 項目「発話一覧」</strong>。</p>
+<p><img loading="lazy" decoding="async" tabindex="0" width="1760" height="850" style="max-width:1760px" alt="頻出語：発話一覧" src="images/word-utterances.png" /></p>
+<table>
+<thead>
+<tr>
+<th>画像の番号</th>
+<th>画面の項目</th>
+<th>説明・操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>表示項目</td>
+<td>表示「結果」内の項目を選びます。この画像は「発話一覧」を選択した状態です。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>選択語を含む発話一覧</td>
+<td>頻出語一覧で選んだ語を含む発話の時刻と本文を確認します。</td>
+</tr>
+<tr>
+<td>3</td>
+<td>発話一覧：縦スクロール</td>
+<td>この一覧または詳細設定の内部を縦にスクロールします。</td>
+</tr>
+<tr>
+<td>4</td>
+<td>発話一覧：横スクロール</td>
+<td>一覧の内部を横にスクロールし、長い行の続きを確認します。</td>
+</tr>
+</tbody>
+</table>
+<p>この画像の番号は <strong>4個</strong>、説明表は <strong>4件</strong>です。</p>
+<p>撮影条件：一時データ。ネット取得・人物照合・Whisper・AviUtl2送信は未実行。</p>
+<p><a id="segment-candidates"></a></p>
+<h3 id="_46">切り出し区間：候補と保存版</h3>
+<p>移動：<strong>解析・切り出し → 切り出し区間 → 表示「操作」→ 項目「候補と保存版」</strong>。</p>
+<p><img loading="lazy" decoding="async" tabindex="0" width="1760" height="850" style="max-width:1760px" alt="切り出し区間：候補と保存版" src="images/segment-candidates.png" /></p>
+<table>
+<thead>
+<tr>
+<th>画像の番号</th>
+<th>画面の項目</th>
+<th>説明・操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>表示項目</td>
+<td>表示「操作」内の項目を選びます。この画像は「候補と保存版」を選択した状態です。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>文字起こし版</td>
+<td>切り出し候補の元にするtranscriptsの版番号を指定します。</td>
+</tr>
+<tr>
+<td>3</td>
+<td>前</td>
+<td>候補の開始に付ける余白を秒で入力します。動画の先頭より前には広げません。</td>
+</tr>
+<tr>
+<td>4</td>
+<td>後</td>
+<td>候補の終了に付ける余白を秒で入力します。動画の末尾より後には広げません。</td>
+</tr>
+<tr>
+<td>5</td>
+<td>候補を生成して別版保存</td>
+<td>指定した文字起こし版のtarget区間に前後余白を付け、切り出し候補をsegments別版に保存します。</td>
+</tr>
+<tr>
+<td>6</td>
+<td>解析なしで区間を手動作成</td>
+<td>対象動画から文字起こしを使わずに手動で切り出し区間を作ります。</td>
+</tr>
+<tr>
+<td>7</td>
+<td>選択した保存版を使用</td>
+<td>保存済み情報で選択したsegments版を切り出し一覧に読み込みます。</td>
+</tr>
+</tbody>
+</table>
+<p>この画像の番号は <strong>7個</strong>、説明表は <strong>7件</strong>です。</p>
+<p>撮影条件：一時データ。ネット取得・人物照合・Whisper・AviUtl2送信は未実行。</p>
+<p><a id="segment-actions"></a></p>
+<h3 id="_47">切り出し区間：区間を修正・試聴</h3>
+<p>移動：<strong>解析・切り出し → 切り出し区間 → 表示「操作」→ 項目「区間を修正・試聴」</strong>。</p>
+<p><img loading="lazy" decoding="async" tabindex="0" width="1760" height="850" style="max-width:1760px" alt="切り出し区間：区間を修正・試聴" src="images/segment-actions.png" /></p>
+<table>
+<thead>
+<tr>
+<th>画像の番号</th>
+<th>画面の項目</th>
+<th>説明・操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>表示項目</td>
+<td>表示「操作」内の項目を選びます。この画像は「区間を修正・試聴」を選択した状態です。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>映像を再生</td>
+<td>選択した切り出し区間の映像と音声をffplayで再生します。</td>
+</tr>
+<tr>
+<td>3</td>
+<td>境界を修正</td>
+<td>開始秒・終了秒で選択区間の境界を修正し、別版に保存します。</td>
+</tr>
+<tr>
+<td>4</td>
+<td>終了秒で分割</td>
+<td>選択区間を入力した終了秒で2つに分割して別版に保存します。開始と元の終了の間の時刻を指定してください。</td>
+</tr>
+<tr>
+<td>5</td>
+<td>区間結合</td>
+<td>2件以上の選択行を結合して別版に保存します。最初と最後の選択行の間の未選択区間も結合に含まれます。</td>
+</tr>
+<tr>
+<td>6</td>
+<td>手動追加</td>
+<td>開始秒・終了秒の区間を手動で追加し、別版に保存します。</td>
+</tr>
+<tr>
+<td>7</td>
+<td>採否を適用</td>
+<td>「採用」のチェックを選択区間へ適用して別版に保存します。</td>
+</tr>
+<tr>
+<td>8</td>
+<td>保存を再試行</td>
+<td>未保存の切り出し区間の修正内容を再度別版へ保存します。</td>
+</tr>
+</tbody>
+</table>
+<p>この画像の番号は <strong>8個</strong>、説明表は <strong>8件</strong>です。</p>
+<p>撮影条件：一時データ。ネット取得・人物照合・Whisper・AviUtl2送信は未実行。</p>
+<p><a id="compose-actions"></a></p>
+<h3 id="_48">切り出し区間：編集用動画を作成</h3>
+<p>移動：<strong>解析・切り出し → 切り出し区間 → 表示「操作」→ 項目「編集用動画を作成」</strong>。</p>
+<p><img loading="lazy" decoding="async" tabindex="0" width="1760" height="850" style="max-width:1760px" alt="切り出し区間：編集用動画を作成" src="images/compose-actions.png" /></p>
+<table>
+<thead>
+<tr>
+<th>画像の番号</th>
+<th>画面の項目</th>
+<th>説明・操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>表示項目</td>
+<td>表示「操作」内の項目を選びます。この画像は「編集用動画を作成」を選択した状態です。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>区間を追加</td>
+<td>選択した採用区間を編集順に追加します。同じ区間を複数回追加できます。</td>
+</tr>
+<tr>
+<td>3</td>
+<td>上へ</td>
+<td>編集順で選択した区間を一つ上へ移動します。</td>
+</tr>
+<tr>
+<td>4</td>
+<td>下へ</td>
+<td>編集順で選択した区間を一つ下へ移動します。</td>
+</tr>
+<tr>
+<td>5</td>
+<td>外す</td>
+<td>編集順で選択した区間を順番一覧から外します。元の切り出し区間は削除しません。</td>
+</tr>
+<tr>
+<td>6</td>
+<td>新しい編集を作成</td>
+<td>現在の編集順と固定fpsで区間を連結し、新しい編集用MP4とAviUtl2プロジェクトを作成します。</td>
+</tr>
+<tr>
+<td>7</td>
+<td>字幕をAviUtl2へ追加</td>
+<td>保存済み情報で選択した元動画のtranscripts版から編集用字幕を生成し、対応するAviUtl2へ追加します。再実行すると全字幕を追加し、既存字幕は置換しません。</td>
+</tr>
+<tr>
+<td>8</td>
+<td>編集用動画を再生</td>
+<td>直前に作成した編集用MP4をffplayで再生します。AviUtl2で追加した字幕や補助素材はこのMP4には反映されません。</td>
+</tr>
+<tr>
+<td>9</td>
+<td>固定fps（可変fpsでは必須。空欄なら元動画優先）</td>
+<td>編集用動画の固定fpsを指定します。可変fpsの元動画では指定が必要です。</td>
+</tr>
+</tbody>
+</table>
+<p>この画像の番号は <strong>9個</strong>、説明表は <strong>9件</strong>です。</p>
+<p>撮影条件：一時データ。ネット取得・人物照合・Whisper・AviUtl2送信は未実行。</p>
+<p><a id="frame-boundaries"></a></p>
+<h3 id="_49">切り出し区間：フレーム境界を確認</h3>
+<p>移動：<strong>解析・切り出し → 切り出し区間 → 表示「操作」→ 項目「フレーム境界を確認」</strong>。</p>
+<p><img loading="lazy" decoding="async" tabindex="0" width="1760" height="850" style="max-width:1760px" alt="切り出し区間：フレーム境界を確認" src="images/frame-boundaries.png" /></p>
+<table>
+<thead>
+<tr>
+<th>画像の番号</th>
+<th>画面の項目</th>
+<th>説明・操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>表示項目</td>
+<td>表示「操作」内の項目を選びます。この画像は「フレーム境界を確認」を選択した状態です。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>フレーム境界へ合わせる</td>
+<td>入力した開始秒・終了秒を近い実フレーム境界へ更新します。変更を保存するには「境界を修正」を押します。</td>
+</tr>
+<tr>
+<td>3</td>
+<td>開始-1F</td>
+<td>開始位置を元動画の実際のフレーム境界で1フレーム前へ移動します。</td>
+</tr>
+<tr>
+<td>4</td>
+<td>開始+1F</td>
+<td>開始位置を元動画の実際のフレーム境界で1フレーム後へ移動します。</td>
+</tr>
+<tr>
+<td>5</td>
+<td>終了-1F</td>
+<td>終了位置を元動画の実際のフレーム境界で1フレーム前へ移動します。</td>
+</tr>
+<tr>
+<td>6</td>
+<td>終了+1F</td>
+<td>終了位置を元動画の実際のフレーム境界で1フレーム後へ移動します。</td>
+</tr>
+</tbody>
+</table>
+<p>この画像の番号は <strong>6個</strong>、説明表は <strong>6件</strong>です。</p>
+<p>撮影条件：一時データ。ネット取得・人物照合・Whisper・AviUtl2送信は未実行。</p>
+<p><a id="segment-results"></a></p>
+<h3 id="_50">切り出し区間：切り出し区間</h3>
+<p>移動：<strong>解析・切り出し → 切り出し区間 → 表示「結果」→ 項目「切り出し区間」</strong>。</p>
+<p><img loading="lazy" decoding="async" tabindex="0" width="1760" height="850" style="max-width:1760px" alt="切り出し区間：切り出し区間" src="images/segment-results.png" /></p>
+<table>
+<thead>
+<tr>
+<th>画像の番号</th>
+<th>画面の項目</th>
+<th>説明・操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>表示項目</td>
+<td>表示「結果」内の項目を選びます。この画像は「切り出し区間」を選択した状態です。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>切り出し区間一覧</td>
+<td>開始・終了・種類・採否を確認して操作対象を選びます。複数選択して区間結合もできます。</td>
+</tr>
+<tr>
+<td>3</td>
+<td>切り出し区間：縦スクロール</td>
+<td>この一覧または詳細設定の内部を縦にスクロールします。</td>
+</tr>
+<tr>
+<td>4</td>
+<td>切り出し区間：横スクロール</td>
+<td>一覧の内部を横にスクロールし、長い行の続きを確認します。</td>
+</tr>
+</tbody>
+</table>
+<p>この画像の番号は <strong>4個</strong>、説明表は <strong>4件</strong>です。</p>
+<p>撮影条件：一時データ。ネット取得・人物照合・Whisper・AviUtl2送信は未実行。</p>
+<p><a id="compose-order"></a></p>
+<h3 id="_51">切り出し区間：編集用動画の順番</h3>
+<p>移動：<strong>解析・切り出し → 切り出し区間 → 表示「結果」→ 項目「編集用動画の順番」</strong>。</p>
+<p><img loading="lazy" decoding="async" tabindex="0" width="1760" height="850" style="max-width:1760px" alt="切り出し区間：編集用動画の順番" src="images/compose-order.png" /></p>
+<table>
+<thead>
+<tr>
+<th>画像の番号</th>
+<th>画面の項目</th>
+<th>説明・操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>表示項目</td>
+<td>表示「結果」内の項目を選びます。この画像は「編集用動画の順番」を選択した状態です。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>編集用動画の順番</td>
+<td>連結する順番を確認し、並べ替え・除外の対象行を選びます。元の切り出し区間は保持します。</td>
+</tr>
+<tr>
+<td>3</td>
+<td>編集用動画の順番：縦スクロール</td>
+<td>この一覧または詳細設定の内部を縦にスクロールします。</td>
+</tr>
+<tr>
+<td>4</td>
+<td>編集用動画の順番：横スクロール</td>
+<td>一覧の内部を横にスクロールし、長い行の続きを確認します。</td>
+</tr>
+</tbody>
+</table>
+<p>この画像の番号は <strong>4個</strong>、説明表は <strong>4件</strong>です。</p>
+<p>撮影条件：一時データ。ネット取得・人物照合・Whisper・AviUtl2送信は未実行。</p>
+<p><a id="segment-settings"></a></p>
+<h3 id="_52">切り出し区間：区間の境界・採否</h3>
+<p>移動：<strong>解析・切り出し → 切り出し区間 → 表示「詳細設定」→ 項目「区間の境界・採否」</strong>。</p>
+<p><img loading="lazy" decoding="async" tabindex="0" width="1760" height="850" style="max-width:1760px" alt="切り出し区間：区間の境界・採否" src="images/segment-settings.png" /></p>
+<table>
+<thead>
+<tr>
+<th>画像の番号</th>
+<th>画面の項目</th>
+<th>説明・操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>表示項目</td>
+<td>表示「詳細設定」内の項目を選びます。この画像は「区間の境界・採否」を選択した状態です。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>開始秒</td>
+<td>切り出し区間の開始位置を秒で入力します。フレーム調整後も「境界を修正」で保存してください。</td>
+</tr>
+<tr>
+<td>3</td>
+<td>終了秒</td>
+<td>切り出し区間の終了位置を秒で入力します。「終了秒で分割」ではこの時刻を分割点にします。</td>
+</tr>
+<tr>
+<td>4</td>
+<td>採用</td>
+<td>選択区間を編集用動画の候補として採用するかを指定します。</td>
+</tr>
+<tr>
+<td>5</td>
+<td>区間の境界・採否：縦スクロール</td>
+<td>この一覧または詳細設定の内部を縦にスクロールします。</td>
+</tr>
+</tbody>
+</table>
+<p>この画像の番号は <strong>5個</strong>、説明表は <strong>5件</strong>です。</p>
+<p>撮影条件：一時データ。ネット取得・人物照合・Whisper・AviUtl2送信は未実行。</p>
+<p><a id="layout-actions"></a></p>
+<h3 id="_53">画面・字幕：画面設定とプレビュー</h3>
+<p>移動：<strong>編集・書き出し → 画面・字幕 → 表示「操作」→ 項目「画面設定とプレビュー」</strong>。</p>
+<p>「横」は元の幅・高さ、「ショート」は元の高さ・幅を使います。縦向き元動画はショートで横長になるため、詳細設定の幅・高さも確認してください。</p>
+<p><img loading="lazy" decoding="async" tabindex="0" width="1760" height="850" style="max-width:1760px" alt="画面・字幕：画面設定とプレビュー" src="images/layout-actions.png" /></p>
+<table>
+<thead>
+<tr>
+<th>画像の番号</th>
+<th>画面の項目</th>
+<th>説明・操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>表示項目</td>
+<td>表示「操作」内の項目を選びます。この画像は「画面設定とプレビュー」を選択した状態です。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>横</td>
+<td>キャンバスを元動画の幅・高さに設定します。縦長元動画では横長になりません。配置の値は保持します。</td>
+</tr>
+<tr>
+<td>3</td>
+<td>ショート</td>
+<td>キャンバスを元動画の高さ・幅に設定します。縦長元動画では横長になるため、必要なら幅・高さを直接入力してください。</td>
+</tr>
+<tr>
+<td>4</td>
+<td>画面設定をAviUtl2へ渡す</td>
+<td>設定を保存して、対応する編集用動画があるAviUtl2へ適用します。字幕は保存された開始・終了・本文と一致するものが対象です。</td>
+</tr>
+<tr>
+<td>5</td>
+<td>AviUtl2結果のプレビューを開く</td>
+<td>直前にAviUtl2で生成したプレビュー画像を開きます。</td>
+</tr>
+</tbody>
+</table>
+<p>この画像の番号は <strong>5個</strong>、説明表は <strong>5件</strong>です。</p>
+<p>撮影条件：一時データ。ネット取得・人物照合・Whisper・AviUtl2送信は未実行。</p>
+<p><a id="subtitle-actions"></a></p>
+<h3 id="_54">画面・字幕：字幕を修正</h3>
+<p>移動：<strong>編集・書き出し → 画面・字幕 → 表示「操作」→ 項目「字幕を修正」</strong>。</p>
+<p>終了Fは表示範囲に含まれます。別版保存後は「保存・書き出し」の「保存」で未適用字幕を追加します。字幕全体が追加されるため、AviUtl2側の既存字幕との重複を確認してください。</p>
+<p><img loading="lazy" decoding="async" tabindex="0" width="1760" height="850" style="max-width:1760px" alt="画面・字幕：字幕を修正" src="images/subtitle-actions.png" /></p>
+<table>
+<thead>
+<tr>
+<th>画像の番号</th>
+<th>画面の項目</th>
+<th>説明・操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>表示項目</td>
+<td>表示「操作」内の項目を選びます。この画像は「字幕を修正」を選択した状態です。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>開始F</td>
+<td>字幕の開始フレームを0始まりで入力します。</td>
+</tr>
+<tr>
+<td>3</td>
+<td>終了F</td>
+<td>字幕の最後に表示するフレームを0始まりで入力します。このフレームも表示範囲に含み、開始Fと同じ値なら1フレームの字幕です。</td>
+</tr>
+<tr>
+<td>4</td>
+<td>字幕本文</td>
+<td>選択した編集用字幕の本文を修正します。元の文字起こしCSVは変更しません。</td>
+</tr>
+<tr>
+<td>5</td>
+<td>字幕を修正：縦スクロール</td>
+<td>この一覧または詳細設定の内部を縦にスクロールします。</td>
+</tr>
+<tr>
+<td>6</td>
+<td>選択字幕を別版保存</td>
+<td>選択字幕の開始F・終了F・本文を新しい編集用字幕版へ保存します。AviUtl2への適用は別操作です。</td>
+</tr>
+</tbody>
+</table>
+<p>この画像の番号は <strong>6個</strong>、説明表は <strong>6件</strong>です。</p>
+<p>撮影条件：一時データ。ネット取得・人物照合・Whisper・AviUtl2送信は未実行。</p>
+<p><a id="subtitle-results"></a></p>
+<h3 id="_55">画面・字幕：編集用字幕</h3>
+<p>移動：<strong>編集・書き出し → 画面・字幕 → 表示「結果」→ 項目「編集用字幕」</strong>。</p>
+<p><img loading="lazy" decoding="async" tabindex="0" width="1760" height="850" style="max-width:1760px" alt="画面・字幕：編集用字幕" src="images/subtitle-results.png" /></p>
+<table>
+<thead>
+<tr>
+<th>画像の番号</th>
+<th>画面の項目</th>
+<th>説明・操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>表示項目</td>
+<td>表示「結果」内の項目を選びます。この画像は「編集用字幕」を選択した状態です。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>編集用字幕一覧</td>
+<td>編集用動画のフレーム時刻と字幕本文を確認し、修正する字幕を選びます。</td>
+</tr>
+<tr>
+<td>3</td>
+<td>編集用字幕：縦スクロール</td>
+<td>この一覧または詳細設定の内部を縦にスクロールします。</td>
+</tr>
+<tr>
+<td>4</td>
+<td>編集用字幕：横スクロール</td>
+<td>一覧の内部を横にスクロールし、長い行の続きを確認します。</td>
+</tr>
+</tbody>
+</table>
+<p>この画像の番号は <strong>4個</strong>、説明表は <strong>4件</strong>です。</p>
+<p>撮影条件：一時データ。ネット取得・人物照合・Whisper・AviUtl2送信は未実行。</p>
+<p><a id="layout-settings"></a></p>
+<h3 id="_56">画面・字幕：画面・字幕の配置</h3>
+<p>移動：<strong>編集・書き出し → 画面・字幕 → 表示「詳細設定」→ 項目「画面・字幕の配置」</strong>。</p>
+<p><img loading="lazy" decoding="async" tabindex="0" width="1760" height="850" style="max-width:1760px" alt="画面・字幕：画面・字幕の配置" src="images/layout-settings.png" /></p>
+<table>
+<thead>
+<tr>
+<th>画像の番号</th>
+<th>画面の項目</th>
+<th>説明・操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>表示項目</td>
+<td>表示「詳細設定」内の項目を選びます。この画像は「画面・字幕の配置」を選択した状態です。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>画面幅</td>
+<td>編集キャンバスの幅をピクセルで入力します。完成動画の出力幅とは別の設定です。</td>
+</tr>
+<tr>
+<td>3</td>
+<td>画面高さ</td>
+<td>編集キャンバスの高さをピクセルで入力します。完成動画の出力高さとは別の設定です。</td>
+</tr>
+<tr>
+<td>4</td>
+<td>動画拡大率 %</td>
+<td>動画の表示倍率を百分率で指定します。</td>
+</tr>
+<tr>
+<td>5</td>
+<td>動画 X</td>
+<td>動画の横方向の配置座標を指定します。</td>
+</tr>
+<tr>
+<td>6</td>
+<td>動画 Y</td>
+<td>動画の縦方向の配置座標を指定します。</td>
+</tr>
+<tr>
+<td>7</td>
+<td>左切り取り px</td>
+<td>元動画の左端から切り取るピクセル数を指定します。</td>
+</tr>
+<tr>
+<td>8</td>
+<td>上切り取り px</td>
+<td>元動画の上端から切り取るピクセル数を指定します。</td>
+</tr>
+<tr>
+<td>9</td>
+<td>右切り取り px</td>
+<td>元動画の右端から切り取るピクセル数を指定します。</td>
+</tr>
+<tr>
+<td>10</td>
+<td>下切り取り px</td>
+<td>元動画の下端から切り取るピクセル数を指定します。</td>
+</tr>
+<tr>
+<td>11</td>
+<td>字幕 X</td>
+<td>アプリから追加した対応字幕の横方向の配置座標を指定します。</td>
+</tr>
+<tr>
+<td>12</td>
+<td>字幕 Y</td>
+<td>アプリから追加した対応字幕の縦方向の配置座標を指定します。</td>
+</tr>
+<tr>
+<td>13</td>
+<td>字幕サイズ</td>
+<td>アプリから追加した対応字幕の文字サイズを指定します。</td>
+</tr>
+<tr>
+<td>14</td>
+<td>プレビューフレーム</td>
+<td>画面設定の結果を確認するフレーム位置を指定します。</td>
+</tr>
+<tr>
+<td>15</td>
+<td>画面・字幕の配置：縦スクロール</td>
+<td>この一覧または詳細設定の内部を縦にスクロールします。</td>
+</tr>
+</tbody>
+</table>
+<p>この画像の番号は <strong>15個</strong>、説明表は <strong>15件</strong>です。</p>
+<p>撮影条件：一時データ。ネット取得・人物照合・Whisper・AviUtl2送信は未実行。</p>
+<p><a id="supporting-actions"></a></p>
+<h3 id="_57">補助素材：追加・適用・プレビュー</h3>
+<p>移動：<strong>編集・書き出し → 補助素材 → 表示「操作」→ 項目「追加・適用・プレビュー」</strong>。</p>
+<p><img loading="lazy" decoding="async" tabindex="0" width="1760" height="850" style="max-width:1760px" alt="補助素材：追加・適用・プレビュー" src="images/supporting-actions.png" /></p>
+<table>
+<thead>
+<tr>
+<th>画像の番号</th>
+<th>画面の項目</th>
+<th>説明・操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>表示項目</td>
+<td>表示「操作」内の項目を選びます。この画像は「追加・適用・プレビュー」を選択した状態です。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>対象動画の場所を確認</td>
+<td>補助素材を配置する編集用動画のパスを確認します。</td>
+</tr>
+<tr>
+<td>3</td>
+<td>画像を追加</td>
+<td>画像ファイルをデータ用フォルダへコピーし、現在の編集用動画に配置を追加します。</td>
+</tr>
+<tr>
+<td>4</td>
+<td>BGMを追加</td>
+<td>音声ファイルをコピーしてBGM配置を追加します。初期長さは素材の長さで、映像末尾には自動短縮しません。</td>
+</tr>
+<tr>
+<td>5</td>
+<td>効果音を追加</td>
+<td>音声ファイルをコピーして効果音配置を追加します。</td>
+</tr>
+<tr>
+<td>6</td>
+<td>配置をAviUtl2へ適用・プレビュー</td>
+<td>未適用の配置設定をAviUtl2へ反映し、指定フレームから最大5秒の画像・ミックス音声を用意します。</td>
+</tr>
+<tr>
+<td>7</td>
+<td>直前のプレビューを開く</td>
+<td>直前に生成した補助素材のプレビューを開きます。</td>
+</tr>
+<tr>
+<td>8</td>
+<td>未適用入力を破棄</td>
+<td>選択配置の未適用入力を、最後に確定した配置設定へ戻します。</td>
+</tr>
+</tbody>
+</table>
+<p>この画像の番号は <strong>8個</strong>、説明表は <strong>8件</strong>です。</p>
+<p>撮影条件：一時データ。ネット取得・人物照合・Whisper・AviUtl2送信は未実行。</p>
+<p><a id="supporting-results"></a></p>
+<h3 id="_58">補助素材：補助素材一覧</h3>
+<p>移動：<strong>編集・書き出し → 補助素材 → 表示「結果」→ 項目「補助素材一覧」</strong>。</p>
+<p><img loading="lazy" decoding="async" tabindex="0" width="1760" height="850" style="max-width:1760px" alt="補助素材：補助素材一覧" src="images/supporting-results.png" /></p>
+<table>
+<thead>
+<tr>
+<th>画像の番号</th>
+<th>画面の項目</th>
+<th>説明・操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>表示項目</td>
+<td>表示「結果」内の項目を選びます。この画像は「補助素材一覧」を選択した状態です。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>補助素材一覧</td>
+<td>現在の編集用動画に追加した画像・BGM・効果音の配置を選びます。</td>
+</tr>
+<tr>
+<td>3</td>
+<td>補助素材一覧：縦スクロール</td>
+<td>この一覧または詳細設定の内部を縦にスクロールします。</td>
+</tr>
+<tr>
+<td>4</td>
+<td>補助素材一覧：横スクロール</td>
+<td>一覧の内部を横にスクロールし、長い行の続きを確認します。</td>
+</tr>
+</tbody>
+</table>
+<p>この画像の番号は <strong>4個</strong>、説明表は <strong>4件</strong>です。</p>
+<p>撮影条件：一時データ。ネット取得・人物照合・Whisper・AviUtl2送信は未実行。</p>
+<p><a id="supporting-settings"></a></p>
+<h3 id="_59">補助素材：素材の配置・音声設定</h3>
+<p>移動：<strong>編集・書き出し → 補助素材 → 表示「詳細設定」→ 項目「素材の配置・音声設定」</strong>。</p>
+<p>BGMは素材の元の長さで追加され、映像の末尾へ自動短縮しません。必要な長さFを手動で調整してください。</p>
+<p><img loading="lazy" decoding="async" tabindex="0" width="1760" height="850" style="max-width:1760px" alt="補助素材：素材の配置・音声設定" src="images/supporting-settings.png" /></p>
+<table>
+<thead>
+<tr>
+<th>画像の番号</th>
+<th>画面の項目</th>
+<th>説明・操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>表示項目</td>
+<td>表示「詳細設定」内の項目を選びます。この画像は「素材の配置・音声設定」を選択した状態です。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>開始F (0始まり)</td>
+<td>補助素材を置き始めるフレームを0始まりで指定します。</td>
+</tr>
+<tr>
+<td>3</td>
+<td>長さF</td>
+<td>補助素材を表示・再生するフレーム数を指定します。</td>
+</tr>
+<tr>
+<td>4</td>
+<td>素材の開始秒（音声）</td>
+<td>BGM・効果音で素材内の再生開始位置を秒で指定します。</td>
+</tr>
+<tr>
+<td>5</td>
+<td>音量 %</td>
+<td>BGM・効果音の音量を百分率で指定します。</td>
+</tr>
+<tr>
+<td>6</td>
+<td>画像 X</td>
+<td>画像の横方向の配置座標を指定します。</td>
+</tr>
+<tr>
+<td>7</td>
+<td>画像 Y</td>
+<td>画像の縦方向の配置座標を指定します。</td>
+</tr>
+<tr>
+<td>8</td>
+<td>画像拡大率 %</td>
+<td>画像の表示倍率を百分率で指定します。</td>
+</tr>
+<tr>
+<td>9</td>
+<td>プレビュー開始F</td>
+<td>補助素材のプレビューを始めるフレーム位置を指定します。</td>
+</tr>
+<tr>
+<td>10</td>
+<td>素材の配置・音声設定：縦スクロール</td>
+<td>この一覧または詳細設定の内部を縦にスクロールします。</td>
+</tr>
+</tbody>
+</table>
+<p>この画像の番号は <strong>10個</strong>、説明表は <strong>10件</strong>です。</p>
+<p>撮影条件：一時データ。ネット取得・人物照合・Whisper・AviUtl2送信は未実行。</p>
+<p><a id="save-export-actions"></a></p>
+<h3 id="_60">保存・書き出し：保存・書き出し</h3>
+<p>移動：<strong>編集・書き出し → 保存・書き出し → 表示「操作」→ 項目「保存・書き出し」</strong>。</p>
+<p>保存・書き出しは、Windows上のClipChannelAPPと対応するプラグインで操作してください。この撮影ではAviUtl2を操作していません。</p>
+<p><img loading="lazy" decoding="async" tabindex="0" width="1760" height="850" style="max-width:1760px" alt="保存・書き出し：保存・書き出し" src="images/save-export-actions.png" /></p>
+<table>
+<thead>
+<tr>
+<th>画像の番号</th>
+<th>画面の項目</th>
+<th>説明・操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>表示項目</td>
+<td>表示「操作」内の項目を選びます。この画像は「保存・書き出し」を選択した状態です。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>保存</td>
+<td>未適用の画面・字幕・補助素材を適用し、AviUtl2で開いている対応プロジェクトを明示保存して確認します。</td>
+</tr>
+<tr>
+<td>3</td>
+<td>完成動画を書き出す</td>
+<td>保存を確認した対応プロジェクトを現在の出力設定でMP4に書き出し、完成条件を検査します。</td>
+</tr>
+<tr>
+<td>4</td>
+<td>書き出しを中止</td>
+<td>書き出しに中止を要求します。実際の停止完了まで同じ編集の操作は待ちます。</td>
+</tr>
+<tr>
+<td>5</td>
+<td>強制停止…</td>
+<td>通常中止要求から3秒以上応答がない場合に使います。描画・エンコード中は担当AviUtl2も終了し、未保存編集が失われます。</td>
+</tr>
+</tbody>
+</table>
+<p>この画像の番号は <strong>5個</strong>、説明表は <strong>5件</strong>です。</p>
+<p>撮影条件：一時データ。ネット取得・人物照合・Whisper・AviUtl2送信は未実行。</p>
+<p><a id="project-target"></a></p>
+<h3 id="_61">保存・書き出し：対象プロジェクト</h3>
+<p>移動：<strong>編集・書き出し → 保存・書き出し → 表示「操作」→ 項目「対象プロジェクト」</strong>。</p>
+<p><img loading="lazy" decoding="async" tabindex="0" width="1760" height="850" style="max-width:1760px" alt="保存・書き出し：対象プロジェクト" src="images/project-target.png" /></p>
+<table>
+<thead>
+<tr>
+<th>画像の番号</th>
+<th>画面の項目</th>
+<th>説明・操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>表示項目</td>
+<td>表示「操作」内の項目を選びます。この画像は「対象プロジェクト」を選択した状態です。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>対象の場所を確認</td>
+<td>対象の編集用動画と保存するAviUtl2プロジェクトのパスを確認します。</td>
+</tr>
+<tr>
+<td>3</td>
+<td>対応するAviUtl2プロジェクトを選ぶ</td>
+<td>projects内の同じ編集フォルダにある対応.aup2を選びます。AviUtl2で開いているものと一致させてください。</td>
+</tr>
+<tr>
+<td>4</td>
+<td>プロジェクトの保存フォルダを開く</td>
+<td>現在の編集に対応するprojectsフォルダを開きます。過去の.aup2はAviUtl2で直接開きます。</td>
+</tr>
+</tbody>
+</table>
+<p>この画像の番号は <strong>4個</strong>、説明表は <strong>4件</strong>です。</p>
+<p>撮影条件：一時データ。ネット取得・人物照合・Whisper・AviUtl2送信は未実行。</p>
+<p><a id="save-export-results"></a></p>
+<h3 id="_62">保存・書き出し：処理結果</h3>
+<p>移動：<strong>編集・書き出し → 保存・書き出し → 表示「結果」→ 項目「処理結果」</strong>。</p>
+<p><img loading="lazy" decoding="async" tabindex="0" width="1760" height="850" style="max-width:1760px" alt="保存・書き出し：処理結果" src="images/save-export-results.png" /></p>
+<table>
+<thead>
+<tr>
+<th>画像の番号</th>
+<th>画面の項目</th>
+<th>説明・操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>表示項目</td>
+<td>表示「結果」内の項目を選びます。この画像は「処理結果」を選択した状態です。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>処理結果の詳細</td>
+<td>保存・書き出しの対象、進行、完了または失敗の内容を確認します。完成確認済みの表示を確認してください。</td>
+</tr>
+<tr>
+<td>3</td>
+<td>処理結果：縦スクロール</td>
+<td>この一覧または詳細設定の内部を縦にスクロールします。</td>
+</tr>
+</tbody>
+</table>
+<p>この画像の番号は <strong>3個</strong>、説明表は <strong>3件</strong>です。</p>
+<p>撮影条件：一時データ。ネット取得・人物照合・Whisper・AviUtl2送信は未実行。</p>
+<p><a id="export-settings"></a></p>
+<h3 id="_63">保存・書き出し：書き出し設定</h3>
+<p>移動：<strong>編集・書き出し → 保存・書き出し → 表示「詳細設定」→ 項目「書き出し設定」</strong>。</p>
+<p><img loading="lazy" decoding="async" tabindex="0" width="1760" height="850" style="max-width:1760px" alt="保存・書き出し：書き出し設定" src="images/export-settings.png" /></p>
+<table>
+<thead>
+<tr>
+<th>画像の番号</th>
+<th>画面の項目</th>
+<th>説明・操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>表示項目</td>
+<td>表示「詳細設定」内の項目を選びます。この画像は「書き出し設定」を選択した状態です。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>完成動画の用途</td>
+<td>横またはショートを選びます。初期値を適用するには隣のボタンを押します。</td>
+</tr>
+<tr>
+<td>3</td>
+<td>用途の初期値を設定</td>
+<td>横1920×1080またはショート1080×1920、編集のfpsなどの初期値を入力欄に設定します。</td>
+</tr>
+<tr>
+<td>4</td>
+<td>出力幅 px</td>
+<td>完成MP4の幅をピクセルで指定します。キャンバスの画面幅とは別です。</td>
+</tr>
+<tr>
+<td>5</td>
+<td>出力高さ px</td>
+<td>完成MP4の高さをピクセルで指定します。キャンバスの画面高さとは別です。</td>
+</tr>
+<tr>
+<td>6</td>
+<td>固定fps（分数も可）</td>
+<td>完成MP4のfpsを指定します。30000/1001のような分数も入力できます。</td>
+</tr>
+<tr>
+<td>7</td>
+<td>映像 Mbps</td>
+<td>H.264映像のビットレートをMbpsで指定します。</td>
+</tr>
+<tr>
+<td>8</td>
+<td>音声 Hz</td>
+<td>AAC音声のサンプルレートをHzで指定します。初期値は48000です。</td>
+</tr>
+<tr>
+<td>9</td>
+<td>書き出し設定：縦スクロール</td>
+<td>この一覧または詳細設定の内部を縦にスクロールします。</td>
+</tr>
+</tbody>
+</table>
+<p>この画像の番号は <strong>9個</strong>、説明表は <strong>9件</strong>です。</p>
+<p>撮影条件：一時データ。ネット取得・人物照合・Whisper・AviUtl2送信は未実行。</p>
+<p><a id="saved-results"></a></p>
+<h3 id="_64">保存済み情報：保存済み一覧</h3>
+<p>移動：<strong>保存結果を確認 → 保存済み情報 → 表示「結果」→ 項目「保存済み一覧」</strong>。</p>
+<p><img loading="lazy" decoding="async" tabindex="0" width="1760" height="850" style="max-width:1760px" alt="保存済み情報：保存済み一覧" src="images/saved-results.png" /></p>
+<table>
+<thead>
+<tr>
+<th>画像の番号</th>
+<th>画面の項目</th>
+<th>説明・操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>表示項目</td>
+<td>表示「結果」内の項目を選びます。この画像は「保存済み一覧」を選択した状態です。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>保存済み一覧</td>
+<td>結果CSVを選択して内容を表示します。各タブで過去版を使用する前に、ここで対象の版を選びます。</td>
+</tr>
+<tr>
+<td>3</td>
+<td>保存済み一覧：縦スクロール</td>
+<td>この一覧または詳細設定の内部を縦にスクロールします。</td>
+</tr>
+<tr>
+<td>4</td>
+<td>保存済み一覧：横スクロール</td>
+<td>一覧の内部を横にスクロールし、長い行の続きを確認します。</td>
+</tr>
+</tbody>
+</table>
+<p>この画像の番号は <strong>4個</strong>、説明表は <strong>4件</strong>です。</p>
+<p>撮影条件：一時データ。ネット取得・人物照合・Whisper・AviUtl2送信は未実行。</p>
+<p><a id="saved-csv"></a></p>
+<h3 id="csv">保存済み情報：CSV本文</h3>
+<p>移動：<strong>保存結果を確認 → 保存済み情報 → 表示「結果」→ 項目「CSV本文」</strong>。</p>
+<p><img loading="lazy" decoding="async" tabindex="0" width="1760" height="850" style="max-width:1760px" alt="保存済み情報：CSV本文" src="images/saved-csv.png" /></p>
+<table>
+<thead>
+<tr>
+<th>画像の番号</th>
+<th>画面の項目</th>
+<th>説明・操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>表示項目</td>
+<td>表示「結果」内の項目を選びます。この画像は「CSV本文」を選択した状態です。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>選択したCSVの内容</td>
+<td>保存済み一覧で選んだCSVを読み取り専用で表示します。ここで直接修正・保存はできません。</td>
+</tr>
+<tr>
+<td>3</td>
+<td>CSV本文：縦スクロール</td>
+<td>この一覧または詳細設定の内部を縦にスクロールします。</td>
+</tr>
+</tbody>
+</table>
+<p>この画像の番号は <strong>3個</strong>、説明表は <strong>3件</strong>です。</p>
+<p>撮影条件：一時データ。ネット取得・人物照合・Whisper・AviUtl2送信は未実行。</p>
+<p><a id="management-actions"></a></p>
+<h3 id="_65">管理・保管：登録情報を管理</h3>
+<p>移動：<strong>データを管理 → 管理・保管 → 表示「操作」→ 項目「登録情報を管理」</strong>。</p>
+<p><img loading="lazy" decoding="async" tabindex="0" width="1760" height="850" style="max-width:1760px" alt="管理・保管：登録情報を管理" src="images/management-actions.png" /></p>
+<table>
+<thead>
+<tr>
+<th>画像の番号</th>
+<th>画面の項目</th>
+<th>説明・操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>表示項目</td>
+<td>表示「操作」内の項目を選びます。この画像は「登録情報を管理」を選択した状態です。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>非表示の項目も表示</td>
+<td>管理一覧に非表示の項目も含め、再表示操作の対象にします。</td>
+</tr>
+<tr>
+<td>3</td>
+<td>非表示</td>
+<td>管理一覧で選んだ項目を通常一覧から隠します。実ファイル・辞書の働き・保存結果は保持します。</td>
+</tr>
+<tr>
+<td>4</td>
+<td>再表示</td>
+<td>管理一覧で選んだ非表示項目を通常一覧に戻します。</td>
+</tr>
+<tr>
+<td>5</td>
+<td>登録情報を削除…</td>
+<td>選択項目の登録情報を確認後に削除します。実ファイルは残り、参照中の情報は削除できません。</td>
+</tr>
+<tr>
+<td>6</td>
+<td>実ファイルを選んで削除…</td>
+<td>削除可能な範囲内のファイルを選び、パスを確認して完全に削除します。操作は取り消せません。</td>
+</tr>
+</tbody>
+</table>
+<p>この画像の番号は <strong>6個</strong>、説明表は <strong>6件</strong>です。</p>
+<p>撮影条件：一時データ。ネット取得・人物照合・Whisper・AviUtl2送信は未実行。</p>
+<p><a id="archive-actions"></a></p>
+<h3 id="_66">管理・保管：動画を保管・展開</h3>
+<p>移動：<strong>データを管理 → 管理・保管 → 表示「操作」→ 項目「動画を保管・展開」</strong>。</p>
+<p><img loading="lazy" decoding="async" tabindex="0" width="1760" height="850" style="max-width:1760px" alt="管理・保管：動画を保管・展開" src="images/archive-actions.png" /></p>
+<table>
+<thead>
+<tr>
+<th>画像の番号</th>
+<th>画面の項目</th>
+<th>説明・操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>表示項目</td>
+<td>表示「操作」内の項目を選びます。この画像は「動画を保管・展開」を選択した状態です。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>動画を保管…</td>
+<td>登録動画を選び、動画とmanifestをZIP64でarchivesへ保管します。元動画は残ります。</td>
+</tr>
+<tr>
+<td>3</td>
+<td>保管物を展開…</td>
+<td>保管ZIPを選び、SHA256を検証してmedia/restoredの新しいフォルダへ展開します。</td>
+</tr>
+</tbody>
+</table>
+<p>この画像の番号は <strong>3個</strong>、説明表は <strong>3件</strong>です。</p>
+<p>撮影条件：一時データ。ネット取得・人物照合・Whisper・AviUtl2送信は未実行。</p>
+<p><a id="log-actions"></a></p>
+<h3 id="_67">管理・保管：ログの整理</h3>
+<p>移動：<strong>データを管理 → 管理・保管 → 表示「操作」→ 項目「ログの整理」</strong>。</p>
+<p><img loading="lazy" decoding="async" tabindex="0" width="1760" height="850" style="max-width:1760px" alt="管理・保管：ログの整理" src="images/log-actions.png" /></p>
+<table>
+<thead>
+<tr>
+<th>画像の番号</th>
+<th>画面の項目</th>
+<th>説明・操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>表示項目</td>
+<td>表示「操作」内の項目を選びます。この画像は「ログの整理」を選択した状態です。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>30日経過した通常ログを整理</td>
+<td>30日以上経過した通常ログを整理します。復旧待ち・状態不明のログは保持します。</td>
+</tr>
+</tbody>
+</table>
+<p>この画像の番号は <strong>2個</strong>、説明表は <strong>2件</strong>です。</p>
+<p>撮影条件：一時データ。ネット取得・人物照合・Whisper・AviUtl2送信は未実行。</p>
+<p><a id="management-results"></a></p>
+<h3 id="_68">管理・保管：登録一覧</h3>
+<p>移動：<strong>データを管理 → 管理・保管 → 表示「結果」→ 項目「登録一覧」</strong>。</p>
+<p><img loading="lazy" decoding="async" tabindex="0" width="1760" height="850" style="max-width:1760px" alt="管理・保管：登録一覧" src="images/management-results.png" /></p>
+<table>
+<thead>
+<tr>
+<th>画像の番号</th>
+<th>画面の項目</th>
+<th>説明・操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>表示項目</td>
+<td>表示「結果」内の項目を選びます。この画像は「登録一覧」を選択した状態です。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>登録一覧</td>
+<td>人物・語・結果・動画などを選び、非表示・再表示・登録情報の削除の対象にします。</td>
+</tr>
+<tr>
+<td>3</td>
+<td>登録一覧：縦スクロール</td>
+<td>この一覧または詳細設定の内部を縦にスクロールします。</td>
+</tr>
+<tr>
+<td>4</td>
+<td>登録一覧：横スクロール</td>
+<td>一覧の内部を横にスクロールし、長い行の続きを確認します。</td>
+</tr>
+</tbody>
+</table>
+<p>この画像の番号は <strong>4個</strong>、説明表は <strong>4件</strong>です。</p>
+<p>撮影条件：一時データ。ネット取得・人物照合・Whisper・AviUtl2送信は未実行。</p>
+<p><a id="archive-results"></a></p>
+<h3 id="_69">管理・保管：保管・展開結果</h3>
+<p>移動：<strong>データを管理 → 管理・保管 → 表示「詳細設定」→ 項目「保管・展開結果」</strong>。</p>
+<p><img loading="lazy" decoding="async" tabindex="0" width="1760" height="850" style="max-width:1760px" alt="管理・保管：保管・展開結果" src="images/archive-results.png" /></p>
+<table>
+<thead>
+<tr>
+<th>画像の番号</th>
+<th>画面の項目</th>
+<th>説明・操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>表示項目</td>
+<td>表示「詳細設定」内の項目を選びます。この画像は「保管・展開結果」を選択した状態です。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>保管・展開結果：縦スクロール</td>
+<td>この一覧または詳細設定の内部を縦にスクロールします。</td>
+</tr>
+</tbody>
+</table>
+<p>この画像の番号は <strong>2個</strong>、説明表は <strong>2件</strong>です。</p>
+<p>撮影条件：一時データ。ネット取得・人物照合・Whisper・AviUtl2送信は未実行。</p>
+<p><a id="process-running"></a></p>
+<h3 id="_70">実行中</h3>
+<p>共通の管理対象処理の実行中表示です。説明用の待機処理を実際に起動して撮影しています。</p>
+<p><img loading="lazy" decoding="async" tabindex="0" width="1760" height="850" style="max-width:1760px" alt="実行中" src="images/process-running.png" /></p>
+<table>
+<thead>
+<tr>
+<th>画像の番号</th>
+<th>画面の項目</th>
+<th>説明・操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>実行中の処理を中止</td>
+<td>共通の管理対象処理に通常中止を要求します。実際の終了を確認するまで処理中の状態を維持します。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>実行中の処理を強制停止…</td>
+<td>通常中止要求から3秒後も終了しない場合に、対象処理とその子プロセスを確認して強制停止します。</td>
+</tr>
+</tbody>
+</table>
+<p>この画像の番号は <strong>2個</strong>、説明表は <strong>2件</strong>です。</p>
+<p>撮影条件：実際の管理対象処理の状態。一時的な待機処理のみ。</p>
+<p><a id="process-stopping"></a></p>
+<h3 id="_71">停止待ち・強制停止選択可能</h3>
+<p>通常中止を要求してから3秒後も終了していない状態です。3秒は強制停止の選択肢を有効にする待機時間で、自動停止の期限ではありません。</p>
+<p><img loading="lazy" decoding="async" tabindex="0" width="1760" height="850" style="max-width:1760px" alt="停止待ち・強制停止選択可能" src="images/process-stopping.png" /></p>
+<table>
+<thead>
+<tr>
+<th>画像の番号</th>
+<th>画面の項目</th>
+<th>説明・操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>実行中の処理を中止</td>
+<td>共通の管理対象処理に通常中止を要求します。実際の終了を確認するまで処理中の状態を維持します。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>実行中の処理を強制停止…</td>
+<td>通常中止要求から3秒後も終了しない場合に、対象処理とその子プロセスを確認して強制停止します。</td>
+</tr>
+</tbody>
+</table>
+<p>この画像の番号は <strong>2個</strong>、説明表は <strong>2件</strong>です。</p>
+<p>撮影条件：実際の管理対象処理の状態。一時的な待機処理のみ。</p>
+<p><a id="process-stopped"></a></p>
+<h3 id="_72">停止完了</h3>
+<p>実際の処理終了を確認した状態です。処理時間の表示は終了時点で固定されます。</p>
+<p><img loading="lazy" decoding="async" tabindex="0" width="1760" height="850" style="max-width:1760px" alt="停止完了" src="images/process-stopped.png" /></p>
+<table>
+<thead>
+<tr>
+<th>画像の番号</th>
+<th>画面の項目</th>
+<th>説明・操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>実行中の処理を中止</td>
+<td>共通の管理対象処理に通常中止を要求します。実際の終了を確認するまで処理中の状態を維持します。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>実行中の処理を強制停止…</td>
+<td>通常中止要求から3秒後も終了しない場合に、対象処理とその子プロセスを確認して強制停止します。</td>
+</tr>
+</tbody>
+</table>
+<p>この画像の番号は <strong>2個</strong>、説明表は <strong>2件</strong>です。</p>
+<p>撮影条件：実際の管理対象処理の状態。一時的な待機処理のみ。</p>
+<p><a id="dialog-location"></a></p>
+<h3 id="_73">場所を確認</h3>
+<p><img loading="lazy" decoding="async" tabindex="0" width="829" height="169" style="max-width:829px" alt="場所を確認" src="images/dialog-location.png" /></p>
+<table>
+<thead>
+<tr>
+<th>画像の番号</th>
+<th>画面の項目</th>
+<th>説明・操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>閉じる</td>
+<td>確認内容またはプレビューを閉じます。</td>
+</tr>
+</tbody>
+</table>
+<p>この画像の番号は <strong>1個</strong>、説明表は <strong>1件</strong>です。</p>
+<p>撮影条件：本番ダイアログに説明用メッセージを表示。処理は未実行。</p>
+<p><a id="dialog-error"></a></p>
+<h3 id="_74">エラー表示</h3>
+<p><img loading="lazy" decoding="async" tabindex="0" width="829" height="169" style="max-width:829px" alt="エラー表示" src="images/dialog-error.png" /></p>
+<table>
+<thead>
+<tr>
+<th>画像の番号</th>
+<th>画面の項目</th>
+<th>説明・操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>閉じる</td>
+<td>確認内容またはプレビューを閉じます。</td>
+</tr>
+</tbody>
+</table>
+<p>この画像の番号は <strong>1個</strong>、説明表は <strong>1件</strong>です。</p>
+<p>撮影条件：本番ダイアログに説明用メッセージを表示。処理は未実行。</p>
+<p><a id="dialog-warning"></a></p>
+<h3 id="_75">警告表示</h3>
+<p><img loading="lazy" decoding="async" tabindex="0" width="829" height="148" style="max-width:829px" alt="警告表示" src="images/dialog-warning.png" /></p>
+<table>
+<thead>
+<tr>
+<th>画像の番号</th>
+<th>画面の項目</th>
+<th>説明・操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>閉じる</td>
+<td>確認内容またはプレビューを閉じます。</td>
+</tr>
+</tbody>
+</table>
+<p>この画像の番号は <strong>1個</strong>、説明表は <strong>1件</strong>です。</p>
+<p>撮影条件：本番ダイアログに説明用メッセージを表示。処理は未実行。</p>
+<p><a id="dialog-short"></a></p>
+<h3 id="_76">ショート条件外</h3>
+<p><img loading="lazy" decoding="async" tabindex="0" width="829" height="187" style="max-width:829px" alt="ショート条件外" src="images/dialog-short.png" /></p>
+<table>
+<thead>
+<tr>
+<th>画像の番号</th>
+<th>画面の項目</th>
+<th>説明・操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>編集・設定を直す</td>
+<td>書き出しを開始せず、編集や出力設定を修正するために戻ります。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>通常の動画として書き出す</td>
+<td>ショート判定の条件外でも、現在の比率・配置・長さ・設定を保って通常の動画として出力します。</td>
+</tr>
+</tbody>
+</table>
+<p>この画像の番号は <strong>2個</strong>、説明表は <strong>2件</strong>です。</p>
+<p>撮影条件：本番ダイアログに説明用メッセージを表示。処理は未実行。</p>
+<p><a id="dialog-unsaved-export"></a></p>
+<h3 id="_77">未保存の編集・書き出し前</h3>
+<p><img loading="lazy" decoding="async" tabindex="0" width="829" height="166" style="max-width:829px" alt="未保存の編集・書き出し前" src="images/dialog-unsaved-export.png" /></p>
+<table>
+<thead>
+<tr>
+<th>画像の番号</th>
+<th>画面の項目</th>
+<th>説明・操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>保存して書き出す</td>
+<td>対応プロジェクトを保存し、保存確認が揃ってから書き出しを開始します。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>戻る</td>
+<td>操作を開始せず、元の編集画面に戻ります。</td>
+</tr>
+</tbody>
+</table>
+<p>この画像の番号は <strong>2個</strong>、説明表は <strong>2件</strong>です。</p>
+<p>撮影条件：本番ダイアログに説明用メッセージを表示。処理は未実行。</p>
+<p><a id="dialog-unsaved-close"></a></p>
+<h3 id="_78">未保存の編集・終了時</h3>
+<p><img loading="lazy" decoding="async" tabindex="0" width="829" height="205" style="max-width:829px" alt="未保存の編集・終了時" src="images/dialog-unsaved-close.png" /></p>
+<table>
+<thead>
+<tr>
+<th>画像の番号</th>
+<th>画面の項目</th>
+<th>説明・操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>保存する</td>
+<td>対応プロジェクトを保存し、保存確認後にアプリを終了します。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>破棄する</td>
+<td>未保存の変更を保存せずにアプリを終了します。AviUtl2の未保存変更も失われる場合があります。</td>
+</tr>
+<tr>
+<td>3</td>
+<td>戻る</td>
+<td>操作を開始せず、元の編集画面に戻ります。</td>
+</tr>
+</tbody>
+</table>
+<p>この画像の番号は <strong>3個</strong>、説明表は <strong>3件</strong>です。</p>
+<p>撮影条件：本番ダイアログに説明用メッセージを表示。処理は未実行。</p>
+<p><a id="dialog-screen"></a></p>
+<h3 id="_79">画面を選択</h3>
+<p><img loading="lazy" decoding="async" tabindex="0" width="829" height="208" style="max-width:829px" alt="画面を選択" src="images/dialog-screen.png" /></p>
+<table>
+<thead>
+<tr>
+<th>画像の番号</th>
+<th>画面の項目</th>
+<th>説明・操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>いいえ</td>
+<td>この確認で提案された操作を実行せず、元の画面に戻ります。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>はい</td>
+<td>この確認の内容を了承して操作を実行します。削除・強制停止では対象と影響を先に確認してください。</td>
+</tr>
+</tbody>
+</table>
+<p>この画像の番号は <strong>2個</strong>、説明表は <strong>2件</strong>です。</p>
+<p>撮影条件：本番ダイアログに説明用メッセージを表示。処理は未実行。</p>
+<p><a id="dialog-registration-delete"></a></p>
+<h3 id="_80">登録情報を削除</h3>
+<p><img loading="lazy" decoding="async" tabindex="0" width="829" height="229" style="max-width:829px" alt="登録情報を削除" src="images/dialog-registration-delete.png" /></p>
+<table>
+<thead>
+<tr>
+<th>画像の番号</th>
+<th>画面の項目</th>
+<th>説明・操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>いいえ</td>
+<td>この確認で提案された操作を実行せず、元の画面に戻ります。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>はい</td>
+<td>この確認の内容を了承して操作を実行します。削除・強制停止では対象と影響を先に確認してください。</td>
+</tr>
+</tbody>
+</table>
+<p>この画像の番号は <strong>2個</strong>、説明表は <strong>2件</strong>です。</p>
+<p>撮影条件：本番ダイアログに説明用メッセージを表示。処理は未実行。</p>
+<p><a id="dialog-file-delete"></a></p>
+<h3 id="_81">実ファイルを削除</h3>
+<p><img loading="lazy" decoding="async" tabindex="0" width="829" height="208" style="max-width:829px" alt="実ファイルを削除" src="images/dialog-file-delete.png" /></p>
+<table>
+<thead>
+<tr>
+<th>画像の番号</th>
+<th>画面の項目</th>
+<th>説明・操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>いいえ</td>
+<td>この確認で提案された操作を実行せず、元の画面に戻ります。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>はい</td>
+<td>この確認の内容を了承して操作を実行します。削除・強制停止では対象と影響を先に確認してください。</td>
+</tr>
+</tbody>
+</table>
+<p>この画像の番号は <strong>2個</strong>、説明表は <strong>2件</strong>です。</p>
+<p>撮影条件：本番ダイアログに説明用メッセージを表示。処理は未実行。</p>
+<p><a id="dialog-process-force"></a></p>
+<h3 id="_82">管理対象処理の強制停止</h3>
+<p>対象はこの管理対象処理と、それが起動した子プロセスです。同名の別プロセスは対象にしません。</p>
+<p><img loading="lazy" decoding="async" tabindex="0" width="829" height="292" style="max-width:829px" alt="管理対象処理の強制停止" src="images/dialog-process-force.png" /></p>
+<table>
+<thead>
+<tr>
+<th>画像の番号</th>
+<th>画面の項目</th>
+<th>説明・操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>いいえ</td>
+<td>この確認で提案された操作を実行せず、元の画面に戻ります。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>はい</td>
+<td>この確認の内容を了承して操作を実行します。削除・強制停止では対象と影響を先に確認してください。</td>
+</tr>
+</tbody>
+</table>
+<p>この画像の番号は <strong>2個</strong>、説明表は <strong>2件</strong>です。</p>
+<p>撮影条件：本番ダイアログに説明用メッセージを表示。処理は未実行。</p>
+<p><a id="dialog-export-force"></a></p>
+<h3 id="_83">書き出しの強制停止</h3>
+<p>描画・エンコード中の強制停止では、担当AviUtl2とエンコーダーを終了します。AviUtl2内の未保存編集は失われます。</p>
+<p><img loading="lazy" decoding="async" tabindex="0" width="829" height="208" style="max-width:829px" alt="書き出しの強制停止" src="images/dialog-export-force.png" /></p>
+<table>
+<thead>
+<tr>
+<th>画像の番号</th>
+<th>画面の項目</th>
+<th>説明・操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>強制停止する</td>
+<td>確認で示された対象だけを強制終了します。描画・エンコード中はAviUtl2内の未保存編集が失われます。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>停止を待つ</td>
+<td>強制停止を実行せず、通常中止の完了を待ちます。</td>
+</tr>
+</tbody>
+</table>
+<p>この画像の番号は <strong>2個</strong>、説明表は <strong>2件</strong>です。</p>
+<p>撮影条件：本番ダイアログに説明用メッセージを表示。処理は未実行。</p>
+<p><a id="dialog-verification-force"></a></p>
+<h3 id="_84">完成動画の検査を強制停止</h3>
+<p>出力検査中は検査プロセスとffprobeを止めます。AviUtl2の編集は保持し、出力ファイルは完成確認済みとしません。</p>
+<p><img loading="lazy" decoding="async" tabindex="0" width="829" height="208" style="max-width:829px" alt="完成動画の検査を強制停止" src="images/dialog-verification-force.png" /></p>
+<table>
+<thead>
+<tr>
+<th>画像の番号</th>
+<th>画面の項目</th>
+<th>説明・操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>強制停止する</td>
+<td>確認で示された対象だけを強制終了します。描画・エンコード中はAviUtl2内の未保存編集が失われます。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>停止を待つ</td>
+<td>強制停止を実行せず、通常中止の完了を待ちます。</td>
+</tr>
+</tbody>
+</table>
+<p>この画像の番号は <strong>2個</strong>、説明表は <strong>2件</strong>です。</p>
+<p>撮影条件：本番ダイアログに説明用メッセージを表示。処理は未実行。</p>
+<p><a id="preview"></a></p>
+<h3 id="_85">画像・音声プレビュー</h3>
+<p>ダイアログの操作方法を示す説明用の図形です。AviUtl2の描画・ミックス音声の検証結果ではありません。</p>
+<p><img loading="lazy" decoding="async" tabindex="0" width="1376" height="640" style="max-width:1376px" alt="画像・音声プレビュー" src="images/preview.png" /></p>
+<table>
+<thead>
+<tr>
+<th>画像の番号</th>
+<th>画面の項目</th>
+<th>説明・操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>この位置から音声を試聴（最大5秒）</td>
+<td>指定したプレビュー位置から、最大5秒・映像末尾までのミックス音声を試聴します。この撮影では音声処理を実行していません。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>試聴を停止</td>
+<td>プレビュー音声の試聴を停止します。プレビューを閉じるときも試聴を停止します。</td>
+</tr>
+<tr>
+<td>3</td>
+<td>閉じる</td>
+<td>確認内容またはプレビューを閉じます。</td>
+</tr>
+</tbody>
+</table>
+<p>この画像の番号は <strong>3個</strong>、説明表は <strong>3件</strong>です。</p>
+<p>撮影条件：説明用の図形画像。AviUtl2の描画結果ではなく、試聴ボタンも未実行です。</p></main></div><a class="top" href="#top">先頭へ</a>
 <dialog id="image-view"><button type="button" id="close-image">閉じる（Esc）</button><p id="image-caption"></p><img id="large-image" alt=""></dialog>
 <script>
 const viewer=document.querySelector('#image-view'),large=document.querySelector('#large-image'),caption=document.querySelector('#image-caption');

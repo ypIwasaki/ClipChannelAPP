@@ -2,20 +2,83 @@
 
 Documentation-only dependency: Markdown (python -m pip install Markdown).
 """
+from html.parser import HTMLParser
 from pathlib import Path
 import re
 import struct
 import markdown
+from build_manual import load_inputs, validate, build, check_tables
 
 ROOT = Path(__file__).resolve().parents[1]
 MANUAL = ROOT / 'docs' / 'manual'
 
 
+class GalleryCheck(HTMLParser):
+    """Read rendered image/table pairs, so HTML preserves the Markdown contract."""
+    def __init__(self):
+        super().__init__()
+        self.pending = None
+        self.in_table = False
+        self.in_cell = False
+        self.row = []
+        self.cell = ""
+        self.numbers = []
+        self.images = {}
+
+    def handle_starttag(self, tag, attributes):
+        attrs = dict(attributes)
+        if tag == "img" and attrs.get("src", "").startswith("images/"):
+            if self.pending:
+                raise ValueError("Image has no numbered table")
+            self.pending = attrs["src"].removeprefix("images/")
+            if self.pending in self.images:
+                raise ValueError("Duplicate manual image")
+        elif tag == "table" and self.pending:
+            self.in_table = True
+            self.numbers = []
+        elif tag == "tr" and self.in_table:
+            self.row = []
+        elif tag == "td" and self.in_table:
+            self.in_cell = True
+            self.cell = ""
+
+    def handle_data(self, data):
+        if self.in_cell:
+            self.cell += data
+
+    def handle_endtag(self, tag):
+        if tag == "td" and self.in_table:
+            self.in_cell = False
+            self.row.append(self.cell.strip())
+        elif tag == "tr" and self.in_table and self.row:
+            if len(self.row) != 3 or not all(self.row):
+                raise ValueError("Incomplete HTML explanation row")
+            self.numbers.append(int(self.row[0]))
+        elif tag == "table" and self.in_table:
+            self.images[self.pending] = self.numbers
+            self.pending = None
+            self.in_table = False
+
+
+def verify_html(body, screens):
+    check = GalleryCheck()
+    check.feed(body)
+    expected = {screen["file"]: list(range(1, len(screen["boxes"]) + 1)) for screen in screens}
+    if check.pending or check.images != expected:
+        raise ValueError("HTML images and numbered explanation rows do not match")
+
+
 def main():
     source = (MANUAL / 'manual.md').read_text(encoding='utf-8')
+    screens, content = load_inputs()
+    validate(screens, content)
+    check_tables(source, screens)
+    if source != build(screens, content):
+        raise ValueError("manual.md is out of date; run scripts/build_manual.py")
     renderer = markdown.Markdown(extensions=['tables', 'fenced_code', 'toc'],
                                  extension_configs={'toc': {'toc_depth': '2-3'}})
     body = renderer.convert(source)
+    verify_html(body, screens)
     # Lazy loading avoids decoding dozens of screenshots at startup.
     def image_attributes(match):
         tag = match.group(0)
@@ -46,7 +109,7 @@ dialog{max-width:96vw;max-height:96vh;padding:15px;border:0;border-radius:8px;ba
 @media(max-width:760px){.layout{display:block}nav{position:static;height:auto;max-height:300px;border-bottom:1px solid var(--line)}main{padding:22px 16px}h1{font-size:25px}h2{font-size:22px}table{font-size:13px}header{padding:16px}header a{display:block;margin-left:0}}
 @media print{nav,header,.top,dialog{display:none}.layout{display:block}main{padding:0}h2{break-before:page}img,table{break-inside:avoid}a{color:inherit}body{font-size:11pt}}
 </style></head><body id="top">
-<header><strong>ClipChannelAPP 操作ガイド</strong><a href="manual.md">Markdown原本</a><a href="screens.json">画面一覧</a></header>
+<header><strong>ClipChannelAPP 操作ガイド</strong><a href="manual.md">Markdown版</a><a href="screens.json">画面一覧</a></header>
 <div class="layout"><nav aria-label="目次"><strong>目次</strong>''' + renderer.toc + '''</nav>
 <main>''' + body + '''</main></div><a class="top" href="#top">先頭へ</a>
 <dialog id="image-view"><button type="button" id="close-image">閉じる（Esc）</button><p id="image-caption"></p><img id="large-image" alt=""></dialog>

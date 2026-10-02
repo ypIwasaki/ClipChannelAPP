@@ -1,0 +1,2234 @@
+[
+  {
+    "screen_id": "overview",
+    "title": "全体の操作",
+    "controls": [
+      {
+        "control_id": "overview-button-01",
+        "label": "フォルダを選択・切り替え",
+        "control_index": 1,
+        "widget_class": "Button"
+      },
+      {
+        "control_id": "overview-button-02",
+        "label": "場所を確認",
+        "control_index": 2,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "overview-button-03",
+        "label": "小",
+        "control_index": 3,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "overview-button-04",
+        "label": "中",
+        "control_index": 4,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "overview-button-05",
+        "label": "大",
+        "control_index": 5,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "overview-button-06",
+        "label": "動画を準備",
+        "control_index": 6,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "overview-button-07",
+        "label": "動画をトリミング",
+        "control_index": 7,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "overview-button-08",
+        "label": "解析・切り出し",
+        "control_index": 8,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "overview-button-09",
+        "label": "編集・書き出し",
+        "control_index": 9,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "overview-button-10",
+        "label": "保存結果を確認",
+        "control_index": 10,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "overview-button-11",
+        "label": "データを管理",
+        "control_index": 11,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "overview-button-12",
+        "label": "実行中の処理を中止",
+        "control_index": 12,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "overview-button-13",
+        "label": "実行中の処理を強制停止…",
+        "control_index": 13,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "overview-view",
+        "label": "表示",
+        "control_index": 14,
+        "widget_class": "TCombobox"
+      },
+      {
+        "control_id": "overview-item-step-01",
+        "label": "◁",
+        "control_index": 15,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "overview-item-step-02",
+        "label": "▷",
+        "control_index": 16,
+        "widget_class": "TButton"
+      }
+    ]
+  },
+  {
+    "screen_id": "download-url",
+    "work": "動画を準備",
+    "tab": "取得・媒体操作",
+    "role": "操作",
+    "title": "URL・取得",
+    "controls": [
+      {
+        "control_id": "download-url-selector",
+        "label": "表示項目",
+        "control_index": 0,
+        "widget_class": "TCombobox"
+      },
+      {
+        "control_id": "download-url-entry-01",
+        "label": "認証不要のURL",
+        "control_index": 1,
+        "widget_class": "Entry"
+      },
+      {
+        "control_id": "download-url-check-01",
+        "label": "音声のみ（音声成果物）",
+        "control_index": 2,
+        "widget_class": "TCheckbutton"
+      },
+      {
+        "control_id": "download-url-check-02",
+        "label": "情報のみ",
+        "control_index": 3,
+        "widget_class": "TCheckbutton"
+      },
+      {
+        "control_id": "download-url-button-01",
+        "label": "取得・情報表示",
+        "control_index": 4,
+        "widget_class": "Button"
+      },
+      {
+        "control_id": "download-url-button-02",
+        "label": "失敗項目を再試行",
+        "control_index": 5,
+        "widget_class": "Button"
+      },
+      {
+        "control_id": "download-url-button-03",
+        "label": "通常中止",
+        "control_index": 6,
+        "widget_class": "Button"
+      },
+      {
+        "control_id": "download-url-button-04",
+        "label": "機能案内",
+        "control_index": 7,
+        "widget_class": "Button"
+      }
+    ]
+  },
+  {
+    "screen_id": "download-local",
+    "work": "動画を準備",
+    "tab": "取得・媒体操作",
+    "role": "操作",
+    "title": "ローカル動画",
+    "controls": [
+      {
+        "control_id": "download-local-selector",
+        "label": "表示項目",
+        "control_index": 0,
+        "widget_class": "TCombobox"
+      },
+      {
+        "control_id": "download-local-button-01",
+        "label": "ローカル動画を登録",
+        "control_index": 1,
+        "widget_class": "Button"
+      },
+      {
+        "control_id": "download-local-button-02",
+        "label": "選択した動画を媒体確認・変換（再試行）",
+        "control_index": 2,
+        "widget_class": "Button"
+      }
+    ]
+  },
+  {
+    "screen_id": "download-results",
+    "work": "動画を準備",
+    "tab": "取得・媒体操作",
+    "role": "結果",
+    "title": "取得結果",
+    "controls": [
+      {
+        "control_id": "download-results-selector",
+        "label": "表示項目",
+        "control_index": 0,
+        "widget_class": "TCombobox"
+      },
+      {
+        "control_id": "download-results-list-01",
+        "label": "取得結果の一覧",
+        "control_index": 1,
+        "widget_class": "Listbox"
+      },
+      {
+        "control_id": "download-results-scrollbar-01",
+        "label": "取得結果：縦スクロール",
+        "control_index": 2,
+        "widget_class": "TScrollbar"
+      },
+      {
+        "control_id": "download-results-scrollbar-02",
+        "label": "取得結果：横スクロール",
+        "control_index": 3,
+        "widget_class": "TScrollbar"
+      }
+    ]
+  },
+  {
+    "screen_id": "registered-videos",
+    "work": "動画を準備",
+    "tab": "取得・媒体操作",
+    "role": "結果",
+    "title": "登録済み動画",
+    "controls": [
+      {
+        "control_id": "registered-videos-selector",
+        "label": "表示項目",
+        "control_index": 0,
+        "widget_class": "TCombobox"
+      },
+      {
+        "control_id": "registered-videos-list-01",
+        "label": "登録済み動画の一覧",
+        "control_index": 1,
+        "widget_class": "Listbox"
+      },
+      {
+        "control_id": "registered-videos-scrollbar-01",
+        "label": "登録済み動画：縦スクロール",
+        "control_index": 2,
+        "widget_class": "TScrollbar"
+      },
+      {
+        "control_id": "registered-videos-scrollbar-02",
+        "label": "登録済み動画：横スクロール",
+        "control_index": 3,
+        "widget_class": "TScrollbar"
+      }
+    ]
+  },
+  {
+    "screen_id": "download-settings",
+    "work": "動画を準備",
+    "tab": "取得・媒体操作",
+    "role": "詳細設定",
+    "title": "形式・品質と取得設定",
+    "controls": [
+      {
+        "control_id": "download-settings-selector",
+        "label": "表示項目",
+        "control_index": 0,
+        "widget_class": "TCombobox"
+      },
+      {
+        "control_id": "download-settings-entry-01",
+        "label": "形式・品質 (yt-dlp format)",
+        "control_index": 1,
+        "widget_class": "Entry"
+      },
+      {
+        "control_id": "download-settings-entry-02",
+        "label": "取得の再試行回数",
+        "control_index": 2,
+        "widget_class": "Entry"
+      },
+      {
+        "control_id": "download-settings-entry-03",
+        "label": "追加引数（-f, --retries, --fragment-retries, --sub-langs）",
+        "control_index": 3,
+        "widget_class": "Entry"
+      },
+      {
+        "control_id": "download-settings-scrollbar-01",
+        "label": "形式・品質と取得設定：縦スクロール",
+        "control_index": 4,
+        "widget_class": "TScrollbar"
+      }
+    ]
+  },
+  {
+    "screen_id": "trimming-range",
+    "work": "動画をトリミング",
+    "tab": "動画をトリミング",
+    "role": "操作",
+    "title": "範囲を指定して書き出す",
+    "controls": [
+      {
+        "control_id": "trimming-range-selector",
+        "label": "表示項目",
+        "control_index": 0,
+        "widget_class": "TCombobox"
+      },
+      {
+        "control_id": "trimming-range-choice-01",
+        "label": "登録済み動画",
+        "control_index": 1,
+        "widget_class": "TCombobox"
+      },
+      {
+        "control_id": "trimming-range-button-01",
+        "label": "一覧を更新",
+        "control_index": 2,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "trimming-range-button-02",
+        "label": "履歴を表示",
+        "control_index": 3,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "trimming-range-preview-01",
+        "label": "動画プレビュー",
+        "control_index": 4,
+        "widget_class": "Canvas"
+      },
+      {
+        "control_id": "trimming-range-slider-01",
+        "label": "動画の再生位置",
+        "control_index": 5,
+        "widget_class": "TScale"
+      },
+      {
+        "control_id": "trimming-range-button-03",
+        "label": "再生／一時停止",
+        "control_index": 6,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "trimming-range-button-04",
+        "label": "現在位置を開始に",
+        "control_index": 7,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "trimming-range-button-05",
+        "label": "現在位置を終了に",
+        "control_index": 8,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "trimming-range-button-06",
+        "label": "選択範囲を再生",
+        "control_index": 9,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "trimming-range-entry-01",
+        "label": "開始 秒",
+        "control_index": 10,
+        "widget_class": "TEntry"
+      },
+      {
+        "control_id": "trimming-range-entry-02",
+        "label": "終了 秒",
+        "control_index": 11,
+        "widget_class": "TEntry"
+      },
+      {
+        "control_id": "trimming-range-entry-03",
+        "label": "保存名",
+        "control_index": 12,
+        "widget_class": "TEntry"
+      },
+      {
+        "control_id": "trimming-range-button-07",
+        "label": "範囲を確認",
+        "control_index": 13,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "trimming-range-button-08",
+        "label": "MP4を書き出す",
+        "control_index": 14,
+        "widget_class": "TButton"
+      }
+    ]
+  },
+  {
+    "screen_id": "speaker-target",
+    "work": "解析・切り出し",
+    "tab": "人物・参照音声",
+    "role": "操作",
+    "title": "人物と対象動画",
+    "controls": [
+      {
+        "control_id": "speaker-target-selector",
+        "label": "表示項目",
+        "control_index": 0,
+        "widget_class": "TCombobox"
+      },
+      {
+        "control_id": "speaker-target-button-01",
+        "label": "対象話者を確認",
+        "control_index": 1,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "speaker-target-choice-01",
+        "label": "対象動画（別動画にも同じ人物を指定できます）",
+        "control_index": 2,
+        "widget_class": "TCombobox"
+      },
+      {
+        "control_id": "speaker-target-button-02",
+        "label": "人物を登録",
+        "control_index": 3,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "speaker-target-button-03",
+        "label": "参照音声を試聴",
+        "control_index": 4,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "speaker-target-button-04",
+        "label": "動画の対象話者に設定",
+        "control_index": 5,
+        "widget_class": "TButton"
+      }
+    ]
+  },
+  {
+    "screen_id": "review-actions",
+    "work": "解析・切り出し",
+    "tab": "人物・参照音声",
+    "role": "操作",
+    "title": "試聴・判定・再表示",
+    "controls": [
+      {
+        "control_id": "review-actions-selector",
+        "label": "表示項目",
+        "control_index": 0,
+        "widget_class": "TCombobox"
+      },
+      {
+        "control_id": "review-actions-button-01",
+        "label": "試聴区間を作成",
+        "control_index": 1,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "review-actions-button-02",
+        "label": "試聴",
+        "control_index": 2,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "review-actions-button-03",
+        "label": "対象発話",
+        "control_index": 3,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "review-actions-button-04",
+        "label": "対象話者の非発話",
+        "control_index": 4,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "review-actions-button-05",
+        "label": "不明",
+        "control_index": 5,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "review-actions-button-06",
+        "label": "保存を再試行",
+        "control_index": 6,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "review-actions-button-07",
+        "label": "保存版を再表示",
+        "control_index": 7,
+        "widget_class": "TButton"
+      }
+    ]
+  },
+  {
+    "screen_id": "speaker-transcribe",
+    "work": "解析・切り出し",
+    "tab": "人物・参照音声",
+    "role": "操作",
+    "title": "対象話者の文字起こし",
+    "controls": [
+      {
+        "control_id": "speaker-transcribe-selector",
+        "label": "表示項目",
+        "control_index": 0,
+        "widget_class": "TCombobox"
+      },
+      {
+        "control_id": "speaker-transcribe-entry-01",
+        "label": "ローカル Whisper モデル（対象発話の区間のみ認識）",
+        "control_index": 1,
+        "widget_class": "TEntry"
+      },
+      {
+        "control_id": "speaker-transcribe-button-01",
+        "label": "対象発話を文字起こし・別版保存",
+        "control_index": 2,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "speaker-transcribe-button-02",
+        "label": "解析を中止",
+        "control_index": 3,
+        "widget_class": "TButton"
+      }
+    ]
+  },
+  {
+    "screen_id": "registered-people",
+    "work": "解析・切り出し",
+    "tab": "人物・参照音声",
+    "role": "結果",
+    "title": "人物一覧",
+    "controls": [
+      {
+        "control_id": "registered-people-selector",
+        "label": "表示項目",
+        "control_index": 0,
+        "widget_class": "TCombobox"
+      },
+      {
+        "control_id": "registered-people-list-01",
+        "label": "人物一覧",
+        "control_index": 1,
+        "widget_class": "Listbox"
+      },
+      {
+        "control_id": "registered-people-scrollbar-01",
+        "label": "人物一覧：縦スクロール",
+        "control_index": 2,
+        "widget_class": "TScrollbar"
+      },
+      {
+        "control_id": "registered-people-scrollbar-02",
+        "label": "人物一覧：横スクロール",
+        "control_index": 3,
+        "widget_class": "TScrollbar"
+      }
+    ]
+  },
+  {
+    "screen_id": "review-results",
+    "work": "解析・切り出し",
+    "tab": "人物・参照音声",
+    "role": "結果",
+    "title": "試聴区間・文字起こし",
+    "controls": [
+      {
+        "control_id": "review-results-selector",
+        "label": "表示項目",
+        "control_index": 0,
+        "widget_class": "TCombobox"
+      },
+      {
+        "control_id": "review-results-list-01",
+        "label": "試聴区間・文字起こしの一覧",
+        "control_index": 1,
+        "widget_class": "Listbox"
+      },
+      {
+        "control_id": "review-results-scrollbar-01",
+        "label": "試聴区間・文字起こし：縦スクロール",
+        "control_index": 2,
+        "widget_class": "TScrollbar"
+      },
+      {
+        "control_id": "review-results-scrollbar-02",
+        "label": "試聴区間・文字起こし：横スクロール",
+        "control_index": 3,
+        "widget_class": "TScrollbar"
+      }
+    ]
+  },
+  {
+    "screen_id": "speaker-registration",
+    "work": "解析・切り出し",
+    "tab": "人物・参照音声",
+    "role": "詳細設定",
+    "title": "人物・参照音声の登録",
+    "controls": [
+      {
+        "control_id": "speaker-registration-selector",
+        "label": "表示項目",
+        "control_index": 0,
+        "widget_class": "TCombobox"
+      },
+      {
+        "control_id": "speaker-registration-entry-01",
+        "label": "名前",
+        "control_index": 1,
+        "widget_class": "TEntry"
+      },
+      {
+        "control_id": "speaker-registration-entry-02",
+        "label": "参照音声ファイル（動画を使う場合は空欄）",
+        "control_index": 2,
+        "widget_class": "TEntry"
+      },
+      {
+        "control_id": "speaker-registration-button-01",
+        "label": "音声ファイルを選択",
+        "control_index": 3,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "speaker-registration-entry-03",
+        "label": "動画を使う場合: 動画を準備の登録済み動画を選び、開始・終了秒を指定",
+        "control_index": 4,
+        "widget_class": "TEntry"
+      },
+      {
+        "control_id": "speaker-registration-entry-04",
+        "label": "〜",
+        "control_index": 5,
+        "widget_class": "TEntry"
+      },
+      {
+        "control_id": "speaker-registration-entry-05",
+        "label": "ローカル ECAPA モデルフォルダ",
+        "control_index": 6,
+        "widget_class": "TEntry"
+      },
+      {
+        "control_id": "speaker-registration-button-02",
+        "label": "モデルを選択",
+        "control_index": 7,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "speaker-registration-entry-06",
+        "label": "照合閾値（-1〜1、品質は別動画で確認）",
+        "control_index": 8,
+        "widget_class": "TEntry"
+      },
+      {
+        "control_id": "speaker-registration-choice-01",
+        "label": "照合閾値（-1〜1、品質は別動画で確認）",
+        "control_index": 9,
+        "widget_class": "TCombobox"
+      },
+      {
+        "control_id": "speaker-registration-scrollbar-01",
+        "label": "人物・参照音声の登録：縦スクロール",
+        "control_index": 10,
+        "widget_class": "TScrollbar"
+      }
+    ]
+  },
+  {
+    "screen_id": "review-edit",
+    "work": "解析・切り出し",
+    "tab": "人物・参照音声",
+    "role": "詳細設定",
+    "title": "発言の修正",
+    "controls": [
+      {
+        "control_id": "review-edit-selector",
+        "label": "表示項目",
+        "control_index": 0,
+        "widget_class": "TCombobox"
+      },
+      {
+        "control_id": "review-edit-entry-01",
+        "label": "開始秒",
+        "control_index": 1,
+        "widget_class": "TEntry"
+      },
+      {
+        "control_id": "review-edit-entry-02",
+        "label": "終了秒",
+        "control_index": 2,
+        "widget_class": "TEntry"
+      },
+      {
+        "control_id": "review-edit-entry-03",
+        "label": "本文",
+        "control_index": 3,
+        "widget_class": "TEntry"
+      },
+      {
+        "control_id": "review-edit-choice-01",
+        "label": "本文",
+        "control_index": 4,
+        "widget_class": "TCombobox"
+      },
+      {
+        "control_id": "review-edit-button-01",
+        "label": "選択行を修正",
+        "control_index": 5,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "review-edit-button-02",
+        "label": "終了秒で分割",
+        "control_index": 6,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "review-edit-button-03",
+        "label": "発言を追加",
+        "control_index": 7,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "review-edit-scrollbar-01",
+        "label": "発言の修正：縦スクロール",
+        "control_index": 8,
+        "widget_class": "TScrollbar"
+      }
+    ]
+  },
+  {
+    "screen_id": "word-settings",
+    "work": "解析・切り出し",
+    "tab": "頻出語",
+    "role": "操作",
+    "title": "集計条件",
+    "controls": [
+      {
+        "control_id": "word-settings-selector",
+        "label": "表示項目",
+        "control_index": 0,
+        "widget_class": "TCombobox"
+      },
+      {
+        "control_id": "word-settings-entry-01",
+        "label": "対象動画は人物タブで選択。修正済み文字起こしの版番号",
+        "control_index": 1,
+        "widget_class": "TEntry"
+      },
+      {
+        "control_id": "word-settings-check-01",
+        "label": "動詞を含める",
+        "control_index": 2,
+        "widget_class": "TCheckbutton"
+      },
+      {
+        "control_id": "word-settings-check-02",
+        "label": "形容詞を含める",
+        "control_index": 3,
+        "widget_class": "TCheckbutton"
+      },
+      {
+        "control_id": "word-settings-button-01",
+        "label": "再集計して別版保存",
+        "control_index": 4,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "word-settings-button-02",
+        "label": "選択した保存版を表示",
+        "control_index": 5,
+        "widget_class": "TButton"
+      }
+    ]
+  },
+  {
+    "screen_id": "word-dictionary",
+    "work": "解析・切り出し",
+    "tab": "頻出語",
+    "role": "操作",
+    "title": "登録語・除外語",
+    "controls": [
+      {
+        "control_id": "word-dictionary-selector",
+        "label": "表示項目",
+        "control_index": 0,
+        "widget_class": "TCombobox"
+      },
+      {
+        "control_id": "word-dictionary-entry-01",
+        "label": "登録語・除外語の入力欄",
+        "control_index": 1,
+        "widget_class": "TEntry"
+      },
+      {
+        "control_id": "word-dictionary-button-01",
+        "label": "登録語に追加",
+        "control_index": 2,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "word-dictionary-button-02",
+        "label": "除外語に追加",
+        "control_index": 3,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "word-dictionary-button-03",
+        "label": "登録語から削除",
+        "control_index": 4,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "word-dictionary-button-04",
+        "label": "除外語から削除",
+        "control_index": 5,
+        "widget_class": "TButton"
+      }
+    ]
+  },
+  {
+    "screen_id": "word-totals",
+    "work": "解析・切り出し",
+    "tab": "頻出語",
+    "role": "結果",
+    "title": "頻出語一覧",
+    "controls": [
+      {
+        "control_id": "word-totals-selector",
+        "label": "表示項目",
+        "control_index": 0,
+        "widget_class": "TCombobox"
+      },
+      {
+        "control_id": "word-totals-list-01",
+        "label": "頻出語一覧",
+        "control_index": 1,
+        "widget_class": "Listbox"
+      },
+      {
+        "control_id": "word-totals-scrollbar-01",
+        "label": "頻出語一覧：縦スクロール",
+        "control_index": 2,
+        "widget_class": "TScrollbar"
+      },
+      {
+        "control_id": "word-totals-scrollbar-02",
+        "label": "頻出語一覧：横スクロール",
+        "control_index": 3,
+        "widget_class": "TScrollbar"
+      }
+    ]
+  },
+  {
+    "screen_id": "word-utterances",
+    "work": "解析・切り出し",
+    "tab": "頻出語",
+    "role": "結果",
+    "title": "発話一覧",
+    "controls": [
+      {
+        "control_id": "word-utterances-selector",
+        "label": "表示項目",
+        "control_index": 0,
+        "widget_class": "TCombobox"
+      },
+      {
+        "control_id": "word-utterances-list-01",
+        "label": "発話一覧",
+        "control_index": 1,
+        "widget_class": "Listbox"
+      },
+      {
+        "control_id": "word-utterances-scrollbar-01",
+        "label": "発話一覧：縦スクロール",
+        "control_index": 2,
+        "widget_class": "TScrollbar"
+      },
+      {
+        "control_id": "word-utterances-scrollbar-02",
+        "label": "発話一覧：横スクロール",
+        "control_index": 3,
+        "widget_class": "TScrollbar"
+      }
+    ]
+  },
+  {
+    "screen_id": "segment-candidates",
+    "work": "解析・切り出し",
+    "tab": "切り出し区間",
+    "role": "操作",
+    "title": "候補と保存版",
+    "controls": [
+      {
+        "control_id": "segment-candidates-selector",
+        "label": "表示項目",
+        "control_index": 0,
+        "widget_class": "TCombobox"
+      },
+      {
+        "control_id": "segment-candidates-entry-01",
+        "label": "文字起こし版",
+        "control_index": 1,
+        "widget_class": "TEntry"
+      },
+      {
+        "control_id": "segment-candidates-entry-02",
+        "label": "前",
+        "control_index": 2,
+        "widget_class": "TEntry"
+      },
+      {
+        "control_id": "segment-candidates-entry-03",
+        "label": "後",
+        "control_index": 3,
+        "widget_class": "TEntry"
+      },
+      {
+        "control_id": "segment-candidates-button-01",
+        "label": "候補を生成して別版保存",
+        "control_index": 4,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "segment-candidates-button-02",
+        "label": "解析なしで区間を手動作成",
+        "control_index": 5,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "segment-candidates-button-03",
+        "label": "選択した保存版を使用",
+        "control_index": 6,
+        "widget_class": "TButton"
+      }
+    ]
+  },
+  {
+    "screen_id": "segment-actions",
+    "work": "解析・切り出し",
+    "tab": "切り出し区間",
+    "role": "操作",
+    "title": "区間を修正・試聴",
+    "controls": [
+      {
+        "control_id": "segment-actions-selector",
+        "label": "表示項目",
+        "control_index": 0,
+        "widget_class": "TCombobox"
+      },
+      {
+        "control_id": "segment-actions-button-01",
+        "label": "映像を再生",
+        "control_index": 1,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "segment-actions-button-02",
+        "label": "境界を修正",
+        "control_index": 2,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "segment-actions-button-03",
+        "label": "終了秒で分割",
+        "control_index": 3,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "segment-actions-button-04",
+        "label": "区間結合",
+        "control_index": 4,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "segment-actions-button-05",
+        "label": "手動追加",
+        "control_index": 5,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "segment-actions-button-06",
+        "label": "採否を適用",
+        "control_index": 6,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "segment-actions-button-07",
+        "label": "保存を再試行",
+        "control_index": 7,
+        "widget_class": "TButton"
+      }
+    ]
+  },
+  {
+    "screen_id": "compose-actions",
+    "work": "解析・切り出し",
+    "tab": "切り出し区間",
+    "role": "操作",
+    "title": "編集用動画を作成",
+    "controls": [
+      {
+        "control_id": "compose-actions-selector",
+        "label": "表示項目",
+        "control_index": 0,
+        "widget_class": "TCombobox"
+      },
+      {
+        "control_id": "compose-actions-button-01",
+        "label": "区間を追加",
+        "control_index": 1,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "compose-actions-button-02",
+        "label": "上へ",
+        "control_index": 2,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "compose-actions-button-03",
+        "label": "下へ",
+        "control_index": 3,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "compose-actions-button-04",
+        "label": "外す",
+        "control_index": 4,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "compose-actions-button-05",
+        "label": "新しい編集を作成",
+        "control_index": 5,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "compose-actions-button-06",
+        "label": "字幕をAviUtl2へ追加",
+        "control_index": 6,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "compose-actions-button-07",
+        "label": "編集用動画を再生",
+        "control_index": 7,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "compose-actions-entry-01",
+        "label": "固定fps（可変fpsでは必須。空欄なら元動画優先）",
+        "control_index": 8,
+        "widget_class": "TEntry"
+      }
+    ]
+  },
+  {
+    "screen_id": "frame-boundaries",
+    "work": "解析・切り出し",
+    "tab": "切り出し区間",
+    "role": "操作",
+    "title": "フレーム境界を確認",
+    "controls": [
+      {
+        "control_id": "frame-boundaries-selector",
+        "label": "表示項目",
+        "control_index": 0,
+        "widget_class": "TCombobox"
+      },
+      {
+        "control_id": "frame-boundaries-button-01",
+        "label": "フレーム境界へ合わせる",
+        "control_index": 1,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "frame-boundaries-button-02",
+        "label": "開始-1F",
+        "control_index": 2,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "frame-boundaries-button-03",
+        "label": "開始+1F",
+        "control_index": 3,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "frame-boundaries-button-04",
+        "label": "終了-1F",
+        "control_index": 4,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "frame-boundaries-button-05",
+        "label": "終了+1F",
+        "control_index": 5,
+        "widget_class": "TButton"
+      }
+    ]
+  },
+  {
+    "screen_id": "segment-results",
+    "work": "解析・切り出し",
+    "tab": "切り出し区間",
+    "role": "結果",
+    "title": "切り出し区間",
+    "controls": [
+      {
+        "control_id": "segment-results-selector",
+        "label": "表示項目",
+        "control_index": 0,
+        "widget_class": "TCombobox"
+      },
+      {
+        "control_id": "segment-results-list-01",
+        "label": "切り出し区間の一覧",
+        "control_index": 1,
+        "widget_class": "Listbox"
+      },
+      {
+        "control_id": "segment-results-scrollbar-01",
+        "label": "切り出し区間：縦スクロール",
+        "control_index": 2,
+        "widget_class": "TScrollbar"
+      },
+      {
+        "control_id": "segment-results-scrollbar-02",
+        "label": "切り出し区間：横スクロール",
+        "control_index": 3,
+        "widget_class": "TScrollbar"
+      }
+    ]
+  },
+  {
+    "screen_id": "compose-order",
+    "work": "解析・切り出し",
+    "tab": "切り出し区間",
+    "role": "結果",
+    "title": "編集用動画の順番",
+    "controls": [
+      {
+        "control_id": "compose-order-selector",
+        "label": "表示項目",
+        "control_index": 0,
+        "widget_class": "TCombobox"
+      },
+      {
+        "control_id": "compose-order-list-01",
+        "label": "編集用動画の順番の一覧",
+        "control_index": 1,
+        "widget_class": "Listbox"
+      },
+      {
+        "control_id": "compose-order-scrollbar-01",
+        "label": "編集用動画の順番：縦スクロール",
+        "control_index": 2,
+        "widget_class": "TScrollbar"
+      },
+      {
+        "control_id": "compose-order-scrollbar-02",
+        "label": "編集用動画の順番：横スクロール",
+        "control_index": 3,
+        "widget_class": "TScrollbar"
+      }
+    ]
+  },
+  {
+    "screen_id": "segment-settings",
+    "work": "解析・切り出し",
+    "tab": "切り出し区間",
+    "role": "詳細設定",
+    "title": "区間の境界・採否",
+    "controls": [
+      {
+        "control_id": "segment-settings-selector",
+        "label": "表示項目",
+        "control_index": 0,
+        "widget_class": "TCombobox"
+      },
+      {
+        "control_id": "segment-settings-entry-01",
+        "label": "開始秒",
+        "control_index": 1,
+        "widget_class": "TEntry"
+      },
+      {
+        "control_id": "segment-settings-entry-02",
+        "label": "終了秒",
+        "control_index": 2,
+        "widget_class": "TEntry"
+      },
+      {
+        "control_id": "segment-settings-check-01",
+        "label": "採用",
+        "control_index": 3,
+        "widget_class": "TCheckbutton"
+      },
+      {
+        "control_id": "segment-settings-scrollbar-01",
+        "label": "区間の境界・採否：縦スクロール",
+        "control_index": 4,
+        "widget_class": "TScrollbar"
+      }
+    ]
+  },
+  {
+    "screen_id": "layout-actions",
+    "work": "編集・書き出し",
+    "tab": "画面・字幕",
+    "role": "操作",
+    "title": "画面設定とプレビュー",
+    "controls": [
+      {
+        "control_id": "layout-actions-selector",
+        "label": "表示項目",
+        "control_index": 0,
+        "widget_class": "TCombobox"
+      },
+      {
+        "control_id": "layout-actions-button-01",
+        "label": "横",
+        "control_index": 1,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "layout-actions-button-02",
+        "label": "ショート",
+        "control_index": 2,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "layout-actions-button-03",
+        "label": "画面設定をAviUtl2へ渡す",
+        "control_index": 3,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "layout-actions-button-04",
+        "label": "AviUtl2結果のプレビューを開く",
+        "control_index": 4,
+        "widget_class": "TButton"
+      }
+    ]
+  },
+  {
+    "screen_id": "subtitle-actions",
+    "work": "編集・書き出し",
+    "tab": "画面・字幕",
+    "role": "操作",
+    "title": "字幕を修正",
+    "controls": [
+      {
+        "control_id": "subtitle-actions-selector",
+        "label": "表示項目",
+        "control_index": 0,
+        "widget_class": "TCombobox"
+      },
+      {
+        "control_id": "subtitle-actions-entry-01",
+        "label": "開始F",
+        "control_index": 1,
+        "widget_class": "TEntry"
+      },
+      {
+        "control_id": "subtitle-actions-entry-02",
+        "label": "終了F",
+        "control_index": 2,
+        "widget_class": "TEntry"
+      },
+      {
+        "control_id": "subtitle-actions-text-01",
+        "label": "字幕を修正の本文",
+        "control_index": 3,
+        "widget_class": "Text"
+      },
+      {
+        "control_id": "subtitle-actions-scrollbar-01",
+        "label": "字幕を修正：縦スクロール",
+        "control_index": 4,
+        "widget_class": "TScrollbar"
+      },
+      {
+        "control_id": "subtitle-actions-button-01",
+        "label": "選択字幕を別版保存",
+        "control_index": 5,
+        "widget_class": "TButton"
+      }
+    ]
+  },
+  {
+    "screen_id": "subtitle-results",
+    "work": "編集・書き出し",
+    "tab": "画面・字幕",
+    "role": "結果",
+    "title": "編集用字幕",
+    "controls": [
+      {
+        "control_id": "subtitle-results-selector",
+        "label": "表示項目",
+        "control_index": 0,
+        "widget_class": "TCombobox"
+      },
+      {
+        "control_id": "subtitle-results-list-01",
+        "label": "編集用字幕（変更時は別版を追加）",
+        "control_index": 1,
+        "widget_class": "Listbox"
+      },
+      {
+        "control_id": "subtitle-results-scrollbar-01",
+        "label": "編集用字幕：縦スクロール",
+        "control_index": 2,
+        "widget_class": "TScrollbar"
+      },
+      {
+        "control_id": "subtitle-results-scrollbar-02",
+        "label": "編集用字幕：横スクロール",
+        "control_index": 3,
+        "widget_class": "TScrollbar"
+      }
+    ]
+  },
+  {
+    "screen_id": "layout-settings",
+    "work": "編集・書き出し",
+    "tab": "画面・字幕",
+    "role": "詳細設定",
+    "title": "画面・字幕の配置",
+    "controls": [
+      {
+        "control_id": "layout-settings-selector",
+        "label": "表示項目",
+        "control_index": 0,
+        "widget_class": "TCombobox"
+      },
+      {
+        "control_id": "layout-settings-entry-01",
+        "label": "画面幅",
+        "control_index": 1,
+        "widget_class": "TEntry"
+      },
+      {
+        "control_id": "layout-settings-entry-02",
+        "label": "画面高さ",
+        "control_index": 2,
+        "widget_class": "TEntry"
+      },
+      {
+        "control_id": "layout-settings-entry-03",
+        "label": "動画拡大率 %",
+        "control_index": 3,
+        "widget_class": "TEntry"
+      },
+      {
+        "control_id": "layout-settings-entry-04",
+        "label": "動画 X",
+        "control_index": 4,
+        "widget_class": "TEntry"
+      },
+      {
+        "control_id": "layout-settings-entry-05",
+        "label": "動画 Y",
+        "control_index": 5,
+        "widget_class": "TEntry"
+      },
+      {
+        "control_id": "layout-settings-entry-06",
+        "label": "左切り取り px",
+        "control_index": 6,
+        "widget_class": "TEntry"
+      },
+      {
+        "control_id": "layout-settings-entry-07",
+        "label": "上切り取り px",
+        "control_index": 7,
+        "widget_class": "TEntry"
+      },
+      {
+        "control_id": "layout-settings-entry-08",
+        "label": "右切り取り px",
+        "control_index": 8,
+        "widget_class": "TEntry"
+      },
+      {
+        "control_id": "layout-settings-entry-09",
+        "label": "下切り取り px",
+        "control_index": 9,
+        "widget_class": "TEntry"
+      },
+      {
+        "control_id": "layout-settings-entry-10",
+        "label": "字幕 X",
+        "control_index": 10,
+        "widget_class": "TEntry"
+      },
+      {
+        "control_id": "layout-settings-entry-11",
+        "label": "字幕 Y",
+        "control_index": 11,
+        "widget_class": "TEntry"
+      },
+      {
+        "control_id": "layout-settings-entry-12",
+        "label": "字幕サイズ",
+        "control_index": 12,
+        "widget_class": "TEntry"
+      },
+      {
+        "control_id": "layout-settings-entry-13",
+        "label": "プレビューフレーム",
+        "control_index": 13,
+        "widget_class": "TEntry"
+      },
+      {
+        "control_id": "layout-settings-scrollbar-01",
+        "label": "画面・字幕の配置：縦スクロール",
+        "control_index": 14,
+        "widget_class": "TScrollbar"
+      }
+    ]
+  },
+  {
+    "screen_id": "supporting-actions",
+    "work": "編集・書き出し",
+    "tab": "補助素材",
+    "role": "操作",
+    "title": "追加・適用・プレビュー",
+    "controls": [
+      {
+        "control_id": "supporting-actions-selector",
+        "label": "表示項目",
+        "control_index": 0,
+        "widget_class": "TCombobox"
+      },
+      {
+        "control_id": "supporting-actions-button-01",
+        "label": "対象動画の場所を確認",
+        "control_index": 1,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "supporting-actions-button-02",
+        "label": "画像を追加",
+        "control_index": 2,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "supporting-actions-button-03",
+        "label": "BGMを追加",
+        "control_index": 3,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "supporting-actions-button-04",
+        "label": "効果音を追加",
+        "control_index": 4,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "supporting-actions-button-05",
+        "label": "配置をAviUtl2へ適用・プレビュー",
+        "control_index": 5,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "supporting-actions-button-06",
+        "label": "直前のプレビューを開く",
+        "control_index": 6,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "supporting-actions-button-07",
+        "label": "未適用入力を破棄",
+        "control_index": 7,
+        "widget_class": "TButton"
+      }
+    ]
+  },
+  {
+    "screen_id": "supporting-results",
+    "work": "編集・書き出し",
+    "tab": "補助素材",
+    "role": "結果",
+    "title": "補助素材一覧",
+    "controls": [
+      {
+        "control_id": "supporting-results-selector",
+        "label": "表示項目",
+        "control_index": 0,
+        "widget_class": "TCombobox"
+      },
+      {
+        "control_id": "supporting-results-list-01",
+        "label": "補助素材一覧",
+        "control_index": 1,
+        "widget_class": "Listbox"
+      },
+      {
+        "control_id": "supporting-results-scrollbar-01",
+        "label": "補助素材一覧：縦スクロール",
+        "control_index": 2,
+        "widget_class": "TScrollbar"
+      },
+      {
+        "control_id": "supporting-results-scrollbar-02",
+        "label": "補助素材一覧：横スクロール",
+        "control_index": 3,
+        "widget_class": "TScrollbar"
+      }
+    ]
+  },
+  {
+    "screen_id": "supporting-settings",
+    "work": "編集・書き出し",
+    "tab": "補助素材",
+    "role": "詳細設定",
+    "title": "素材の配置・音声設定",
+    "controls": [
+      {
+        "control_id": "supporting-settings-selector",
+        "label": "表示項目",
+        "control_index": 0,
+        "widget_class": "TCombobox"
+      },
+      {
+        "control_id": "supporting-settings-entry-01",
+        "label": "開始F (0始まり)",
+        "control_index": 1,
+        "widget_class": "TEntry"
+      },
+      {
+        "control_id": "supporting-settings-entry-02",
+        "label": "長さF",
+        "control_index": 2,
+        "widget_class": "TEntry"
+      },
+      {
+        "control_id": "supporting-settings-entry-03",
+        "label": "素材の開始秒（音声）",
+        "control_index": 3,
+        "widget_class": "TEntry"
+      },
+      {
+        "control_id": "supporting-settings-entry-04",
+        "label": "音量 %",
+        "control_index": 4,
+        "widget_class": "TEntry"
+      },
+      {
+        "control_id": "supporting-settings-entry-05",
+        "label": "画像 X",
+        "control_index": 5,
+        "widget_class": "TEntry"
+      },
+      {
+        "control_id": "supporting-settings-entry-06",
+        "label": "画像 Y",
+        "control_index": 6,
+        "widget_class": "TEntry"
+      },
+      {
+        "control_id": "supporting-settings-entry-07",
+        "label": "画像拡大率 %",
+        "control_index": 7,
+        "widget_class": "TEntry"
+      },
+      {
+        "control_id": "supporting-settings-entry-08",
+        "label": "プレビュー開始F",
+        "control_index": 8,
+        "widget_class": "TEntry"
+      },
+      {
+        "control_id": "supporting-settings-scrollbar-01",
+        "label": "素材の配置・音声設定：縦スクロール",
+        "control_index": 9,
+        "widget_class": "TScrollbar"
+      }
+    ]
+  },
+  {
+    "screen_id": "save-export-actions",
+    "work": "編集・書き出し",
+    "tab": "保存・書き出し",
+    "role": "操作",
+    "title": "保存・書き出し",
+    "controls": [
+      {
+        "control_id": "save-export-actions-selector",
+        "label": "表示項目",
+        "control_index": 0,
+        "widget_class": "TCombobox"
+      },
+      {
+        "control_id": "save-export-actions-button-01",
+        "label": "保存",
+        "control_index": 1,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "save-export-actions-button-02",
+        "label": "完成動画を書き出す",
+        "control_index": 2,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "save-export-actions-button-03",
+        "label": "書き出しを中止",
+        "control_index": 3,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "save-export-actions-button-04",
+        "label": "強制停止…",
+        "control_index": 4,
+        "widget_class": "TButton"
+      }
+    ]
+  },
+  {
+    "screen_id": "project-target",
+    "work": "編集・書き出し",
+    "tab": "保存・書き出し",
+    "role": "操作",
+    "title": "対象プロジェクト",
+    "controls": [
+      {
+        "control_id": "project-target-selector",
+        "label": "表示項目",
+        "control_index": 0,
+        "widget_class": "TCombobox"
+      },
+      {
+        "control_id": "project-target-button-01",
+        "label": "対象の場所を確認",
+        "control_index": 1,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "project-target-button-02",
+        "label": "対応するAviUtl2プロジェクトを選ぶ",
+        "control_index": 2,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "project-target-button-03",
+        "label": "プロジェクトの保存フォルダを開く",
+        "control_index": 3,
+        "widget_class": "TButton"
+      }
+    ]
+  },
+  {
+    "screen_id": "save-export-results",
+    "work": "編集・書き出し",
+    "tab": "保存・書き出し",
+    "role": "結果",
+    "title": "処理結果",
+    "controls": [
+      {
+        "control_id": "save-export-results-selector",
+        "label": "表示項目",
+        "control_index": 0,
+        "widget_class": "TCombobox"
+      },
+      {
+        "control_id": "save-export-results-text-01",
+        "label": "待機中 / 処理時間 0.0秒",
+        "control_index": 1,
+        "widget_class": "Text"
+      },
+      {
+        "control_id": "save-export-results-scrollbar-01",
+        "label": "処理結果：縦スクロール",
+        "control_index": 2,
+        "widget_class": "TScrollbar"
+      }
+    ]
+  },
+  {
+    "screen_id": "export-settings",
+    "work": "編集・書き出し",
+    "tab": "保存・書き出し",
+    "role": "詳細設定",
+    "title": "書き出し設定",
+    "controls": [
+      {
+        "control_id": "export-settings-selector",
+        "label": "表示項目",
+        "control_index": 0,
+        "widget_class": "TCombobox"
+      },
+      {
+        "control_id": "export-settings-choice-01",
+        "label": "完成動画の用途",
+        "control_index": 1,
+        "widget_class": "TCombobox"
+      },
+      {
+        "control_id": "export-settings-button-01",
+        "label": "用途の初期値を設定",
+        "control_index": 2,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "export-settings-entry-01",
+        "label": "出力幅 px",
+        "control_index": 3,
+        "widget_class": "TEntry"
+      },
+      {
+        "control_id": "export-settings-entry-02",
+        "label": "出力高さ px",
+        "control_index": 4,
+        "widget_class": "TEntry"
+      },
+      {
+        "control_id": "export-settings-entry-03",
+        "label": "固定fps（分数も可）",
+        "control_index": 5,
+        "widget_class": "TEntry"
+      },
+      {
+        "control_id": "export-settings-entry-04",
+        "label": "映像 Mbps",
+        "control_index": 6,
+        "widget_class": "TEntry"
+      },
+      {
+        "control_id": "export-settings-entry-05",
+        "label": "音声 Hz",
+        "control_index": 7,
+        "widget_class": "TEntry"
+      },
+      {
+        "control_id": "export-settings-scrollbar-01",
+        "label": "書き出し設定：縦スクロール",
+        "control_index": 8,
+        "widget_class": "TScrollbar"
+      }
+    ]
+  },
+  {
+    "screen_id": "saved-results",
+    "work": "保存結果を確認",
+    "tab": "保存済み情報",
+    "role": "結果",
+    "title": "保存済み一覧",
+    "controls": [
+      {
+        "control_id": "saved-results-selector",
+        "label": "表示項目",
+        "control_index": 0,
+        "widget_class": "TCombobox"
+      },
+      {
+        "control_id": "saved-results-list-01",
+        "label": "保存済み情報",
+        "control_index": 1,
+        "widget_class": "Listbox"
+      },
+      {
+        "control_id": "saved-results-scrollbar-01",
+        "label": "保存済み一覧：縦スクロール",
+        "control_index": 2,
+        "widget_class": "TScrollbar"
+      },
+      {
+        "control_id": "saved-results-scrollbar-02",
+        "label": "保存済み一覧：横スクロール",
+        "control_index": 3,
+        "widget_class": "TScrollbar"
+      }
+    ]
+  },
+  {
+    "screen_id": "saved-csv",
+    "work": "保存結果を確認",
+    "tab": "保存済み情報",
+    "role": "結果",
+    "title": "CSV本文",
+    "controls": [
+      {
+        "control_id": "saved-csv-selector",
+        "label": "表示項目",
+        "control_index": 0,
+        "widget_class": "TCombobox"
+      },
+      {
+        "control_id": "saved-csv-text-01",
+        "label": "選択したCSVの内容",
+        "control_index": 1,
+        "widget_class": "Text"
+      },
+      {
+        "control_id": "saved-csv-scrollbar-01",
+        "label": "CSV本文：縦スクロール",
+        "control_index": 2,
+        "widget_class": "TScrollbar"
+      }
+    ]
+  },
+  {
+    "screen_id": "management-actions",
+    "work": "データを管理",
+    "tab": "管理・保管",
+    "role": "操作",
+    "title": "登録情報を管理",
+    "controls": [
+      {
+        "control_id": "management-actions-selector",
+        "label": "表示項目",
+        "control_index": 0,
+        "widget_class": "TCombobox"
+      },
+      {
+        "control_id": "management-actions-check-01",
+        "label": "非表示の項目も表示",
+        "control_index": 1,
+        "widget_class": "TCheckbutton"
+      },
+      {
+        "control_id": "management-actions-button-01",
+        "label": "非表示",
+        "control_index": 2,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "management-actions-button-02",
+        "label": "再表示",
+        "control_index": 3,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "management-actions-button-03",
+        "label": "登録情報を削除…",
+        "control_index": 4,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "management-actions-button-04",
+        "label": "実ファイルを選んで削除…",
+        "control_index": 5,
+        "widget_class": "TButton"
+      }
+    ]
+  },
+  {
+    "screen_id": "archive-actions",
+    "work": "データを管理",
+    "tab": "管理・保管",
+    "role": "操作",
+    "title": "動画を保管・展開",
+    "controls": [
+      {
+        "control_id": "archive-actions-selector",
+        "label": "表示項目",
+        "control_index": 0,
+        "widget_class": "TCombobox"
+      },
+      {
+        "control_id": "archive-actions-button-01",
+        "label": "動画を保管…",
+        "control_index": 1,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "archive-actions-button-02",
+        "label": "保管物を展開…",
+        "control_index": 2,
+        "widget_class": "TButton"
+      }
+    ]
+  },
+  {
+    "screen_id": "log-actions",
+    "work": "データを管理",
+    "tab": "管理・保管",
+    "role": "操作",
+    "title": "ログの整理",
+    "controls": [
+      {
+        "control_id": "log-actions-selector",
+        "label": "表示項目",
+        "control_index": 0,
+        "widget_class": "TCombobox"
+      },
+      {
+        "control_id": "log-actions-button-01",
+        "label": "30日経過した通常ログを整理",
+        "control_index": 1,
+        "widget_class": "TButton"
+      }
+    ]
+  },
+  {
+    "screen_id": "management-results",
+    "work": "データを管理",
+    "tab": "管理・保管",
+    "role": "結果",
+    "title": "登録一覧",
+    "controls": [
+      {
+        "control_id": "management-results-selector",
+        "label": "表示項目",
+        "control_index": 0,
+        "widget_class": "TCombobox"
+      },
+      {
+        "control_id": "management-results-list-01",
+        "label": "登録一覧",
+        "control_index": 1,
+        "widget_class": "Listbox"
+      },
+      {
+        "control_id": "management-results-scrollbar-01",
+        "label": "登録一覧：縦スクロール",
+        "control_index": 2,
+        "widget_class": "TScrollbar"
+      },
+      {
+        "control_id": "management-results-scrollbar-02",
+        "label": "登録一覧：横スクロール",
+        "control_index": 3,
+        "widget_class": "TScrollbar"
+      }
+    ]
+  },
+  {
+    "screen_id": "archive-results",
+    "work": "データを管理",
+    "tab": "管理・保管",
+    "role": "詳細設定",
+    "title": "保管・展開結果",
+    "controls": [
+      {
+        "control_id": "archive-results-selector",
+        "label": "表示項目",
+        "control_index": 0,
+        "widget_class": "TCombobox"
+      },
+      {
+        "control_id": "archive-results-scrollbar-01",
+        "label": "保管・展開結果：縦スクロール",
+        "control_index": 1,
+        "widget_class": "TScrollbar"
+      }
+    ]
+  },
+  {
+    "screen_id": "process-running",
+    "title": "実行中",
+    "controls": [
+      {
+        "control_id": "process-running-button-01",
+        "label": "実行中の処理を中止",
+        "control_index": 1,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "process-running-button-02",
+        "label": "実行中の処理を強制停止…",
+        "control_index": 2,
+        "widget_class": "TButton"
+      }
+    ]
+  },
+  {
+    "screen_id": "process-stopping",
+    "title": "停止待ち・強制停止選択可能",
+    "controls": [
+      {
+        "control_id": "process-stopping-button-01",
+        "label": "実行中の処理を中止",
+        "control_index": 1,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "process-stopping-button-02",
+        "label": "実行中の処理を強制停止…",
+        "control_index": 2,
+        "widget_class": "TButton"
+      }
+    ]
+  },
+  {
+    "screen_id": "process-stopped",
+    "title": "停止完了",
+    "controls": [
+      {
+        "control_id": "process-stopped-button-01",
+        "label": "実行中の処理を中止",
+        "control_index": 1,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "process-stopped-button-02",
+        "label": "実行中の処理を強制停止…",
+        "control_index": 2,
+        "widget_class": "TButton"
+      }
+    ]
+  },
+  {
+    "screen_id": "dialog-location",
+    "title": "場所を確認",
+    "controls": [
+      {
+        "control_id": "dialog-location-button-01",
+        "label": "閉じる",
+        "control_index": 1,
+        "widget_class": "TButton"
+      }
+    ]
+  },
+  {
+    "screen_id": "dialog-error",
+    "title": "エラー表示",
+    "controls": [
+      {
+        "control_id": "dialog-error-button-01",
+        "label": "閉じる",
+        "control_index": 1,
+        "widget_class": "TButton"
+      }
+    ]
+  },
+  {
+    "screen_id": "dialog-warning",
+    "title": "警告表示",
+    "controls": [
+      {
+        "control_id": "dialog-warning-button-01",
+        "label": "閉じる",
+        "control_index": 1,
+        "widget_class": "TButton"
+      }
+    ]
+  },
+  {
+    "screen_id": "dialog-short",
+    "title": "ショート条件外",
+    "controls": [
+      {
+        "control_id": "dialog-short-button-01",
+        "label": "編集・設定を直す",
+        "control_index": 1,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "dialog-short-button-02",
+        "label": "通常の動画として書き出す",
+        "control_index": 2,
+        "widget_class": "TButton"
+      }
+    ]
+  },
+  {
+    "screen_id": "dialog-unsaved-export",
+    "title": "未保存の編集・書き出し前",
+    "controls": [
+      {
+        "control_id": "dialog-unsaved-export-button-01",
+        "label": "保存して書き出す",
+        "control_index": 1,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "dialog-unsaved-export-button-02",
+        "label": "戻る",
+        "control_index": 2,
+        "widget_class": "TButton"
+      }
+    ]
+  },
+  {
+    "screen_id": "dialog-unsaved-close",
+    "title": "未保存の編集・終了時",
+    "controls": [
+      {
+        "control_id": "dialog-unsaved-close-button-01",
+        "label": "保存する",
+        "control_index": 1,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "dialog-unsaved-close-button-02",
+        "label": "破棄する",
+        "control_index": 2,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "dialog-unsaved-close-button-03",
+        "label": "戻る",
+        "control_index": 3,
+        "widget_class": "TButton"
+      }
+    ]
+  },
+  {
+    "screen_id": "dialog-screen",
+    "title": "画面を選択",
+    "controls": [
+      {
+        "control_id": "dialog-screen-button-01",
+        "label": "いいえ",
+        "control_index": 1,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "dialog-screen-button-02",
+        "label": "はい",
+        "control_index": 2,
+        "widget_class": "TButton"
+      }
+    ]
+  },
+  {
+    "screen_id": "dialog-registration-delete",
+    "title": "登録情報を削除",
+    "controls": [
+      {
+        "control_id": "dialog-registration-delete-button-01",
+        "label": "いいえ",
+        "control_index": 1,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "dialog-registration-delete-button-02",
+        "label": "はい",
+        "control_index": 2,
+        "widget_class": "TButton"
+      }
+    ]
+  },
+  {
+    "screen_id": "dialog-file-delete",
+    "title": "実ファイルを削除",
+    "controls": [
+      {
+        "control_id": "dialog-file-delete-button-01",
+        "label": "いいえ",
+        "control_index": 1,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "dialog-file-delete-button-02",
+        "label": "はい",
+        "control_index": 2,
+        "widget_class": "TButton"
+      }
+    ]
+  },
+  {
+    "screen_id": "dialog-process-force",
+    "title": "管理対象処理の強制停止",
+    "controls": [
+      {
+        "control_id": "dialog-process-force-button-01",
+        "label": "いいえ",
+        "control_index": 1,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "dialog-process-force-button-02",
+        "label": "はい",
+        "control_index": 2,
+        "widget_class": "TButton"
+      }
+    ]
+  },
+  {
+    "screen_id": "dialog-export-force",
+    "title": "書き出しの強制停止",
+    "controls": [
+      {
+        "control_id": "dialog-export-force-button-01",
+        "label": "強制停止する",
+        "control_index": 1,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "dialog-export-force-button-02",
+        "label": "停止を待つ",
+        "control_index": 2,
+        "widget_class": "TButton"
+      }
+    ]
+  },
+  {
+    "screen_id": "dialog-verification-force",
+    "title": "完成動画の検査を強制停止",
+    "controls": [
+      {
+        "control_id": "dialog-verification-force-button-01",
+        "label": "強制停止する",
+        "control_index": 1,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "dialog-verification-force-button-02",
+        "label": "停止を待つ",
+        "control_index": 2,
+        "widget_class": "TButton"
+      }
+    ]
+  },
+  {
+    "screen_id": "preview",
+    "title": "画像・音声プレビュー",
+    "controls": [
+      {
+        "control_id": "preview-button-01",
+        "label": "この位置から音声を試聴（最大5秒）",
+        "control_index": 1,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "preview-button-02",
+        "label": "試聴を停止",
+        "control_index": 2,
+        "widget_class": "TButton"
+      },
+      {
+        "control_id": "preview-button-03",
+        "label": "閉じる",
+        "control_index": 3,
+        "widget_class": "TButton"
+      }
+    ]
+  }
+]
